@@ -1,3 +1,5 @@
+// import d3Tip from './d3-tip';
+
 function explodingBoxplot() {
       
     // options which should be accessible via ACCESSORS
@@ -162,8 +164,8 @@ function explodingBoxplot() {
 
                 if (events.update.ready) { events.update.ready(constituents, options, events); }
 
-                var xAxis = d3.svg.axis().scale(xScale).orient('bottom')
-                var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(options.axes.y.tickFormat)
+                var xAxis = d3.axisBottom().scale(xScale)
+                var yAxis = d3.axisLeft().scale(yScale).tickFormat(options.axes.y.tickFormat)
 
                 resetArea
                   .on('dblclick', implode_boxplot);
