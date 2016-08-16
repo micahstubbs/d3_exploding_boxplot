@@ -20,8 +20,7 @@
     "email":"matthieu.caule@gmail.com"
   },
   "dependencies": {
-    "d3": "^4.2.0",
-    "d3-tip": "~0.6.7"
+    "d3": "^4.2.0"
   },
   "license": "MIT",
   "bugs": {
