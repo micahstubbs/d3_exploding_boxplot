@@ -149,7 +149,7 @@ function explodingBoxplot() {
                      return o;
                 });
 
-                var yScale = d3.scale.linear()
+                var yScale = d3.scaleLinear()
                      .domain(d3.extent(data_set.map(function(m) { return m[options.axes.y.label]; } )))
                      .range([options.height - options.margins.top - options.margins.bottom, 0])
                      .nice();
