@@ -137,9 +137,9 @@ function explodingBoxplot() {
                      groups = [ {key: '', values: data_set } ]
                 }
 
-                var xScale = d3.scaleOrdinal()
+                var xScale = d3.scaleBand()
                      .domain(groups.map(function(d) { return d.key } ))
-                     .rangeRoundBands([0, options.width - options.margins.left - options.margins.right], options.display.boxpadding);
+                     .rangeRound([0, options.width - options.margins.left - options.margins.right], options.display.boxpadding);
                 constituents.scales.X = xScale;
 
                 //create boxplot data
