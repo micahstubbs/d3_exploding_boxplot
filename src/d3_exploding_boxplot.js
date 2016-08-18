@@ -7,6 +7,7 @@ no-console: "off",
 no-unused-vars: "off"
 */
 // import d3Tip from './d3-tip';
+// import { jitterPlot } from './jitterPlot';
 import { implodeBoxplot } from './implodeBoxplot';
 
 export default function () {
@@ -18,20 +19,16 @@ export default function () {
   let explodedBoxPlots = [];
 
   const options = {
-
     id: '',
     class: 'xBoxPlot',
-
     width: window.innerWidth,
     height: window.innerHeight,
-
     margins: {
       top: 10,
       right: 10,
       bottom: 30,
       left: 40
     },
-
     axes: {
       x: {
         label: '',
@@ -50,26 +47,21 @@ export default function () {
         domain: undefined
       }
     },
-
     data: {
       color_index: 'color',
       label: 'undefined',
       group: undefined,
       identifier: undefined
     },
-
     datapoints: {
       radius: 3
     },
-
     display: {
       iqr: 1.5, // interquartile range
       boxpadding: 0.2
     },
-
     resize: true,
     mobileScreenMax: 500
-
   };
 
   const constituents = {
@@ -223,8 +215,17 @@ export default function () {
           .tickFormat(options.axes.y.tickFormat);
         console.log('yAxis', yAxis);
 
+        const implodeBoxplotOptions = {
+          xScale,
+          yScale,
+          transitionTime,
+          drawBoxplot
+        }
+
         resetArea
-          .on('dblclick', implodeBoxplot);
+          .on('dblclick', () => {
+            implodeBoxplot(chartWrapper, undefined, implodeBoxplotOptions);
+          });
 
         const updateXAxis = chartWrapper.selectAll('#xpb_xAxis')
           .data([0]);
@@ -365,10 +366,10 @@ export default function () {
           s = d3.select(this);
           if (explodedBoxPlots.indexOf(i) >= 0) {
             explodeBoxplot(i);
-            jitterPlot(i);
+            jitterPlot(i, options);
             return;
           }
-          jitterPlot(i);
+          jitterPlot(i, options);
 
           // box
           s.select('rect.box')
@@ -468,16 +469,12 @@ export default function () {
         function jitterPlot(i) {
           const elem = d3.select(`#explodingBoxplot${options.id}${i}`)
             .select('.outliers-points');
-
           const displayOutliers = elem.selectAll('.point')
             .data(groups[i].outlier);
-
           displayOutliers.enter()
             .append('circle');
-
           displayOutliers.exit()
             .remove();
-
           displayOutliers
             .attr('cx', xScale.rangeBand() * 0.5)
             .attr('cy', yScale(groups[i].quartiles[1]))

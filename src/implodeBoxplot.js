@@ -1,8 +1,13 @@
 import * as d3 from 'd3';
 
-export function implodeBoxplot() {
-  explodedBoxPlots = [];
-  chartWrapper.selectAll('.normal-points')
+export function implodeBoxplot(selector, data, options) {
+  const xScale = options.xScale;
+  const yScale = options.yScale;
+  const transitionTime = options.transitionTime;
+  const drawBoxplot = options.drawBoxplot;
+
+  const explodedBoxPlots = [];
+  selector.selectAll('.normal-points')
     .each(function (g) {
       d3.select(this)
         .selectAll('circle')
@@ -14,10 +19,10 @@ export function implodeBoxplot() {
         .remove();
     });
 
-  chartWrapper.selectAll('.boxcontent')
-           .transition()
-           .ease(d3.ease('back-out'))
-           .duration((transitionTime * 1.5))
-           .delay(transitionTime)
-           .each(drawBoxplot);
+  selector.selectAll('.boxcontent')
+    .transition()
+    .ease(d3.ease('back-out'))
+    .duration((transitionTime * 1.5))
+    .delay(transitionTime)
+    .each(drawBoxplot);
 }

@@ -5,15 +5,20 @@
   (factory((global.explodingBoxplot = global.explodingBoxplot || {}),global.d3));
 }(this, function (exports,d3$1) { 'use strict';
 
-  function implodeBoxplot() {
-    explodedBoxPlots = [];
-    chartWrapper.selectAll('.normal-points').each(function (g) {
+  function implodeBoxplot(selector, data, options) {
+    var xScale = options.xScale;
+    var yScale = options.yScale;
+    var transitionTime = options.transitionTime;
+    var drawBoxplot = options.drawBoxplot;
+
+    var explodedBoxPlots = [];
+    selector.selectAll('.normal-points').each(function (g) {
       d3$1.select(this).selectAll('circle').transition().ease(d3$1.ease('back-out')).duration(function () {
         return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
       }).attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(g.quartiles[1])).remove();
     });
 
-    chartWrapper.selectAll('.boxcontent').transition().ease(d3$1.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(drawBoxplot);
+    selector.selectAll('.boxcontent').transition().ease(d3$1.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(drawBoxplot);
   }
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -31,20 +36,16 @@
     var explodedBoxPlots = [];
 
     var options = {
-
       id: '',
       class: 'xBoxPlot',
-
       width: window.innerWidth,
       height: window.innerHeight,
-
       margins: {
         top: 10,
         right: 10,
         bottom: 30,
         left: 40
       },
-
       axes: {
         x: {
           label: '',
@@ -66,26 +67,21 @@
           domain: undefined
         }
       },
-
       data: {
         color_index: 'color',
         label: 'undefined',
         group: undefined,
         identifier: undefined
       },
-
       datapoints: {
         radius: 3
       },
-
       display: {
         iqr: 1.5, // interquartile range
         boxpadding: 0.2
       },
-
       resize: true,
       mobileScreenMax: 500
-
     };
 
     var constituents = {
@@ -224,7 +220,16 @@
           var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(options.axes.y.tickFormat);
           console.log('yAxis', yAxis);
 
-          resetArea.on('dblclick', implodeBoxplot);
+          var implodeBoxplotOptions = {
+            xScale: xScale,
+            yScale: yScale,
+            transitionTime: transitionTime,
+            drawBoxplot: drawBoxplot
+          };
+
+          resetArea.on('dblclick', function () {
+            implodeBoxplot(chartWrapper, undefined, implodeBoxplotOptions);
+          });
 
           var updateXAxis = chartWrapper.selectAll('#xpb_xAxis').data([0]);
           console.log('updateXAxis', updateXAxis);
@@ -318,10 +323,10 @@
             s = d3.select(this);
             if (explodedBoxPlots.indexOf(i) >= 0) {
               explodeBoxplot(i);
-              jitterPlot(i);
+              jitterPlot(i, options);
               return;
             }
-            jitterPlot(i);
+            jitterPlot(i, options);
 
             // box
             s.select('rect.box').transition().duration(transitionTime).attr('x', 0).attr('width', xScale.rangeBand()).attr('y', function (d) {
@@ -401,13 +406,9 @@
 
           function jitterPlot(i) {
             var elem = d3.select('#explodingBoxplot' + options.id + i).select('.outliers-points');
-
             var displayOutliers = elem.selectAll('.point').data(groups[i].outlier);
-
             displayOutliers.enter().append('circle');
-
             displayOutliers.exit().remove();
-
             displayOutliers.attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter).transition().ease(d3.ease('back-out')).delay(function () {
               return transitionTime * 1.5 + 100 * Math.random();
             }).duration(function () {
