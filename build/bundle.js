@@ -17,7 +17,7 @@
     var chartOptions = options.chartOptions;
 
     state.explodedBoxplots = [];
-    console.log('state.explodedBoxPlots', state.explodedBoxPlots);
+    console.log('state.explodedBoxplots', state.explodedBoxplots);
     selector.selectAll('.normal-points').each(function (g) {
       d3$1.select(this).selectAll('circle').transition().ease(d3$1.ease('back-out')).duration(function () {
         return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();

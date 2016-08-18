@@ -12,7 +12,7 @@ export function implodeBoxplot(selector, data, options, state) {
   const chartOptions = options.chartOptions;
 
   state.explodedBoxplots = [];
-  console.log('state.explodedBoxPlots', state.explodedBoxPlots);
+  console.log('state.explodedBoxplots', state.explodedBoxplots);
   selector.selectAll('.normal-points')
     .each(function (g) {
       d3.select(this)
