@@ -9,14 +9,18 @@ no-unused-vars: "off"
 // import d3Tip from './d3-tip';
 // import { jitterPlot } from './jitterPlot';
 import { implodeBoxplot } from './implodeBoxplot';
-
+import { drawBoxplot } from './drawBoxplot';
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
   const privateDataSet = [];
 
   let groups;
-  let explodedBoxPlots = [];
+
+  // create state object for shared state
+  // TODO: find a better pattern
+  const state = {};
+  state.explodedBoxplots = [];
 
   const options = {
     id: '',
@@ -115,9 +119,10 @@ export default function () {
   };
 
   function chart(selection) {
+    console.log('chart() was called');
     selection.each(function () {
       const domParent = d3.select(this);
-      console.log('domParent', domParent);
+      // console.log('domParent', domParent);
       constituents.elements.domParent = domParent;
 
       const chartRoot = domParent.append('svg')
@@ -142,6 +147,7 @@ export default function () {
 
       // boolean resize used to disable transitions during resize operation
       update = resize => {
+        console.log('update/resize function was called');
         chartRoot
           .attr('width', (options.width + options.margins.left + options.margins.right))
           .attr('height', (options.height + options.margins.top + options.margins.bottom));
@@ -149,10 +155,10 @@ export default function () {
         chartWrapper
           .attr('transform', `translate(${options.margins.left},${options.margins.top})`);
 
-        console.log('events.update.begin', events.update.begin);
+        // console.log('events.update.begin', events.update.begin);
         if (events.update.begin) { events.update.begin(constituents, options, events); }
 
-        console.log('options.data.group', options.data.group);
+        // console.log('options.data.group', options.data.group);
         if (options.data.group) {
           groups = d3.nest()
             .key(k => k[options.data.group])
@@ -163,7 +169,7 @@ export default function () {
             values: dataSet
           }];
         }
-        console.log('groups after nest', groups);
+        // console.log('groups after nest', groups);
 
         const xScale = d3.scale.ordinal()
           .domain(groups.map(d => d.key))
@@ -173,8 +179,8 @@ export default function () {
           );
 
         constituents.scales.X = xScale;
-        console.log('xScale.domain()', xScale.domain()); 
-        console.log('xScale.range()', xScale.range());
+        // console.log('xScale.domain()', xScale.domain()); 
+        // console.log('xScale.range()', xScale.range());
 
         // create boxplot data
         groups = groups.map(g => {
@@ -182,7 +188,7 @@ export default function () {
           o.group = g.key;
           return o;
         });
-        console.log('groups after map', groups);
+        // console.log('groups after map', groups);
 
         const yScale = d3.scale.linear()
           .domain(d3.extent(dataSet.map(m => m[options.axes.y.label])))
@@ -190,47 +196,51 @@ export default function () {
           .nice();
 
         constituents.scales.Y = yScale;
-        console.log('yScale.domain()', yScale.domain());
-        console.log('yScale.range()', yScale.range());
+        // console.log('yScale.domain()', yScale.domain());
+        // console.log('yScale.range()', yScale.range());
 
         const colorScale = d3.scale.ordinal()
           .domain(d3.set(dataSet.map(m => m[options.data.color_index])).values())
           .range(Object.keys(colors).map(m => colors[m]));
-        console.log('colorScale.domain()', colorScale.domain());
-        console.log('colorScale.range()', colorScale.range());
+        // console.log('colorScale.domain()', colorScale.domain());
+        // console.log('colorScale.range()', colorScale.range());
 
         constituents.scales.color = colorScale;
 
-        console.log('events.update.ready', events.update.ready);
+        // console.log('events.update.ready', events.update.ready);
         if (events.update.ready) { events.update.ready(constituents, options, events); }
 
         const xAxis = d3.svg.axis()
           .scale(xScale)
           .orient('bottom');
-        console.log('xAxis', xAxis);
+        // console.log('xAxis', xAxis);
 
         const yAxis = d3.svg.axis()
           .scale(yScale)
           .orient('left')
           .tickFormat(options.axes.y.tickFormat);
-        console.log('yAxis', yAxis);
+        // console.log('yAxis', yAxis);
 
         const implodeBoxplotOptions = {
           xScale,
           yScale,
           transitionTime,
-          drawBoxplot
+          drawBoxplot,
+          jitterPlot,
+          colorScale,
+          explodeBoxplot,
+          chartOptions: options
         }
 
         resetArea
           .on('dblclick', () => {
-            implodeBoxplot(chartWrapper, undefined, implodeBoxplotOptions);
+            implodeBoxplot(chartWrapper, undefined, implodeBoxplotOptions, state);
           });
 
         const updateXAxis = chartWrapper.selectAll('#xpb_xAxis')
           .data([0]);
-        console.log('updateXAxis', updateXAxis);
-        console.log('updateXAxis[0]', updateXAxis[0])
+        // console.log('updateXAxis', updateXAxis);
+        // console.log('updateXAxis[0]', updateXAxis[0])
 
         updateXAxis.enter()
           .append('g')
@@ -252,7 +262,7 @@ export default function () {
           .attr('y', options.margins.bottom - 10)
           .style('text-anchor', 'middle')
           .text(options.axes.x.label);
-        console.log(`d3.selectAll('.x.axis')`, d3.selectAll('.x.axis'));
+        // console.log(`d3.selectAll('.x.axis')`, d3.selectAll('.x.axis'));
 
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
           .data([0]);
@@ -277,16 +287,15 @@ export default function () {
             .style('text-anchor', 'middle')
             .text(options.axes.y.label);
 
-
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);
-        console.log('boxContent', boxContent);
+        // console.log('boxContent', boxContent);
 
         boxContent.enter()
           .append('g')
           .attr('class', 'explodingBoxplot boxcontent')
           .attr('id', (d, i) => `explodingBoxplot${options.id}${i}`);
-        console.log('boxContent after enter', boxContent);
+        // console.log('boxContent after enter', boxContent);
 
         boxContent.exit()
           .remove();
@@ -295,9 +304,21 @@ export default function () {
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(createJitter)
           .each(createBoxplot)
-          .each(drawBoxplot);
+          .each(function (d, i) {
+            const drawBoxplotOptions = {
+              chartOptions: options,
+              jitterPlot,
+              transitionTime,
+              xScale,
+              yScale,
+              colorScale,
+              explodeBoxplot
+            }
+            drawBoxplot(d, i, drawBoxplotOptions, state)
+          });
 
         function createJitter(/* g, i*/) {
+          console.log('createJitter() was called');
           d3.select(this).append('g')
             .attr('class', 'explodingBoxplot outliers-points');
           d3.select(this).append('g')
@@ -327,6 +348,7 @@ export default function () {
         }
 
         function drawJitter(s) {
+          console.log('drawJitter() was called');
           s.attr('r', options.datapoints.radius)
             .attr('fill', d => colorScale(d[options.data.color_index]))
             .attr('cx', (/* d */) => {
@@ -337,7 +359,7 @@ export default function () {
         }
 
         function createBoxplot(g, i) {
-          console.log('this from createBoxplot', this);
+          // console.log('this from createBoxplot', this);
           const s = d3.select(this).append('g')
             .attr('class', 'explodingBoxplot box')
             .attr('id', `explodingBoxplot_box${options.id}${i}`)
@@ -356,71 +378,65 @@ export default function () {
           s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
         }
 
-        function drawBoxplot(s, i) {
-          d3.select(`#explodingBoxplot_box${options.id}${i}`)
-            .on('click', (/* d */) => {
-              explodeBoxplot(i);
-              explodedBoxPlots.push(i);
-            });
-
-          s = d3.select(this);
-          if (explodedBoxPlots.indexOf(i) >= 0) {
-            explodeBoxplot(i);
-            jitterPlot(i, options);
-            return;
-          }
-          jitterPlot(i, options);
-
-          // box
-          s.select('rect.box')
-            .transition().duration(transitionTime)
-            .attr('x', 0)
-            .attr('width', xScale.rangeBand())
-            .attr('y', d => yScale(d.quartiles[2]))
-            .attr('height', d => yScale(d.quartiles[0]) - yScale(d.quartiles[2]))
-            .attr('fill', d => colorScale(d.normal[0][options.data.color_index]));
-
-          // median line
-          s.select('line.median')
-            .transition().duration(transitionTime)
-            .attr('x1', 0).attr('x2', xScale.rangeBand())
-            .attr('y1', d => yScale(d.quartiles[1]))
-            .attr('y2', d => yScale(d.quartiles[1]));
-
-          // min line
-          s.select('line.min.hline') 
-            .transition().duration(transitionTime)
-            .attr('x1', xScale.rangeBand() * 0.25)
-            .attr('x2', xScale.rangeBand() * 0.75)
-            .attr('y1', d => yScale(Math.min(d.min, d.quartiles[0])))
-            .attr('y2', d => yScale(Math.min(d.min, d.quartiles[0])));
-
-          // min vline
-          s.select('line.min.vline')
-            .transition().duration(transitionTime)
-            .attr('x1', xScale.rangeBand() * 0.5)
-            .attr('x2', xScale.rangeBand() * 0.5)
-            .attr('y1', d => yScale(Math.min(d.min, d.quartiles[0])))
-            .attr('y2', d => yScale(d.quartiles[0]));
-
-          // max line
-          s.select('line.max.hline')
-            .transition().duration(transitionTime)
-            .attr('x1', xScale.rangeBand() * 0.25)
-            .attr('x2', xScale.rangeBand() * 0.75)
-            .attr('y1', d => yScale(Math.max(d.max, d.quartiles[2])))
-            .attr('y2', d => yScale(Math.max(d.max, d.quartiles[2])));
-
-          // max vline
-          s.select('line.max.vline')
-            .transition().duration(transitionTime)
-            .attr('x1', xScale.rangeBand() * 0.5)
-            .attr('x2', xScale.rangeBand() * 0.5)
-            .attr('y1', d => yScale(d.quartiles[2]))
-            .attr('y2', d => yScale(Math.max(d.max, d.quartiles[2])));
-        }
+        // function drawBoxplot(s, i) {
+        //   d3.select(`#explodingBoxplot_box${options.id}${i}`)
+        //     .on('click', (/* d */) => {
+        //       explodeBoxplot(i);
+        //       explodedBoxplots.push(i);
+        //     });
+        //   s = d3.select(this);
+        //   if (explodedBoxplots.indexOf(i) >= 0) {
+        //     explodeBoxplot(i);
+        //     jitterPlot(i, options);
+        //     return;
+        //   }
+        //   jitterPlot(i, options);
+        //   // box
+        //   s.select('rect.box')
+        //     .transition().duration(transitionTime)
+        //     .attr('x', 0)
+        //     .attr('width', xScale.rangeBand())
+        //     .attr('y', d => yScale(d.quartiles[2]))
+        //     .attr('height', d => yScale(d.quartiles[0]) - yScale(d.quartiles[2]))
+        //     .attr('fill', d => colorScale(d.normal[0][options.data.color_index]));
+        //   // median line
+        //   s.select('line.median')
+        //     .transition().duration(transitionTime)
+        //     .attr('x1', 0).attr('x2', xScale.rangeBand())
+        //     .attr('y1', d => yScale(d.quartiles[1]))
+        //     .attr('y2', d => yScale(d.quartiles[1]));
+        //   // min line
+        //   s.select('line.min.hline') 
+        //     .transition().duration(transitionTime)
+        //     .attr('x1', xScale.rangeBand() * 0.25)
+        //     .attr('x2', xScale.rangeBand() * 0.75)
+        //     .attr('y1', d => yScale(Math.min(d.min, d.quartiles[0])))
+        //     .attr('y2', d => yScale(Math.min(d.min, d.quartiles[0])));
+        //   // min vline
+        //   s.select('line.min.vline')
+        //     .transition().duration(transitionTime)
+        //     .attr('x1', xScale.rangeBand() * 0.5)
+        //     .attr('x2', xScale.rangeBand() * 0.5)
+        //     .attr('y1', d => yScale(Math.min(d.min, d.quartiles[0])))
+        //     .attr('y2', d => yScale(d.quartiles[0]));
+        //   // max line
+        //   s.select('line.max.hline')
+        //     .transition().duration(transitionTime)
+        //     .attr('x1', xScale.rangeBand() * 0.25)
+        //     .attr('x2', xScale.rangeBand() * 0.75)
+        //     .attr('y1', d => yScale(Math.max(d.max, d.quartiles[2])))
+        //     .attr('y2', d => yScale(Math.max(d.max, d.quartiles[2])));
+        //   // max vline
+        //   s.select('line.max.vline')
+        //     .transition().duration(transitionTime)
+        //     .attr('x1', xScale.rangeBand() * 0.5)
+        //     .attr('x2', xScale.rangeBand() * 0.5)
+        //     .attr('y1', d => yScale(d.quartiles[2]))
+        //     .attr('y2', d => yScale(Math.max(d.max, d.quartiles[2])));
+        // }
 
         function hideBoxplot(/* g, i */) {
+          console.log('hideBoxplot() was called');
           const s = this;
 
           s.select('rect.box')
@@ -438,6 +454,7 @@ export default function () {
         }
 
         function explodeBoxplot(i) {
+          console.log('explodeBoxplot() was called');
           d3.select(`#explodingBoxplot${options.id}${i}`)
             .select('g.box').transition()
             .ease(d3.ease('back-in'))
@@ -467,6 +484,7 @@ export default function () {
         }
 
         function jitterPlot(i) {
+          console.log('jitterPlot() was called');
           const elem = d3.select(`#explodingBoxplot${options.id}${i}`)
             .select('.outliers-points');
           const displayOutliers = elem.selectAll('.point')
@@ -500,12 +518,14 @@ export default function () {
   // chart.options() allows updating individual options and suboptions
   // while preserving state of other options
   chart.options = function (values) {
+    console.log('chart.options() was called');
     if (!arguments.length) return options;
     keyWalk(values, options);
     return chart;
   };
 
   function keyWalk(valuesObject, optionsObject) {
+    console.log('keyWalk() was called');
     if (!valuesObject || !optionsObject) return;
     const vKeys = Object.keys(valuesObject);
     const oKeys = Object.keys(optionsObject);
@@ -523,6 +543,7 @@ export default function () {
   }
 
   chart.events = function (functions) {
+    console.log('chart.events() was called');
     if (!arguments.length) return events;
     keyWalk(functions, events);
     return chart;
@@ -531,6 +552,7 @@ export default function () {
   chart.constituents = () => constituents;
 
   chart.colors = function (color3s) {
+    console.log('chart.colors() was called');
     // no arguments, return present value
     if (!arguments.length) return colors;
 
@@ -555,18 +577,21 @@ export default function () {
   };
 
   chart.width = function (value) {
+    console.log('chart.width() was called');
     if (!arguments.length) return options.width;
     options.width = value;
     return chart;
   };
 
   chart.height = function (value) {
+    console.log('chart.height() was called');
     if (!arguments.length) return options.height;
     options.height = value;
     return chart;
   };
 
   chart.data = function (value) {
+    console.log('chart.data() was called');
     if (!arguments.length) return dataSet;
     value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
     dataSet = JSON.parse(JSON.stringify(value));
@@ -574,6 +599,7 @@ export default function () {
   };
 
   chart.push = function (value) {
+    console.log('chart.push() was called');
     const privateValue = JSON.parse(JSON.stringify(value));
     if (!arguments.length) return false;
     if (privateValue.constructor === Array) {
@@ -589,6 +615,7 @@ export default function () {
   };
 
   chart.pop = () => {
+    console.log('chart.pop() was called');
     if (!dataSet.length) return undefined;
     // const count = dataSet.length;
     privateDataSet.pop();
@@ -596,10 +623,12 @@ export default function () {
   };
 
   chart.update = resize => {
+    console.log('chart.update() was called');
     if (typeof update === 'function') update(resize);
   };
 
   chart.duration = function (value) {
+    console.log('chart.duration() was called');
     if (!arguments.length) return transitionTime;
     transitionTime = value;
     return chart;
@@ -608,6 +637,7 @@ export default function () {
   // END ACCESSORS
 
   let computeBoxplot = (data, iqrScalingFactor, value) => {
+    console.log('computeBoxplot() was called');
     iqrScalingFactor = iqrScalingFactor || 1.5;
     value = value || Number;
 
