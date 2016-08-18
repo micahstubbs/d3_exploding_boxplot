@@ -1,14 +1,16 @@
 {
   "name": "d3_exploding_boxplot",
   "version": "0.2.1",
-  "description": "d3 boxplot visualisation transforming in scatter plot",
-  "main": "src/d3_exploding_boxplot.js",
+  "description": "d3 boxplot visualisation that transforms into a scatter plot",
+  "main": "build/bundle.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js",
+    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/explodingBoxplot.js",
+    "lint": "eslint index.js src"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcaule/d3_exploding_boxplot.git"
+    "url": "https://github.com/micahstubbs/d3_exploding_boxplot"
   },
   "keywords": [
     "d3",
@@ -16,8 +18,31 @@
   ],
   "homepage": "http://mcaule.github.io/d3_exploding_boxplot",
   "author": {
-    "name":"Matthieu Caule",
-    "email":"matthieu.caule@gmail.com"
+    "name":"@micahstubbs",
+    "email":"micah.stubbs@gmail.com"
+  },
+  "contributors": [
+    {
+      "name":"Matthieu Caule",
+      "email":"matthieu.caule@gmail.com"
+    },
+    {
+      "name": "@micahstubbs",
+      "email": "micah.stubbs@gmail.com"
+    }
+  ],
+  "devDependencies": {
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "cli": "^0.11.2",
+    "eslint": "^2.13.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.10.2",
+    "eslint-plugin-jsx-a11y": "^1.5.5",
+    "eslint-plugin-react": "^5.2.2",
+    "package-preamble": "0.0",
+    "rollup": "^0.33.2",
+    "rollup-plugin-babel": "^2.6.1",
+    "rollup-plugin-json": "^2.0.1"
   },
   "dependencies": {
     "d3": "~3.5.6",
