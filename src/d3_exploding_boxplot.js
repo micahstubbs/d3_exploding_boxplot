@@ -10,6 +10,7 @@ no-unused-vars: "off"
 // import { jitterPlot } from './jitterPlot';
 import { implodeBoxplot } from './implodeBoxplot';
 import { drawBoxplot } from './drawBoxplot';
+import { createJitter } from './createJitter';  
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -316,14 +317,6 @@ export default function () {
             }
             drawBoxplot(d, i, drawBoxplotOptions, state)
           });
-
-        function createJitter(/* g, i*/) {
-          console.log('createJitter() was called');
-          d3.select(this).append('g')
-            .attr('class', 'explodingBoxplot outliers-points');
-          d3.select(this).append('g')
-            .attr('class', 'explodingBoxplot normal-points');
-        }
 
         function initJitter(s) {
           console.log('initJitter() was called');

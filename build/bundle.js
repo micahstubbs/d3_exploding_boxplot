@@ -110,6 +110,16 @@
     });
   }
 
+  function createJitter() {
+    console.log('createJitter() was called');
+    var selector = this;
+    console.log('this from createJitter', this);
+
+    d3.select(selector).append('g').attr('class', 'explodingBoxplot outliers-points');
+
+    d3.select(selector).append('g').attr('class', 'explodingBoxplot normal-points');
+  }
+
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
   } : function (obj) {
@@ -373,12 +383,6 @@
             };
             drawBoxplot(d, i, drawBoxplotOptions, state);
           });
-
-          function createJitter() /* g, i*/{
-            console.log('createJitter() was called');
-            d3.select(this).append('g').attr('class', 'explodingBoxplot outliers-points');
-            d3.select(this).append('g').attr('class', 'explodingBoxplot normal-points');
-          }
 
           function initJitter(s) {
             console.log('initJitter() was called');
