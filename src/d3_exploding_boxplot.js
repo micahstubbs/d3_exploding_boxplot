@@ -7,6 +7,7 @@ no-console: "off",
 no-unused-vars: "off"
 */
 // import d3Tip from './d3-tip';
+import { implodeBoxplot } from './implodeBoxplot';
 
 export default function () {
   // options which should be accessible via ACCESSORS
@@ -486,28 +487,6 @@ export default function () {
             .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
             .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
             .call(drawJitter);
-        }
-
-        function implodeBoxplot(/* elem, g */) {
-          explodedBoxPlots = [];
-          chartWrapper.selectAll('.normal-points')
-            .each(function (g) {
-              d3.select(this)
-                .selectAll('circle')
-                .transition()
-                .ease(d3.ease('back-out'))
-                .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-                .attr('cx', xScale.rangeBand() * 0.5)
-                .attr('cy', yScale(g.quartiles[1]))
-                .remove();
-            });
-
-          chartWrapper.selectAll('.boxcontent')
-                   .transition()
-                   .ease(d3.ease('back-out'))
-                   .duration((transitionTime * 1.5))
-                   .delay(transitionTime)
-                   .each(drawBoxplot);
         }
 
         if (events.update.end) {

@@ -1,25 +1,26 @@
 // http://mcaule.github.io/d3_exploding_boxplot Version 0.2.1. Copyright 2016 @micahstubbs.
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-  typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.explodingBoxplot = global.explodingBoxplot || {})));
-}(this, function (exports) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'd3'], factory) :
+  (factory((global.explodingBoxplot = global.explodingBoxplot || {}),global.d3));
+}(this, function (exports,d3$1) { 'use strict';
+
+  function implodeBoxplot() {
+    explodedBoxPlots = [];
+    chartWrapper.selectAll('.normal-points').each(function (g) {
+      d3$1.select(this).selectAll('circle').transition().ease(d3$1.ease('back-out')).duration(function () {
+        return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
+      }).attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(g.quartiles[1])).remove();
+    });
+
+    chartWrapper.selectAll('.boxcontent').transition().ease(d3$1.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(drawBoxplot);
+  }
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
   } : function (obj) {
     return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
   };
-
-  /*
-  eslint
-  no-undef: "off",
-  func-names: "off",
-  no-use-before-define: "off",
-  no-console: "off",
-  no-unused-vars: "off"
-  */
-  // import d3Tip from './d3-tip';
 
   function d3_exploding_boxplot () {
     // options which should be accessible via ACCESSORS
@@ -412,17 +413,6 @@
             }).duration(function () {
               return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
             }).call(drawJitter);
-          }
-
-          function implodeBoxplot() /* elem, g */{
-            explodedBoxPlots = [];
-            chartWrapper.selectAll('.normal-points').each(function (g) {
-              d3.select(this).selectAll('circle').transition().ease(d3.ease('back-out')).duration(function () {
-                return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
-              }).attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(g.quartiles[1])).remove();
-            });
-
-            chartWrapper.selectAll('.boxcontent').transition().ease(d3.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(drawBoxplot);
           }
 
           if (events.update.end) {
