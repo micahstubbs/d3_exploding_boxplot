@@ -560,10 +560,10 @@
             events.update.ready(constituents, options, events);
           }
 
-          var xAxis = d3.svg.axis().scale(xScale).orient('bottom');
+          var xAxis = d3.axisBottom().scale(xScale);
           // console.log('xAxis', xAxis);
 
-          var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(options.axes.y.tickFormat);
+          var yAxis = d3.axisLeft().scale(yScale).tickFormat(options.axes.y.tickFormat);
           // console.log('yAxis', yAxis);
 
           var implodeBoxplotOptions = {

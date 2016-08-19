@@ -218,14 +218,12 @@ export default function () {
         // console.log('events.update.ready', events.update.ready);
         if (events.update.ready) { events.update.ready(constituents, options, events); }
 
-        const xAxis = d3.svg.axis()
-          .scale(xScale)
-          .orient('bottom');
+        const xAxis = d3.axisBottom()
+          .scale(xScale);
         // console.log('xAxis', xAxis);
 
-        const yAxis = d3.svg.axis()
+        const yAxis = d3.axisLeft()
           .scale(yScale)
-          .orient('left')
           .tickFormat(options.axes.y.tickFormat);
         // console.log('yAxis', yAxis);
 
