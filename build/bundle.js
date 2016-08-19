@@ -5,62 +5,6 @@
   (factory((global.explodingBoxplot = global.explodingBoxplot || {}),global.d3));
 }(this, function (exports,d3$1) { 'use strict';
 
-  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
-  };
-
-  var defineProperty = function (obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  };
-
-  function implodeBoxplot(selector, data, options, state) {
-    console.log('implodeBoxplot() was called');
-    var xScale = options.xScale;
-    var yScale = options.yScale;
-    var transitionTime = options.transitionTime;
-    var drawBoxplot = options.drawBoxplot;
-    var colorScale = options.colorScale;
-    var chartOptions = options.chartOptions;
-    var groups = options.groups;
-    var events = options.events;
-    var constituents = options.constituents;
-
-    state.explodedBoxplots = [];
-    console.log('state.explodedBoxplots', state.explodedBoxplots);
-    selector.selectAll('.normal-points').each(function (g) {
-      d3$1.select(this).selectAll('circle').transition().ease(d3$1.ease('back-out')).duration(function () {
-        return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
-      }).attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(g.quartiles[1])).remove();
-    });
-
-    selector.selectAll('.boxcontent').transition().ease(d3$1.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(function (d, i) {
-      var drawBoxplotOptions = defineProperty({
-        chartOptions: chartOptions,
-        transitionTime: transitionTime,
-        xScale: xScale,
-        yScale: yScale,
-        colorScale: colorScale,
-        groups: groups,
-        events: events,
-        constituents: constituents
-      }, 'transitionTime', transitionTime);
-      drawBoxplot(d, i, drawBoxplotOptions, state);
-    });
-  }
-
   function initJitter(s, options) {
     console.log('initJitter() was called');
 
@@ -299,6 +243,61 @@
       return yScale(d.quartiles[2]);
     }).attr('y2', function (d) {
       return yScale(Math.max(d.max, d.quartiles[2]));
+    });
+  }
+
+  var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+  };
+
+  var defineProperty = function (obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  };
+
+  function implodeBoxplot(selector, data, options, state) {
+    console.log('implodeBoxplot() was called');
+    var xScale = options.xScale;
+    var yScale = options.yScale;
+    var transitionTime = options.transitionTime;
+    var colorScale = options.colorScale;
+    var chartOptions = options.chartOptions;
+    var groups = options.groups;
+    var events = options.events;
+    var constituents = options.constituents;
+
+    state.explodedBoxplots = [];
+    console.log('state.explodedBoxplots', state.explodedBoxplots);
+    selector.selectAll('.normal-points').each(function (g) {
+      d3$1.select(this).selectAll('circle').transition().ease(d3$1.ease('back-out')).duration(function () {
+        return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
+      }).attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(g.quartiles[1])).remove();
+    });
+
+    selector.selectAll('.boxcontent').transition().ease(d3$1.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(function (d, i) {
+      var drawBoxplotOptions = defineProperty({
+        chartOptions: chartOptions,
+        transitionTime: transitionTime,
+        xScale: xScale,
+        yScale: yScale,
+        colorScale: colorScale,
+        groups: groups,
+        events: events,
+        constituents: constituents
+      }, 'transitionTime', transitionTime);
+      drawBoxplot(d, i, drawBoxplotOptions, state);
     });
   }
 
@@ -586,7 +585,6 @@
             xScale: xScale,
             yScale: yScale,
             transitionTime: transitionTime,
-            drawBoxplot: drawBoxplot,
             colorScale: colorScale,
             chartOptions: options,
             groups: groups,

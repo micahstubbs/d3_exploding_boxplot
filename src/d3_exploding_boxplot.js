@@ -233,7 +233,6 @@ export default function () {
           xScale,
           yScale,
           transitionTime,
-          drawBoxplot,
           colorScale,
           chartOptions: options,
           groups,

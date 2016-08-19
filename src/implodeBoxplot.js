@@ -1,3 +1,4 @@
+import { drawBoxplot } from './drawBoxplot';
 import * as d3 from 'd3';
 
 export function implodeBoxplot(selector, data, options, state) {
@@ -5,7 +6,6 @@ export function implodeBoxplot(selector, data, options, state) {
   const xScale = options.xScale;
   const yScale = options.yScale;
   const transitionTime = options.transitionTime;
-  const drawBoxplot = options.drawBoxplot;
   const colorScale = options.colorScale;
   const chartOptions = options.chartOptions;
   const groups = options.groups;
