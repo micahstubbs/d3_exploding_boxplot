@@ -14,6 +14,7 @@ import { createJitter } from './createJitter';
 import { drawJitter } from './drawJitter';
 import { createBoxplot } from './createBoxplot';
 import { hideBoxplot } from './hideBoxplot';
+import { keyWalk } from './keyWalk';
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -440,24 +441,6 @@ export default function () {
     keyWalk(values, options);
     return chart;
   };
-
-  function keyWalk(valuesObject, optionsObject) {
-    console.log('keyWalk() was called');
-    if (!valuesObject || !optionsObject) return;
-    const vKeys = Object.keys(valuesObject);
-    const oKeys = Object.keys(optionsObject);
-    for (let k = 0; k < vKeys.length; k++) {
-      if (oKeys.indexOf(vKeys[k]) >= 0) {
-        const oo = optionsObject[vKeys[k]];
-        const vo = valuesObject[vKeys[k]];
-        if (typeof oo === 'object' && typeof vo !== 'function') {
-          keyWalk(valuesObject[vKeys[k]], optionsObject[vKeys[k]]);
-        } else {
-          optionsObject[vKeys[k]] = valuesObject[vKeys[k]];
-        }
-      }
-    }
-  }
 
   chart.events = function (functions) {
     console.log('chart.events() was called');

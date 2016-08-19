@@ -194,6 +194,24 @@
     return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
   };
 
+  function keyWalk(valuesObject, optionsObject) {
+    console.log('keyWalk() was called');
+    if (!valuesObject || !optionsObject) return;
+    var vKeys = Object.keys(valuesObject);
+    var oKeys = Object.keys(optionsObject);
+    for (var k = 0; k < vKeys.length; k++) {
+      if (oKeys.indexOf(vKeys[k]) >= 0) {
+        var oo = optionsObject[vKeys[k]];
+        var vo = valuesObject[vKeys[k]];
+        if ((typeof oo === 'undefined' ? 'undefined' : _typeof(oo)) === 'object' && typeof vo !== 'function') {
+          keyWalk(valuesObject[vKeys[k]], optionsObject[vKeys[k]]);
+        } else {
+          optionsObject[vKeys[k]] = valuesObject[vKeys[k]];
+        }
+      }
+    }
+  }
+
   function d3_exploding_boxplot () {
     // options which should be accessible via ACCESSORS
     var dataSet = [];
@@ -547,24 +565,6 @@
       keyWalk(values, options);
       return chart;
     };
-
-    function keyWalk(valuesObject, optionsObject) {
-      console.log('keyWalk() was called');
-      if (!valuesObject || !optionsObject) return;
-      var vKeys = Object.keys(valuesObject);
-      var oKeys = Object.keys(optionsObject);
-      for (var k = 0; k < vKeys.length; k++) {
-        if (oKeys.indexOf(vKeys[k]) >= 0) {
-          var oo = optionsObject[vKeys[k]];
-          var vo = valuesObject[vKeys[k]];
-          if ((typeof oo === 'undefined' ? 'undefined' : _typeof(oo)) === 'object' && typeof vo !== 'function') {
-            keyWalk(valuesObject[vKeys[k]], optionsObject[vKeys[k]]);
-          } else {
-            optionsObject[vKeys[k]] = valuesObject[vKeys[k]];
-          }
-        }
-      }
-    }
 
     chart.events = function (functions) {
       console.log('chart.events() was called');
