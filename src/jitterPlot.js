@@ -19,16 +19,23 @@ export function jitterPlot(i, options) {
     .remove();
 
   const drawJitterOptions = {
-    chartOptions: options,
+    chartOptions,
     colorScale,
     xScale,
     yScale
   };
 
+  const initJitterOptions = {
+    chartOptions,
+    colorScale,
+    events,
+    constituents
+  }
+
   displayOutliers
     .attr('cx', xScale.rangeBand() * 0.5)
     .attr('cy', yScale(groups[i].quartiles[1]))
-    .call(initJitter)
+    .call(initJitter, initJitterOptions)
     .transition()
     .ease(d3.ease('back-out'))
     .delay(() => (transitionTime * 1.5) + (100 * Math.random()))

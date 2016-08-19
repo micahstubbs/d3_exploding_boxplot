@@ -16,6 +16,7 @@ import { createBoxplot } from './createBoxplot';
 import { hideBoxplot } from './hideBoxplot';
 import { keyWalk } from './keyWalk';
 import { computeBoxplot } from './computeBoxplot';
+import { initJitter } from './initJitter';
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -332,28 +333,6 @@ export default function () {
             drawBoxplot(d, i, drawBoxplotOptions, state)
           });
 
-        function initJitter(s) {
-          console.log('initJitter() was called');
-          s.attr('class', 'explodingBoxplot point')
-            .attr('r', options.datapoints.radius)
-            .attr('fill', d => colorScale(d[options.data.color_index]))
-            .on('mouseover', function (d, i/* , self */) {
-              if (events.point && typeof events.point.mouseover === 'function') {
-                events.point.mouseover(d, i, d3.select(this), constituents, options);
-              }
-            })
-            .on('mouseout', function (d, i/* , self */) {
-              if (events.point && typeof events.point.mouseout === 'function') {
-                events.point.mouseout(d, i, d3.select(this), constituents, options);
-              }
-            })
-            .on('click', function (d, i/* , self */) {
-              if (events.point && typeof events.point.click === 'function') {
-                events.point.click(d, i, d3.select(this), constituents, options);
-              }
-            });
-        }
-
         function explodeBoxplot(i) {
           console.log('explodeBoxplot() was called');
 
@@ -384,10 +363,16 @@ export default function () {
             xScale,
             yScale
           };
+          const initJitterOptions = {
+            chartOptions: options,
+            colorScale,
+            events,
+            constituents
+          }
           explodeNormal
             .attr('cx', xScale.rangeBand() * 0.5)
             .attr('cy', yScale(groups[i].quartiles[1]))
-            .call(initJitter)
+            .call(initJitter, initJitterOptions)
             .transition()
             .ease(d3.ease('back-out'))
             .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
@@ -412,10 +397,16 @@ export default function () {
             .append('circle');
           displayOutliers.exit()
             .remove();
+          const initJitterOptions = {
+            chartOptions: options,
+            colorScale,
+            events,
+            constituents
+          }
           displayOutliers
             .attr('cx', xScale.rangeBand() * 0.5)
             .attr('cy', yScale(groups[i].quartiles[1]))
-            .call(initJitter)
+            .call(initJitter, initJitterOptions)
             .transition()
             .ease(d3.ease('back-out'))
             .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
