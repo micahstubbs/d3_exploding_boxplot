@@ -198,7 +198,7 @@ export default function () {
         });
         // console.log('groups after map', groups);
 
-        const yScale = d3.scale.linear()
+        const yScale = d3.scaleLinear()
           .domain(d3.extent(dataSet.map(m => m[options.axes.y.label])))
           .range([options.height - options.margins.top - options.margins.bottom, 0])
           .nice();
