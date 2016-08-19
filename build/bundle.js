@@ -537,7 +537,7 @@
           });
           // console.log('groups after map', groups);
 
-          var yScale = d3.scale.linear().domain(d3.extent(dataSet.map(function (m) {
+          var yScale = d3.scaleLinear().domain(d3.extent(dataSet.map(function (m) {
             return m[options.axes.y.label];
           }))).range([options.height - options.margins.top - options.margins.bottom, 0]).nice();
 
@@ -545,7 +545,7 @@
           // console.log('yScale.domain()', yScale.domain());
           // console.log('yScale.range()', yScale.range());
 
-          var colorScale = d3.scale.ordinal().domain(d3.set(dataSet.map(function (m) {
+          var colorScale = d3.scaleOrdinal().domain(d3.set(dataSet.map(function (m) {
             return m[options.data.color_index];
           })).values()).range(Object.keys(colors).map(function (m) {
             return colors[m];

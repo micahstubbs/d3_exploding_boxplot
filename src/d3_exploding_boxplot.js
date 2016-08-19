@@ -207,7 +207,7 @@ export default function () {
         // console.log('yScale.domain()', yScale.domain());
         // console.log('yScale.range()', yScale.range());
 
-        const colorScale = d3.scale.ordinal()
+        const colorScale = d3.scaleOrdinal()
           .domain(d3.set(dataSet.map(m => m[options.data.color_index])).values())
           .range(Object.keys(colors).map(m => colors[m]));
         // console.log('colorScale.domain()', colorScale.domain());
