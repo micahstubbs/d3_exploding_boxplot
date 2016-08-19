@@ -11,7 +11,8 @@ no-unused-vars: "off"
 import { implodeBoxplot } from './implodeBoxplot';
 import { drawBoxplot } from './drawBoxplot';
 import { createJitter } from './createJitter';
-import { drawJitter } from './drawJitter';  
+import { drawJitter } from './drawJitter';
+import { createBoxplot } from './createBoxplot'; 
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -305,7 +306,16 @@ export default function () {
         boxContent
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(createJitter)
-          .each(createBoxplot)
+          .each(function(d, i) {
+            const selector = `#${d3.select(this).attr('id')}`;
+            const createBoxplotOptions = {
+              chartOptions: options,
+              i,
+              colorScale
+            };
+
+            createBoxplot(selector, d, createBoxplotOptions)
+          })
           .each(function (d, i) {
             const drawBoxplotOptions = {
               chartOptions: options,
@@ -341,25 +351,23 @@ export default function () {
             });
         }
 
-        function createBoxplot(g, i) {
-          // console.log('this from createBoxplot', this);
-          const s = d3.select(this).append('g')
-            .attr('class', 'explodingBoxplot box')
-            .attr('id', `explodingBoxplot_box${options.id}${i}`)
-            .selectAll('.box')
-            .data([g])
-            .enter();
-
-          s.append('rect')
-            .attr('class', 'explodingBoxplot box')
-            .attr('fill', d => colorScale(d.normal[0][options.data.color_index]));
-
-          s.append('line').attr('class', 'explodingBoxplot median line');    // median line
-          s.append('line').attr('class', 'explodingBoxplot min line hline'); // min line
-          s.append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
-          s.append('line').attr('class', 'explodingBoxplot max line hline'); // max line
-          s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
-        }
+        // function createBoxplot(g, i) {
+        //   // console.log('this from createBoxplot', this);
+        //   const s = d3.select(this).append('g')
+        //     .attr('class', 'explodingBoxplot box')
+        //     .attr('id', `explodingBoxplot_box${options.id}${i}`)
+        //     .selectAll('.box')
+        //     .data([g])
+        //     .enter();
+        //   s.append('rect')
+        //     .attr('class', 'explodingBoxplot box')
+        //     .attr('fill', d => colorScale(d.normal[0][options.data.color_index]));
+        //   s.append('line').attr('class', 'explodingBoxplot median line');    // median line
+        //   s.append('line').attr('class', 'explodingBoxplot min line hline'); // min line
+        //   s.append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
+        //   s.append('line').attr('class', 'explodingBoxplot max line hline'); // max line
+        //   s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
+        // }
 
         function hideBoxplot(/* g, i */) {
           console.log('hideBoxplot() was called');
