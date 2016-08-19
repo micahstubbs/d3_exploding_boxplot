@@ -320,21 +320,6 @@
     return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
   };
 
-  var defineProperty = function (obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  };
-
   function keyWalk(valuesObject, optionsObject) {
     console.log('keyWalk() was called');
     if (!valuesObject || !optionsObject) return;
@@ -581,7 +566,7 @@
           var yAxis = d3.svg.axis().scale(yScale).orient('left').tickFormat(options.axes.y.tickFormat);
           // console.log('yAxis', yAxis);
 
-          var implodeBoxplotOptions = defineProperty({
+          var implodeBoxplotOptions = {
             xScale: xScale,
             yScale: yScale,
             transitionTime: transitionTime,
@@ -590,7 +575,7 @@
             groups: groups,
             events: events,
             constituents: constituents
-          }, 'transitionTime', transitionTime);
+          };
 
           resetArea.on('dblclick', function () {
             implodeBoxplot(chartWrapper, implodeBoxplotOptions, state);
@@ -637,7 +622,7 @@
 
             createBoxplot(selector, d, createBoxplotOptions);
           }).each(function (d, i) {
-            var drawBoxplotOptions = defineProperty({
+            var drawBoxplotOptions = {
               chartOptions: options,
               transitionTime: transitionTime,
               xScale: xScale,
@@ -646,7 +631,7 @@
               groups: groups,
               events: events,
               constituents: constituents
-            }, 'transitionTime', transitionTime);
+            };
             drawBoxplot(d, i, drawBoxplotOptions, state);
           });
 
@@ -664,15 +649,23 @@
     // chart.options() allows updating individual options and suboptions
     // while preserving state of other options
     chart.options = function (values) {
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
       console.log('chart.options() was called');
-      if (!arguments.length) return options;
+      if (!args) return options;
       keyWalk(values, options);
       return chart;
     };
 
     chart.events = function (functions) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+        args[_key2 - 1] = arguments[_key2];
+      }
+
       console.log('chart.events() was called');
-      if (!arguments.length) return events;
+      if (!args) return events;
       keyWalk(functions, events);
       return chart;
     };
@@ -682,11 +675,15 @@
     };
 
     chart.colors = function (color3s) {
+      for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+        args[_key3 - 1] = arguments[_key3];
+      }
+
       console.log('chart.colors() was called');
       // no arguments, return present value
-      if (!arguments.length) return colors;
+      if (!args) return colors;
 
-      // argument is not object
+      // argument is not object            
       if ((typeof color3s === 'undefined' ? 'undefined' : _typeof(color3s)) !== 'object') return false;
       var keys = Object.keys(color3s);
 
@@ -707,22 +704,34 @@
     };
 
     chart.width = function (value) {
+      for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+        args[_key4 - 1] = arguments[_key4];
+      }
+
       console.log('chart.width() was called');
-      if (!arguments.length) return options.width;
+      if (!args) return options.width;
       options.width = value;
       return chart;
     };
 
     chart.height = function (value) {
+      for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+        args[_key5 - 1] = arguments[_key5];
+      }
+
       console.log('chart.height() was called');
-      if (!arguments.length) return options.height;
+      if (!args) return options.height;
       options.height = value;
       return chart;
     };
 
     chart.data = function (value) {
+      for (var _len6 = arguments.length, args = Array(_len6 > 1 ? _len6 - 1 : 0), _key6 = 1; _key6 < _len6; _key6++) {
+        args[_key6 - 1] = arguments[_key6];
+      }
+
       console.log('chart.data() was called');
-      if (!arguments.length) return dataSet;
+      if (!args) return dataSet;
       value.sort(function (x, y) {
         return x['Set Score'].split('-').join('') - y['Set Score'].split('-').join('');
       });
@@ -731,9 +740,13 @@
     };
 
     chart.push = function (value) {
+      for (var _len7 = arguments.length, args = Array(_len7 > 1 ? _len7 - 1 : 0), _key7 = 1; _key7 < _len7; _key7++) {
+        args[_key7 - 1] = arguments[_key7];
+      }
+
       console.log('chart.push() was called');
       var privateValue = JSON.parse(JSON.stringify(value));
-      if (!arguments.length) return false;
+      if (!args) return false;
       if (privateValue.constructor === Array) {
         for (var i = 0; i < privateValue.length; i++) {
           dataSet.push(privateValue[i]);
@@ -760,8 +773,12 @@
     };
 
     chart.duration = function (value) {
+      for (var _len8 = arguments.length, args = Array(_len8 > 1 ? _len8 - 1 : 0), _key8 = 1; _key8 < _len8; _key8++) {
+        args[_key8 - 1] = arguments[_key8];
+      }
+
       console.log('chart.duration() was called');
-      if (!arguments.length) return transitionTime;
+      if (!args) return transitionTime;
       transitionTime = value;
       return chart;
     };

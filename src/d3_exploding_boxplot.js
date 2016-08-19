@@ -321,7 +321,7 @@ export default function () {
 
             createBoxplot(selector, d, createBoxplotOptions);
           })
-          .each((d, i) => {
+          .each((d, i) =>{
             const drawBoxplotOptions = {
               chartOptions: options,
               transitionTime,
@@ -342,7 +342,7 @@ export default function () {
         }
       }; // end update()
     });
-  }
+}
 
 
   // ACCESSORS
@@ -351,14 +351,14 @@ export default function () {
   // while preserving state of other options
   chart.options = function (values, ...args) {
     console.log('chart.options() was called');
-    if (!args.length) return options;
+    if (!args) return options;
     keyWalk(values, options);
     return chart;
   };
 
   chart.events = function (functions, ...args) {
     console.log('chart.events() was called');
-    if (!args.length) return events;
+    if (!args) return events;
     keyWalk(functions, events);
     return chart;
   };
@@ -368,15 +368,15 @@ export default function () {
   chart.colors = function (color3s, ...args) {
     console.log('chart.colors() was called');
     // no arguments, return present value
-    if (!args.length) return colors;
+    if (!args) return colors;
 
-    // argument is not object
+    // argument is not object            
     if (typeof color3s !== 'object') return false;
     const keys = Object.keys(color3s);
 
     // object is empty
     if (!keys.length) return false;
-
+    
       // remove all properties that are not colors
     keys.forEach(f => {
       if (!/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color3s[f])) delete color3s[f];
@@ -392,21 +392,21 @@ export default function () {
 
   chart.width = function (value, ...args) {
     console.log('chart.width() was called');
-    if (!args.length) return options.width;
+    if (!args) return options.width;
     options.width = value;
     return chart;
   };
 
   chart.height = function (value, ...args) {
     console.log('chart.height() was called');
-    if (!args.length) return options.height;
+    if (!args) return options.height;
     options.height = value;
     return chart;
   };
 
   chart.data = function (value, ...args) {
     console.log('chart.data() was called');
-    if (!args.length) return dataSet;
+    if (!args) return dataSet;
     value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
     dataSet = JSON.parse(JSON.stringify(value));
     return chart;
@@ -415,7 +415,7 @@ export default function () {
   chart.push = function (value, ...args) {
     console.log('chart.push() was called');
     const privateValue = JSON.parse(JSON.stringify(value));
-    if (!args.length) return false;
+    if (!args) return false;
     if (privateValue.constructor === Array) {
       for (let i = 0; i < privateValue.length; i++) {
         dataSet.push(privateValue[i]);
@@ -443,7 +443,7 @@ export default function () {
 
   chart.duration = function (value, ...args) {
     console.log('chart.duration() was called');
-    if (!args.length) return transitionTime;
+    if (!args) return transitionTime;
     transitionTime = value;
     return chart;
   };
