@@ -179,11 +179,11 @@ export default function () {
         }
         // console.log('groups after nest', groups);
 
-        const xScale = d3.scale.ordinal()
-          .domain(groups.map(d => d.key))
-          .rangeRoundBands(
-            [0, options.width - options.margins.left - options.margins.right],
-            options.display.boxpadding
+        const xScale = d3.scaleBand()
+          .domain(groups.map(d => d.key)) 
+          .padding(options.display.boxpadding)
+          .rangeRound(
+            [0, options.width - options.margins.left - options.margins.right]
           );
 
         constituents.scales.X = xScale;

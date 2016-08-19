@@ -521,9 +521,9 @@
           }
           // console.log('groups after nest', groups);
 
-          var xScale = d3.scale.ordinal().domain(groups.map(function (d) {
+          var xScale = d3.scaleBand().domain(groups.map(function (d) {
             return d.key;
-          })).rangeRoundBands([0, options.width - options.margins.left - options.margins.right], options.display.boxpadding);
+          })).padding(options.display.boxpadding).rangeRound([0, options.width - options.margins.left - options.margins.right]);
 
           constituents.scales.X = xScale;
           // console.log('xScale.domain()', xScale.domain());
