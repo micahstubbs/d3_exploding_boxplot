@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 export function createBoxplot(selector, data, options) {
   console.log('createBoxplot() was called');
 

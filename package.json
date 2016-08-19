@@ -6,7 +6,7 @@
   "scripts": {
     "prepublish": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js",
     "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/explodingBoxplot.js",
-    "lint": "eslint index.js src"
+    "lint": "eslint index.js src --fix"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,7 @@
 import { drawBoxplot } from './drawBoxplot';
 import * as d3 from 'd3';
 
-export function implodeBoxplot(selector, data, options, state) {
+export function implodeBoxplot(selector, options, state) {
   console.log('implodeBoxplot() was called');
   const xScale = options.xScale;
   const yScale = options.yScale;
@@ -31,7 +31,7 @@ export function implodeBoxplot(selector, data, options, state) {
       .ease(d3.ease('back-out'))
       .duration((transitionTime * 1.5))
       .delay(transitionTime)
-      .each(function (d, i) {
+      .each((d, i) => {
         const drawBoxplotOptions = {
           chartOptions,
           transitionTime,
@@ -40,9 +40,8 @@ export function implodeBoxplot(selector, data, options, state) {
           colorScale,
           groups,
           events,
-          constituents,
-          transitionTime
-        }
-        drawBoxplot(d, i, drawBoxplotOptions, state)
+          constituents
+        };
+        drawBoxplot(d, i, drawBoxplotOptions, state);
       });
 }

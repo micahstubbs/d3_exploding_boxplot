@@ -187,7 +187,7 @@ export default function () {
           );
 
         constituents.scales.X = xScale;
-        // console.log('xScale.domain()', xScale.domain()); 
+        // console.log('xScale.domain()', xScale.domain());
         // console.log('xScale.range()', xScale.range());
 
         // create boxplot data
@@ -237,13 +237,12 @@ export default function () {
           chartOptions: options,
           groups,
           events,
-          constituents,
-          transitionTime
-        }
+          constituents
+        };
 
         resetArea
           .on('dblclick', () => {
-            implodeBoxplot(chartWrapper, undefined, implodeBoxplotOptions, state);
+            implodeBoxplot(chartWrapper, implodeBoxplotOptions, state);
           });
 
         const updateXAxis = chartWrapper.selectAll('#xpb_xAxis')
@@ -312,7 +311,7 @@ export default function () {
         boxContent
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(createJitter)
-          .each(function(d, i) {
+          .each(function (d, i) {
             const selector = `#${d3.select(this).attr('id')}`;
             const createBoxplotOptions = {
               chartOptions: options,
@@ -320,9 +319,9 @@ export default function () {
               colorScale
             };
 
-            createBoxplot(selector, d, createBoxplotOptions)
+            createBoxplot(selector, d, createBoxplotOptions);
           })
-          .each(function (d, i) {
+          .each((d, i) => {
             const drawBoxplotOptions = {
               chartOptions: options,
               transitionTime,
@@ -331,10 +330,9 @@ export default function () {
               colorScale,
               groups,
               events,
-              constituents,
-              transitionTime
-            }
-            drawBoxplot(d, i, drawBoxplotOptions, state)
+              constituents
+            };
+            drawBoxplot(d, i, drawBoxplotOptions, state);
           });
 
         if (events.update.end) {
@@ -346,38 +344,39 @@ export default function () {
     });
   }
 
+
   // ACCESSORS
 
   // chart.options() allows updating individual options and suboptions
   // while preserving state of other options
-  chart.options = function (values) {
+  chart.options = function (values, ...args) {
     console.log('chart.options() was called');
-    if (!arguments.length) return options;
+    if (!args.length) return options;
     keyWalk(values, options);
     return chart;
   };
 
-  chart.events = function (functions) {
+  chart.events = function (functions, ...args) {
     console.log('chart.events() was called');
-    if (!arguments.length) return events;
+    if (!args.length) return events;
     keyWalk(functions, events);
     return chart;
   };
 
-  chart.constituents = () => constituents;
+  chart.constituents = () => state.constituents;
 
-  chart.colors = function (color3s) {
+  chart.colors = function (color3s, ...args) {
     console.log('chart.colors() was called');
     // no arguments, return present value
-    if (!arguments.length) return colors;
+    if (!args.length) return colors;
 
-    // argument is not object            
+    // argument is not object
     if (typeof color3s !== 'object') return false;
     const keys = Object.keys(color3s);
 
     // object is empty
     if (!keys.length) return false;
-    
+
       // remove all properties that are not colors
     keys.forEach(f => {
       if (!/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color3s[f])) delete color3s[f];
@@ -391,32 +390,32 @@ export default function () {
     return chart;
   };
 
-  chart.width = function (value) {
+  chart.width = function (value, ...args) {
     console.log('chart.width() was called');
-    if (!arguments.length) return options.width;
+    if (!args.length) return options.width;
     options.width = value;
     return chart;
   };
 
-  chart.height = function (value) {
+  chart.height = function (value, ...args) {
     console.log('chart.height() was called');
-    if (!arguments.length) return options.height;
+    if (!args.length) return options.height;
     options.height = value;
     return chart;
   };
 
-  chart.data = function (value) {
+  chart.data = function (value, ...args) {
     console.log('chart.data() was called');
-    if (!arguments.length) return dataSet;
+    if (!args.length) return dataSet;
     value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
     dataSet = JSON.parse(JSON.stringify(value));
     return chart;
   };
 
-  chart.push = function (value) {
+  chart.push = function (value, ...args) {
     console.log('chart.push() was called');
     const privateValue = JSON.parse(JSON.stringify(value));
-    if (!arguments.length) return false;
+    if (!args.length) return false;
     if (privateValue.constructor === Array) {
       for (let i = 0; i < privateValue.length; i++) {
         dataSet.push(privateValue[i]);
@@ -442,9 +441,9 @@ export default function () {
     if (typeof update === 'function') update(resize);
   };
 
-  chart.duration = function (value) {
+  chart.duration = function (value, ...args) {
     console.log('chart.duration() was called');
-    if (!arguments.length) return transitionTime;
+    if (!args.length) return transitionTime;
     transitionTime = value;
     return chart;
   };

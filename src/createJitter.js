@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 export function createJitter() {
   console.log('createJitter() was called');
   const selector = this;

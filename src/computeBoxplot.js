@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 export function computeBoxplot(data, iqrScalingFactor, value) {
   console.log('computeBoxplot() was called');
   iqrScalingFactor = iqrScalingFactor || 1.5;
@@ -29,4 +31,4 @@ export function computeBoxplot(data, iqrScalingFactor, value) {
   boxData.max = max;
   boxData.min = min;
   return boxData;
-};
+}

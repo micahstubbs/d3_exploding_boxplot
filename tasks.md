@@ -5,3 +5,4 @@ DONE + abstract out createBoxplot()
 DONE + abstract out hideBoxplot()
 DONE + abstract out keyWalk()
 + debug colorScale across states and options in the example
++ convert color_index to camelCase colorIndex

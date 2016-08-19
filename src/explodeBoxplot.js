@@ -1,6 +1,7 @@
 import { hideBoxplot } from './hideBoxplot';
 import { initJitter } from './initJitter';
 import { drawJitter } from './drawJitter';
+import * as d3 from 'd3';
 
 export function explodeBoxplot(i, options) {
   console.log('explodeBoxplot() was called');
@@ -17,7 +18,7 @@ export function explodeBoxplot(i, options) {
   const hideBoxplotOptions = {
     xScale,
     yScale
-  }
+  };
 
   d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('g.box').transition()
@@ -46,7 +47,7 @@ export function explodeBoxplot(i, options) {
     colorScale,
     events,
     constituents
-  }
+  };
 
   explodeNormal
     .attr('cx', xScale.rangeBand() * 0.5)
