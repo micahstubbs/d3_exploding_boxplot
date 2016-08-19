@@ -62,8 +62,14 @@
     }
 
     // console.log('s from drawBoxplot', s);
+    var jitterPlotOptions = {
+      chartOptions: options,
+      colorScale: colorScale,
+      xScale: xScale,
+      yScale: yScale
+    };
 
-    jitterPlot(i, chartOptions);
+    jitterPlot(i, jitterPlotOptions);
 
     // box
     s.select('rect.box').transition().duration(transitionTime).attr('x', 0).attr('width', xScale.rangeBand()).attr('y', function (d) {
@@ -118,6 +124,24 @@
     d3.select(selector).append('g').attr('class', 'explodingBoxplot outliers-points');
 
     d3.select(selector).append('g').attr('class', 'explodingBoxplot normal-points');
+  }
+
+  function drawJitter(selection, options) {
+    console.log('drawJitter() was called');
+
+    var chartOptions = options.chartOptions;
+    var colorScale = options.colorScale;
+    var xScale = options.xScale;
+    var yScale = options.yScale;
+
+    selection.attr('r', chartOptions.datapoints.radius).attr('fill', function (d) {
+      return colorScale(d[chartOptions.data.color_index]);
+    }).attr('cx', function () /* d */{
+      var w = xScale.rangeBand();
+      return Math.floor(Math.random() * w);
+    }).attr('cy', function (d) {
+      return yScale(d[chartOptions.axes.y.label]);
+    });
   }
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -403,18 +427,6 @@
             });
           }
 
-          function drawJitter(s) {
-            console.log('drawJitter() was called');
-            s.attr('r', options.datapoints.radius).attr('fill', function (d) {
-              return colorScale(d[options.data.color_index]);
-            }).attr('cx', function () /* d */{
-              var w = xScale.rangeBand();
-              return Math.floor(Math.random() * w);
-            }).attr('cy', function (d) {
-              return yScale(d[options.axes.y.label]);
-            });
-          }
-
           function createBoxplot(g, i) {
             // console.log('this from createBoxplot', this);
             var s = d3.select(this).append('g').attr('class', 'explodingBoxplot box').attr('id', 'explodingBoxplot_box' + options.id + i).selectAll('.box').data([g]).enter();
@@ -513,15 +525,28 @@
 
             explodeNormal.exit().remove();
 
+            var drawJitterOptions = {
+              chartOptions: options,
+              colorScale: colorScale,
+              xScale: xScale,
+              yScale: yScale
+            };
             explodeNormal.attr('cx', xScale.rangeBand() * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter).transition().ease(d3.ease('back-out')).delay(function () {
               return transitionTime * 1.5 + 100 * Math.random();
             }).duration(function () {
               return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
-            }).call(drawJitter);
+            }).call(drawJitter, drawJitterOptions);
           }
 
           function jitterPlot(i) {
             console.log('jitterPlot() was called');
+
+            var drawJitterOptions = {
+              chartOptions: options,
+              colorScale: colorScale,
+              xScale: xScale,
+              yScale: yScale
+            };
             var elem = d3.select('#explodingBoxplot' + options.id + i).select('.outliers-points');
             var displayOutliers = elem.selectAll('.point').data(groups[i].outlier);
             displayOutliers.enter().append('circle');
@@ -530,7 +555,7 @@
               return transitionTime * 1.5 + 100 * Math.random();
             }).duration(function () {
               return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
-            }).call(drawJitter);
+            }).call(drawJitter, drawJitterOptions);
           }
 
           if (events.update.end) {

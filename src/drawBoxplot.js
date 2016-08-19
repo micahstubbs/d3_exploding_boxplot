@@ -23,8 +23,14 @@ export function drawBoxplot(d, i, options, state) {
   }
 
   // console.log('s from drawBoxplot', s);
+  const jitterPlotOptions = {
+    chartOptions: options,
+    colorScale,
+    xScale,
+    yScale
+  };
 
-  jitterPlot(i, chartOptions);
+  jitterPlot(i, jitterPlotOptions);
 
   // box
   s.select('rect.box')

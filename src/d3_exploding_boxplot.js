@@ -10,7 +10,8 @@ no-unused-vars: "off"
 // import { jitterPlot } from './jitterPlot';
 import { implodeBoxplot } from './implodeBoxplot';
 import { drawBoxplot } from './drawBoxplot';
-import { createJitter } from './createJitter';  
+import { createJitter } from './createJitter';
+import { drawJitter } from './drawJitter';  
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -340,17 +341,6 @@ export default function () {
             });
         }
 
-        function drawJitter(s) {
-          console.log('drawJitter() was called');
-          s.attr('r', options.datapoints.radius)
-            .attr('fill', d => colorScale(d[options.data.color_index]))
-            .attr('cx', (/* d */) => {
-              const w = xScale.rangeBand();
-              return Math.floor(Math.random() * w);
-            })
-            .attr('cy', d => yScale(d[options.axes.y.label]));
-        }
-
         function createBoxplot(g, i) {
           // console.log('this from createBoxplot', this);
           const s = d3.select(this).append('g')
@@ -465,6 +455,12 @@ export default function () {
           explodeNormal.exit()
             .remove();
 
+          const drawJitterOptions = {
+            chartOptions: options,
+            colorScale,
+            xScale,
+            yScale
+          };
           explodeNormal
             .attr('cx', xScale.rangeBand() * 0.5)
             .attr('cy', yScale(groups[i].quartiles[1]))
@@ -473,11 +469,18 @@ export default function () {
             .ease(d3.ease('back-out'))
             .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
             .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-            .call(drawJitter);
+            .call(drawJitter, drawJitterOptions);
         }
 
         function jitterPlot(i) {
           console.log('jitterPlot() was called');
+          
+          const drawJitterOptions = {
+            chartOptions: options,
+            colorScale,
+            xScale,
+            yScale
+          };
           const elem = d3.select(`#explodingBoxplot${options.id}${i}`)
             .select('.outliers-points');
           const displayOutliers = elem.selectAll('.point')
@@ -494,7 +497,7 @@ export default function () {
             .ease(d3.ease('back-out'))
             .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
             .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-            .call(drawJitter);
+            .call(drawJitter, drawJitterOptions);
         }
 
         if (events.update.end) {
