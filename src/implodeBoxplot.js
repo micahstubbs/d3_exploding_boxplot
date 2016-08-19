@@ -6,10 +6,12 @@ export function implodeBoxplot(selector, data, options, state) {
   const yScale = options.yScale;
   const transitionTime = options.transitionTime;
   const drawBoxplot = options.drawBoxplot;
-  const jitterPlot = options.jitterPlot;
   const colorScale = options.colorScale;
   const explodeBoxplot = options.explodeBoxplot;
   const chartOptions = options.chartOptions;
+  const groups = options.groups;
+  const events = options.events;
+  const constituents = options.constituents;
 
   state.explodedBoxplots = [];
   console.log('state.explodedBoxplots', state.explodedBoxplots);
@@ -33,12 +35,15 @@ export function implodeBoxplot(selector, data, options, state) {
       .each(function (d, i) {
         const drawBoxplotOptions = {
           chartOptions,
-          jitterPlot,
           transitionTime,
           xScale,
           yScale,
           colorScale,
-          explodeBoxplot
+          explodeBoxplot,
+          groups,
+          events,
+          constituents,
+          transitionTime
         }
         drawBoxplot(d, i, drawBoxplotOptions, state)
       });

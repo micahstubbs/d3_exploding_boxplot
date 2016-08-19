@@ -1,3 +1,6 @@
+import { initJitter } from './initJitter';
+import { drawJitter } from './drawJitter';
+
 export function jitterPlot(i, options) {
   console.log('jitterPlot() was called');
 
@@ -5,8 +8,12 @@ export function jitterPlot(i, options) {
   const colorScale = options.colorScale;
   const xScale = options.xScale;
   const yScale = options.yScale;
+  const groups = options.groups;
+  const events = options.events;
+  const constituents = options.constituents;
+  const transitionTime = options.transitionTime;
 
-  const elem = d3.select(`#explodingBoxplot${options.id}${i}`)
+  const elem = d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.outliers-points');
 
   const displayOutliers = elem.selectAll('.point')
