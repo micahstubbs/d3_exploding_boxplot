@@ -168,6 +168,26 @@
     s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
   }
 
+  function hideBoxplot(g, options) {
+    console.log('hideBoxplot() was called');
+
+    // console.log('arguments', arguments);
+    var s = this;
+    var xScale = options.xScale;
+    var yScale = options.yScale;
+
+    s.select('rect.box').attr('x', xScale.rangeBand() * 0.5).attr('width', 0).attr('y', function (d) {
+      return yScale(d.quartiles[1]);
+    }).attr('height', 0);
+
+    // median line
+    s.selectAll('line').attr('x1', xScale.rangeBand() * 0.5).attr('x2', xScale.rangeBand() * 0.5).attr('y1', function (d) {
+      return yScale(d.quartiles[1]);
+    }).attr('y2', function (d) {
+      return yScale(d.quartiles[1]);
+    });
+  }
+
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
     return typeof obj;
   } : function (obj) {
@@ -460,25 +480,14 @@
             });
           }
 
-          function hideBoxplot() /* g, i */{
-            console.log('hideBoxplot() was called');
-            var s = this;
-
-            s.select('rect.box').attr('x', xScale.rangeBand() * 0.5).attr('width', 0).attr('y', function (d) {
-              return yScale(d.quartiles[1]);
-            }).attr('height', 0);
-
-            // median line
-            s.selectAll('line').attr('x1', xScale.rangeBand() * 0.5).attr('x2', xScale.rangeBand() * 0.5).attr('y1', function (d) {
-              return yScale(d.quartiles[1]);
-            }).attr('y2', function (d) {
-              return yScale(d.quartiles[1]);
-            });
-          }
-
           function explodeBoxplot(i) {
             console.log('explodeBoxplot() was called');
-            d3.select('#explodingBoxplot' + options.id + i).select('g.box').transition().ease(d3.ease('back-in')).duration(transitionTime * 1.5).call(hideBoxplot);
+
+            var hideBoxplotOptions = {
+              xScale: xScale,
+              yScale: yScale
+            };
+            d3.select('#explodingBoxplot' + options.id + i).select('g.box').transition().ease(d3.ease('back-in')).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
 
             var explodeNormal = d3.select('#explodingBoxplot' + options.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
 

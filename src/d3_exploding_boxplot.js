@@ -12,7 +12,8 @@ import { implodeBoxplot } from './implodeBoxplot';
 import { drawBoxplot } from './drawBoxplot';
 import { createJitter } from './createJitter';
 import { drawJitter } from './drawJitter';
-import { createBoxplot } from './createBoxplot'; 
+import { createBoxplot } from './createBoxplot';
+import { hideBoxplot } from './hideBoxplot';
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -351,31 +352,18 @@ export default function () {
             });
         }
 
-        function hideBoxplot(/* g, i */) {
-          console.log('hideBoxplot() was called');
-          const s = this;
-
-          s.select('rect.box')
-            .attr('x', xScale.rangeBand() * 0.5)
-            .attr('width', 0)
-            .attr('y', d => yScale(d.quartiles[1]))
-            .attr('height', 0);
-
-          // median line
-          s.selectAll('line')
-            .attr('x1', xScale.rangeBand() * 0.5)
-            .attr('x2', xScale.rangeBand() * 0.5)
-            .attr('y1', d => yScale(d.quartiles[1]))
-            .attr('y2', d => yScale(d.quartiles[1]));
-        }
-
         function explodeBoxplot(i) {
           console.log('explodeBoxplot() was called');
+
+          const hideBoxplotOptions = {
+            xScale,
+            yScale
+          }
           d3.select(`#explodingBoxplot${options.id}${i}`)
             .select('g.box').transition()
             .ease(d3.ease('back-in'))
             .duration((transitionTime * 1.5))
-            .call(hideBoxplot);
+            .call(hideBoxplot, hideBoxplotOptions);
 
           const explodeNormal = d3.select(`#explodingBoxplot${options.id}${i}`)
             .select('.normal-points')
