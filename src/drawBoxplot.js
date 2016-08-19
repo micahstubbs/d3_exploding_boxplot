@@ -1,4 +1,5 @@
 import { jitterPlot } from './jitterPlot';
+import { explodeBoxplot } from './explodeBoxplot';
 
 export function drawBoxplot(d, i, options, state) {
   console.log('drawBoxplot() was called');
@@ -7,21 +8,30 @@ export function drawBoxplot(d, i, options, state) {
   const xScale = options.xScale;
   const yScale = options.yScale;
   const colorScale = options.colorScale;
-  const explodeBoxplot = options.explodeBoxplot;
   const groups = options.groups;
   const events = options.events; 
   const constituents = options.constituents;
 
+  const explodeBoxplotOptions = {
+    xScale,
+    yScale,
+    colorScale,
+    chartOptions,
+    events,
+    constituents,
+    transitionTime,
+    groups
+  };
   const s = d3.select(`#explodingBoxplot_box${chartOptions.id}${i}`)
     .on('click', (/* d */) => {
-      explodeBoxplot(i);
+      explodeBoxplot(i, explodeBoxplotOptions);
       state.explodedBoxplots.push(i);
       console.log('state.explodedBoxplots', state.explodedBoxplots);
     });
 
   // const s = d3.select(this);
   if (state.explodedBoxplots.indexOf(i) >= 0) {
-    explodeBoxplot(i);
+    explodeBoxplot(i, explodeBoxplotOptions);
     jitterPlot(i, chartOptions);
     return;
   }

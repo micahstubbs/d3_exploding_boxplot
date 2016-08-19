@@ -17,6 +17,7 @@ import { keyWalk } from './keyWalk';
 import { computeBoxplot } from './computeBoxplot';
 import { initJitter } from './initJitter';
 import { jitterPlot } from './jitterPlot';
+import { explodeBoxplot } from './explodeBoxplot';
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -234,7 +235,6 @@ export default function () {
           transitionTime,
           drawBoxplot,
           colorScale,
-          explodeBoxplot,
           chartOptions: options,
           groups,
           events,
@@ -330,7 +330,6 @@ export default function () {
               xScale,
               yScale,
               colorScale,
-              explodeBoxplot,
               groups,
               events,
               constituents,
@@ -338,53 +337,6 @@ export default function () {
             }
             drawBoxplot(d, i, drawBoxplotOptions, state)
           });
-
-        function explodeBoxplot(i) {
-          console.log('explodeBoxplot() was called');
-
-          const hideBoxplotOptions = {
-            xScale,
-            yScale
-          }
-          d3.select(`#explodingBoxplot${options.id}${i}`)
-            .select('g.box').transition()
-            .ease(d3.ease('back-in'))
-            .duration((transitionTime * 1.5))
-            .call(hideBoxplot, hideBoxplotOptions);
-
-          const explodeNormal = d3.select(`#explodingBoxplot${options.id}${i}`)
-            .select('.normal-points')
-            .selectAll('.point')
-            .data(groups[i].normal);
-
-          explodeNormal.enter()
-            .append('circle');
-
-          explodeNormal.exit()
-            .remove();
-
-          const drawJitterOptions = {
-            chartOptions: options,
-            colorScale,
-            xScale,
-            yScale
-          };
-          const initJitterOptions = {
-            chartOptions: options,
-            colorScale,
-            events,
-            constituents
-          }
-          explodeNormal
-            .attr('cx', xScale.rangeBand() * 0.5)
-            .attr('cy', yScale(groups[i].quartiles[1]))
-            .call(initJitter, initJitterOptions)
-            .transition()
-            .ease(d3.ease('back-out'))
-            .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
-            .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-            .call(drawJitter, drawJitterOptions);
-        }
 
         if (events.update.end) {
           setTimeout(() => {

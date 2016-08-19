@@ -7,7 +7,6 @@ export function implodeBoxplot(selector, data, options, state) {
   const transitionTime = options.transitionTime;
   const drawBoxplot = options.drawBoxplot;
   const colorScale = options.colorScale;
-  const explodeBoxplot = options.explodeBoxplot;
   const chartOptions = options.chartOptions;
   const groups = options.groups;
   const events = options.events;
@@ -39,7 +38,6 @@ export function implodeBoxplot(selector, data, options, state) {
           xScale,
           yScale,
           colorScale,
-          explodeBoxplot,
           groups,
           events,
           constituents,
