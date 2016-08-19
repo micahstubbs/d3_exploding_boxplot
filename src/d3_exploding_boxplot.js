@@ -351,24 +351,6 @@ export default function () {
             });
         }
 
-        // function createBoxplot(g, i) {
-        //   // console.log('this from createBoxplot', this);
-        //   const s = d3.select(this).append('g')
-        //     .attr('class', 'explodingBoxplot box')
-        //     .attr('id', `explodingBoxplot_box${options.id}${i}`)
-        //     .selectAll('.box')
-        //     .data([g])
-        //     .enter();
-        //   s.append('rect')
-        //     .attr('class', 'explodingBoxplot box')
-        //     .attr('fill', d => colorScale(d.normal[0][options.data.color_index]));
-        //   s.append('line').attr('class', 'explodingBoxplot median line');    // median line
-        //   s.append('line').attr('class', 'explodingBoxplot min line hline'); // min line
-        //   s.append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
-        //   s.append('line').attr('class', 'explodingBoxplot max line hline'); // max line
-        //   s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
-        // }
-
         function hideBoxplot(/* g, i */) {
           console.log('hideBoxplot() was called');
           const s = this;
