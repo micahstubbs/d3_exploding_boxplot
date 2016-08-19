@@ -442,63 +442,6 @@
             s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
           }
 
-          // function drawBoxplot(s, i) {
-          //   d3.select(`#explodingBoxplot_box${options.id}${i}`)
-          //     .on('click', (/* d */) => {
-          //       explodeBoxplot(i);
-          //       explodedBoxplots.push(i);
-          //     });
-          //   s = d3.select(this);
-          //   if (explodedBoxplots.indexOf(i) >= 0) {
-          //     explodeBoxplot(i);
-          //     jitterPlot(i, options);
-          //     return;
-          //   }
-          //   jitterPlot(i, options);
-          //   // box
-          //   s.select('rect.box')
-          //     .transition().duration(transitionTime)
-          //     .attr('x', 0)
-          //     .attr('width', xScale.rangeBand())
-          //     .attr('y', d => yScale(d.quartiles[2]))
-          //     .attr('height', d => yScale(d.quartiles[0]) - yScale(d.quartiles[2]))
-          //     .attr('fill', d => colorScale(d.normal[0][options.data.color_index]));
-          //   // median line
-          //   s.select('line.median')
-          //     .transition().duration(transitionTime)
-          //     .attr('x1', 0).attr('x2', xScale.rangeBand())
-          //     .attr('y1', d => yScale(d.quartiles[1]))
-          //     .attr('y2', d => yScale(d.quartiles[1]));
-          //   // min line
-          //   s.select('line.min.hline') 
-          //     .transition().duration(transitionTime)
-          //     .attr('x1', xScale.rangeBand() * 0.25)
-          //     .attr('x2', xScale.rangeBand() * 0.75)
-          //     .attr('y1', d => yScale(Math.min(d.min, d.quartiles[0])))
-          //     .attr('y2', d => yScale(Math.min(d.min, d.quartiles[0])));
-          //   // min vline
-          //   s.select('line.min.vline')
-          //     .transition().duration(transitionTime)
-          //     .attr('x1', xScale.rangeBand() * 0.5)
-          //     .attr('x2', xScale.rangeBand() * 0.5)
-          //     .attr('y1', d => yScale(Math.min(d.min, d.quartiles[0])))
-          //     .attr('y2', d => yScale(d.quartiles[0]));
-          //   // max line
-          //   s.select('line.max.hline')
-          //     .transition().duration(transitionTime)
-          //     .attr('x1', xScale.rangeBand() * 0.25)
-          //     .attr('x2', xScale.rangeBand() * 0.75)
-          //     .attr('y1', d => yScale(Math.max(d.max, d.quartiles[2])))
-          //     .attr('y2', d => yScale(Math.max(d.max, d.quartiles[2])));
-          //   // max vline
-          //   s.select('line.max.vline')
-          //     .transition().duration(transitionTime)
-          //     .attr('x1', xScale.rangeBand() * 0.5)
-          //     .attr('x2', xScale.rangeBand() * 0.5)
-          //     .attr('y1', d => yScale(d.quartiles[2]))
-          //     .attr('y2', d => yScale(Math.max(d.max, d.quartiles[2])));
-          // }
-
           function hideBoxplot() /* g, i */{
             console.log('hideBoxplot() was called');
             var s = this;
