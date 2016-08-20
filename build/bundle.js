@@ -90,23 +90,22 @@
     }).call(drawJitter, drawJitterOptions);
   }
 
-  function hideBoxplot(g, options) {
+  function hideBoxplot(d, options) {
     console.log('hideBoxplot() was called');
 
-    // console.log('arguments', arguments);
-    var s = this;
+    console.log('arguments from hideBoxplot()', arguments);
     var xScale = options.xScale;
     var yScale = options.yScale;
 
-    s.select('rect.box').attr('x', xScale.bandwidth() * 0.5).attr('width', 0).attr('y', function (d) {
-      return yScale(d.quartiles[1]);
+    d.select('rect.box').attr('x', xScale.bandwidth() * 0.5).attr('width', 0).attr('y', function (e) {
+      return yScale(e.quartiles[1]);
     }).attr('height', 0);
 
     // median line
-    s.selectAll('line').attr('x1', xScale.bandwidth() * 0.5).attr('x2', xScale.bandwidth() * 0.5).attr('y1', function (d) {
-      return yScale(d.quartiles[1]);
-    }).attr('y2', function (d) {
-      return yScale(d.quartiles[1]);
+    d.selectAll('line').attr('x1', xScale.bandwidth() * 0.5).attr('x2', xScale.bandwidth() * 0.5).attr('y1', function (e) {
+      return yScale(e.quartiles[1]);
+    }).attr('y2', function (e) {
+      return yScale(e.quartiles[1]);
     });
   }
 
