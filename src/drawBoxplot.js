@@ -56,7 +56,7 @@ export function drawBoxplot(d, i, options, state) {
     .transition()
       .duration(transitionTime)
       .attr('x', 0)
-      .attr('width', xScale.rangeBand())
+      .attr('width', xScale.bandwidth())
       .attr('y', e => yScale(e.quartiles[2]))
       .attr('height', e => yScale(e.quartiles[0]) - yScale(e.quartiles[2]))
       .attr('fill', e => colorScale(e.normal[0][chartOptions.data.color_index]));
@@ -65,7 +65,7 @@ export function drawBoxplot(d, i, options, state) {
   s.select('line.median')
     .transition()
       .duration(transitionTime)
-      .attr('x1', 0).attr('x2', xScale.rangeBand())
+      .attr('x1', 0).attr('x2', xScale.bandwidth())
       .attr('y1', e => yScale(e.quartiles[1]))
       .attr('y2', e => yScale(e.quartiles[1]));
 
@@ -73,8 +73,8 @@ export function drawBoxplot(d, i, options, state) {
   s.select('line.min.hline')
     .transition()
       .duration(transitionTime)
-      .attr('x1', xScale.rangeBand() * 0.25)
-      .attr('x2', xScale.rangeBand() * 0.75)
+      .attr('x1', xScale.bandwidth() * 0.25)
+      .attr('x2', xScale.bandwidth() * 0.75)
       .attr('y1', e => yScale(Math.min(e.min, e.quartiles[0])))
       .attr('y2', e => yScale(Math.min(e.min, e.quartiles[0])));
 
@@ -82,8 +82,8 @@ export function drawBoxplot(d, i, options, state) {
   s.select('line.min.vline')
     .transition()
       .duration(transitionTime)
-      .attr('x1', xScale.rangeBand() * 0.5)
-      .attr('x2', xScale.rangeBand() * 0.5)
+      .attr('x1', xScale.bandwidth() * 0.5)
+      .attr('x2', xScale.bandwidth() * 0.5)
       .attr('y1', e => yScale(Math.min(e.min, e.quartiles[0])))
       .attr('y2', e => yScale(e.quartiles[0]));
 
@@ -91,8 +91,8 @@ export function drawBoxplot(d, i, options, state) {
   s.select('line.max.hline')
     .transition()
       .duration(transitionTime)
-      .attr('x1', xScale.rangeBand() * 0.25)
-      .attr('x2', xScale.rangeBand() * 0.75)
+      .attr('x1', xScale.bandwidth() * 0.25)
+      .attr('x2', xScale.bandwidth() * 0.75)
       .attr('y1', e => yScale(Math.max(e.max, e.quartiles[2])))
       .attr('y2', e => yScale(Math.max(e.max, e.quartiles[2])));
 
@@ -100,8 +100,8 @@ export function drawBoxplot(d, i, options, state) {
   s.select('line.max.vline')
     .transition()
       .duration(transitionTime)
-      .attr('x1', xScale.rangeBand() * 0.5)
-      .attr('x2', xScale.rangeBand() * 0.5)
+      .attr('x1', xScale.bandwidth() * 0.5)
+      .attr('x2', xScale.bandwidth() * 0.5)
       .attr('y1', e => yScale(e.quartiles[2]))
       .attr('y2', e => yScale(Math.max(e.max, e.quartiles[2])));
 }

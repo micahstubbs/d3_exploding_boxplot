@@ -20,8 +20,8 @@ export function jitterPlot(i, options) {
   const displayOutliers = elem.selectAll('.point')
     .data(groups[i].outlier);
 
-  displayOutliers.enter()
-    .append('circle');
+  // displayOutliers.enter()
+  //   .append('circle');
 
   displayOutliers.exit()
     .remove();
@@ -41,12 +41,15 @@ export function jitterPlot(i, options) {
   };
 
   displayOutliers
-    .attr('cx', xScale.rangeBand() * 0.5)
-    .attr('cy', yScale(groups[i].quartiles[1]))
-    .call(initJitter, initJitterOptions)
-    .transition()
-    .ease(d3.ease('back-out'))
-    .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
-    .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-    .call(drawJitter, drawJitterOptions);
+    .enter()
+    .append('circle')
+    .merge(displayOutliers)
+      .attr('cx', xScale.bandwidth() * 0.5)
+      .attr('cy', yScale(groups[i].quartiles[1]))
+      .call(initJitter, initJitterOptions)
+      .transition()
+      .ease(d3.ease('back-out'))
+      .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
+      .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
+      .call(drawJitter, drawJitterOptions);
 }

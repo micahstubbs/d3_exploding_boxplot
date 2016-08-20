@@ -13,14 +13,23 @@ export function createBoxplot(selector, data, options) {
   // console.log('this from createBoxplot', this);
   const s = d3.select(selector).append('g')
     .attr('class', 'explodingBoxplot box')
-    .attr('id', `explodingBoxplot_box${chartOptions.id}${i}`)
-    .selectAll('.box')
-    .data([g])
-    .enter();
+    .attr('id', `explodingBoxplot_box${chartOptions.id}${i}`);
+    // .selectAll('.box')
+    // .data([g])
+    // .enter();
 
-  s.append('rect')
-    .attr('class', 'explodingBoxplot box')
-    .attr('fill', d => colorScale(d.normal[0][chartOptions.data.color_index]));
+  const createBoxplotSelection = s.selectAll('.box')
+    .data([g]);
+
+  createBoxplotSelection
+    .enter()
+    .append('rect')
+    .merge(createBoxplotSelection)
+      .attr('class', 'explodingBoxplot box')
+      .attr('fill', d => {
+        console.log('d from createBoxplot', d);
+        colorScale(d.normal[0][chartOptions.data.color_index])
+      });
 
   s.append('line').attr('class', 'explodingBoxplot median line');    // median line
   s.append('line').attr('class', 'explodingBoxplot min line hline'); // min line

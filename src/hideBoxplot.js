@@ -7,15 +7,15 @@ export function hideBoxplot(g, options) {
   const yScale = options.yScale;
 
   s.select('rect.box')
-    .attr('x', xScale.rangeBand() * 0.5)
+    .attr('x', xScale.bandwidth() * 0.5)
     .attr('width', 0)
     .attr('y', d => yScale(d.quartiles[1]))
     .attr('height', 0);
 
   // median line
   s.selectAll('line')
-    .attr('x1', xScale.rangeBand() * 0.5)
-    .attr('x2', xScale.rangeBand() * 0.5)
+    .attr('x1', xScale.bandwidth() * 0.5)
+    .attr('x2', xScale.bandwidth() * 0.5)
     .attr('y1', d => yScale(d.quartiles[1]))
     .attr('y2', d => yScale(d.quartiles[1]));
 }

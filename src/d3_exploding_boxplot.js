@@ -250,6 +250,7 @@ export default function () {
 
         updateXAxis.enter()
           .append('g')
+          .merge(updateXAxis)
             .attr('class', 'explodingBoxplot x axis')
             .attr('id', 'xpb_xAxis')
           .append('text')
@@ -275,6 +276,7 @@ export default function () {
 
         updateYAxis.enter()
           .append('g')
+          .merge(updateYAxis)
             .attr('class', 'explodingBoxplot y axis')
             .attr('id', 'xpb_yAxis')
           .append('text')
@@ -299,6 +301,7 @@ export default function () {
 
         boxContent.enter()
           .append('g')
+          .merge(boxContent)
           .attr('class', 'explodingBoxplot boxcontent')
           .attr('id', (d, i) => `explodingBoxplot${options.id}${i}`);
         // console.log('boxContent after enter', boxContent);

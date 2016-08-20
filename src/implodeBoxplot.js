@@ -21,7 +21,7 @@ export function implodeBoxplot(selector, options, state) {
         .transition()
           .ease(d3.ease('back-out'))
           .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-          .attr('cx', xScale.rangeBand() * 0.5)
+          .attr('cx', xScale.bandwidth() * 0.5)
           .attr('cy', yScale(g.quartiles[1]))
           .remove();
     });
