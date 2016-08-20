@@ -93,7 +93,7 @@
   function hideBoxplot(d, options) {
     console.log('hideBoxplot() was called');
 
-    console.log('arguments from hideBoxplot()', arguments);
+    // console.log('arguments from hideBoxplot()', arguments);
     var xScale = options.xScale;
     var yScale = options.yScale;
 
@@ -489,6 +489,7 @@
 
     function chart(selection) {
       console.log('chart() was called');
+      console.log('selection from chart()', selection);
       selection.each(function () {
         var domParent = d3.select(this);
         // console.log('domParent', domParent);
@@ -504,6 +505,7 @@
         var chartWrapper = chartRoot.append('g').attr('class', 'chartWrapper').attr('id', 'chartWrapper' + options.id);
 
         mobileScreen = $(window).innerWidth() < options.mobileScreenMax;
+        console.log('mobileScreen', mobileScreen);
 
         // boolean resize used to disable transitions during resize operation
         update = function update(resize) {
@@ -740,6 +742,8 @@
       }
 
       console.log('chart.data() was called');
+      console.log('value from chart.data', value);
+      console.log('args from chart.data', args);
       if (!args) return dataSet;
       value.sort(function (x, y) {
         return x['Set Score'].split('-').join('') - y['Set Score'].split('-').join('');

@@ -127,6 +127,7 @@ export default function () {
 
   function chart(selection) {
     console.log('chart() was called');
+    console.log('selection from chart()', selection);
     selection.each(function () {
       const domParent = d3.select(this);
       // console.log('domParent', domParent);
@@ -151,6 +152,7 @@ export default function () {
         .attr('id', `chartWrapper${options.id}`);
 
       mobileScreen = ($(window).innerWidth() < options.mobileScreenMax);
+      console.log('mobileScreen', mobileScreen);
 
       // boolean resize used to disable transitions during resize operation
       update = resize => {
@@ -406,6 +408,8 @@ export default function () {
 
   chart.data = function (value, ...args) {
     console.log('chart.data() was called');
+    console.log('value from chart.data', value);
+    console.log('args from chart.data', args);
     if (!args) return dataSet;
     value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
     dataSet = JSON.parse(JSON.stringify(value));
