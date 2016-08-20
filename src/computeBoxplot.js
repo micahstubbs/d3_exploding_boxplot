@@ -24,7 +24,7 @@ export function computeBoxplot(data, iqrScalingFactor, value) {
         }
         return type;
       })
-      .map(data);
+      .object(data);
   if (!boxData.outlier) boxData.outlier = [];
   boxData.quartiles = quartiles;
   boxData.iqr = iqr;
