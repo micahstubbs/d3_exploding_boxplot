@@ -177,13 +177,17 @@
       transitionTime: transitionTime,
       groups: groups
     };
-    var s = d3$1.select('#explodingBoxplot_box' + chartOptions.id + i).on('click', function () /* d */{
+
+    var s = d3$1.select('#explodingBoxplot_box' + chartOptions.id + i);
+    // const s = d3.select(this);
+    console.log('s from drawBoxplot', s);
+
+    s.on('click', function () /* d */{
       explodeBoxplot(i, explodeBoxplotOptions);
       state.explodedBoxplots.push(i);
       // console.log('state.explodedBoxplots', state.explodedBoxplots);
     });
 
-    // const s = d3.select(this);
     if (state.explodedBoxplots.indexOf(i) >= 0) {
       explodeBoxplot(i, explodeBoxplotOptions);
       jitterPlot(i, chartOptions);
@@ -204,18 +208,25 @@
 
     jitterPlot(i, jitterPlotOptions);
 
+    var drawBoxplotBoxSelection = s.select('rect.box');
+    console.log('drawBoxplotBoxSelection', drawBoxplotBoxSelection);
     // box
     s.select('rect.box').transition().duration(transitionTime).attr('x', 0).attr('width', xScale.bandwidth()).attr('y', function (e) {
-      return yScale(e.quartiles[2]);
+      console.log('e from drawBoxplotBoxSelection', e);
+      yScale(e.quartiles[2]);
     }).attr('height', function (e) {
       return yScale(e.quartiles[0]) - yScale(e.quartiles[2]);
     }).attr('fill', function (e) {
       return colorScale(e.normal[0][chartOptions.data.color_index]);
     });
 
+    var drawBoxplotMedianLineSelection = s.select('line.median');
+    console.log('drawBoxplotMedianLineSelection', drawBoxplotMedianLineSelection);
+
     // median line
     s.select('line.median').transition().duration(transitionTime).attr('x1', 0).attr('x2', xScale.bandwidth()).attr('y1', function (e) {
-      return yScale(e.quartiles[1]);
+      console.log('e from drawBoxplotMedianLineSelection', e);
+      yScale(e.previousSibling.quartiles[1]);
     }).attr('y2', function (e) {
       return yScale(e.quartiles[1]);
     });
@@ -286,7 +297,13 @@
   function createJitter() {
     console.log('createJitter() was called');
     var selector = this;
-    console.log('this from createJitter', this);
+    // console.log('selection from createJitter', selector;
+
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    console.log('args from createJitter', args);
 
     d3$1.select(selector).append('g').attr('class', 'explodingBoxplot outliers-points');
 
@@ -316,11 +333,11 @@
       colorScale(d.normal[0][chartOptions.data.color_index]);
     });
 
-    s.append('line').attr('class', 'explodingBoxplot median line'); // median line
-    s.append('line').attr('class', 'explodingBoxplot min line hline'); // min line
-    s.append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
-    s.append('line').attr('class', 'explodingBoxplot max line hline'); // max line
-    s.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
+    createBoxplotSelection.append('line').attr('class', 'explodingBoxplot median line'); // median line
+    createBoxplotSelection.append('line').attr('class', 'explodingBoxplot min line hline'); // min line
+    createBoxplotSelection.append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
+    createBoxplotSelection.append('line').attr('class', 'explodingBoxplot max line hline'); // max line
+    createBoxplotSelection.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
   }
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -349,6 +366,9 @@
 
   function computeBoxplot(data, iqrScalingFactor, value) {
     console.log('computeBoxplot() was called');
+    console.log('data from computeBoxplot', data);
+    console.log('iqrScalingFactor', iqrScalingFactor);
+    console.log('value from computeBoxplot', value);
     iqrScalingFactor = iqrScalingFactor || 1.5;
     value = value || Number;
     var seriev = data.map(function (m) {
@@ -356,6 +376,7 @@
     }).sort(d3$1.ascending);
     var quartiles = [d3$1.quantile(seriev, 0.25), d3$1.quantile(seriev, 0.5), d3$1.quantile(seriev, 0.75)];
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
+    console.log('iqr', iqr);
     // separate outliers
     var max = Number.MIN_VALUE;
     var min = Number.MAX_VALUE;
@@ -373,6 +394,7 @@
     boxData.iqr = iqr;
     boxData.max = max;
     boxData.min = min;
+    console.log('boxData', boxData);
     return boxData;
   }
 
@@ -491,6 +513,8 @@
       console.log('chart() was called');
       console.log('selection from chart()', selection);
       selection.each(function () {
+        var _this = this;
+
         var domParent = d3.select(this);
         // console.log('domParent', domParent);
         constituents.elements.domParent = domParent;
@@ -612,19 +636,26 @@
           updateYAxis.call(yAxis).select('.axis.text').attr('transform', 'rotate(-90)').attr('x', -options.margins.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margins.left + 5).style('text-anchor', 'middle').text(options.axes.y.label);
 
           var boxContent = chartWrapper.selectAll('.boxcontent').data(groups);
-          // console.log('boxContent', boxContent);
+          console.log('boxContent', boxContent);
 
           boxContent.enter().append('g').merge(boxContent).attr('class', 'explodingBoxplot boxcontent').attr('id', function (d, i) {
             return 'explodingBoxplot' + options.id + i;
           });
-          // console.log('boxContent after enter', boxContent);
+          console.log('boxContent after enter', boxContent);
 
           boxContent.exit().remove();
+          console.log('boxContent after exit', boxContent);
 
-          boxContent.attr('transform', function (d) {
+          chartWrapper.selectAll('g.boxcontent').attr('transform', function (d) {
             return 'translate(' + xScale(d.group) + ',0)';
+          }).each(function (d, i) {
+            console.log('d, testing selection.each', d);
+            console.log('i, testing selection.each', i);
           }).each(createJitter).each(function (d, i) {
-            var selector = '#' + d3.select(this).attr('id');
+            console.log('d from boxContent each', d);
+            console.log('this from boxContent each', _this);
+            var selector = '#' + d3.select(_this).attr('id');
+            // const selector = `#${d.attr('id')}`;
             var createBoxplotOptions = {
               chartOptions: options,
               i: i,
@@ -745,9 +776,8 @@
       console.log('value from chart.data', value);
       console.log('args from chart.data', args);
       if (!args) return dataSet;
-      value.sort(function (x, y) {
-        return x['Set Score'].split('-').join('') - y['Set Score'].split('-').join('');
-      });
+      // this appears to be specific to the @tennisvisuals atpWta.json dataset
+      // value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
       dataSet = JSON.parse(JSON.stringify(value));
       return chart;
     };

@@ -23,14 +23,18 @@ export function drawBoxplot(d, i, options, state) {
     transitionTime,
     groups
   };
+  
   const s = d3.select(`#explodingBoxplot_box${chartOptions.id}${i}`)
-    .on('click', (/* d */) => {
+  // const s = d3.select(this);
+  console.log('s from drawBoxplot', s);
+
+  s.on('click', (/* d */) => {
       explodeBoxplot(i, explodeBoxplotOptions);
       state.explodedBoxplots.push(i);
       // console.log('state.explodedBoxplots', state.explodedBoxplots);
     });
 
-  // const s = d3.select(this);
+
   if (state.explodedBoxplots.indexOf(i) >= 0) {
     explodeBoxplot(i, explodeBoxplotOptions);
     jitterPlot(i, chartOptions);
@@ -51,22 +55,33 @@ export function drawBoxplot(d, i, options, state) {
 
   jitterPlot(i, jitterPlotOptions);
 
+  const drawBoxplotBoxSelection = s.select('rect.box');
+  console.log('drawBoxplotBoxSelection', drawBoxplotBoxSelection);
   // box
   s.select('rect.box')
     .transition()
       .duration(transitionTime)
       .attr('x', 0)
       .attr('width', xScale.bandwidth())
-      .attr('y', e => yScale(e.quartiles[2]))
+      .attr('y', e => {
+        console.log('e from drawBoxplotBoxSelection', e);
+        yScale(e.quartiles[2])
+      })
       .attr('height', e => yScale(e.quartiles[0]) - yScale(e.quartiles[2]))
       .attr('fill', e => colorScale(e.normal[0][chartOptions.data.color_index]));
+
+  const drawBoxplotMedianLineSelection = s.select('line.median');
+  console.log('drawBoxplotMedianLineSelection', drawBoxplotMedianLineSelection);
 
   // median line
   s.select('line.median')
     .transition()
       .duration(transitionTime)
       .attr('x1', 0).attr('x2', xScale.bandwidth())
-      .attr('y1', e => yScale(e.quartiles[1]))
+      .attr('y1', e => {
+        console.log('e from drawBoxplotMedianLineSelection', e);
+        yScale(e.previousSibling.quartiles[1])
+      })
       .attr('y2', e => yScale(e.quartiles[1]));
 
   // min line

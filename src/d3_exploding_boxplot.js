@@ -298,23 +298,31 @@ export default function () {
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);
-        // console.log('boxContent', boxContent);
+        console.log('boxContent', boxContent);
 
         boxContent.enter()
           .append('g')
           .merge(boxContent)
           .attr('class', 'explodingBoxplot boxcontent')
           .attr('id', (d, i) => `explodingBoxplot${options.id}${i}`);
-        // console.log('boxContent after enter', boxContent);
+        console.log('boxContent after enter', boxContent);
 
         boxContent.exit()
           .remove();
+        console.log('boxContent after exit', boxContent);
 
-        boxContent
+        chartWrapper.selectAll('g.boxcontent')
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
-          .each(createJitter)
           .each(function (d, i) {
+            console.log('d, testing selection.each', d);
+            console.log('i, testing selection.each', i);
+          })
+          .each(createJitter)
+          .each((d, i) => {
+            console.log('d from boxContent each', d);
+            console.log('this from boxContent each', this);
             const selector = `#${d3.select(this).attr('id')}`;
+            // const selector = `#${d.attr('id')}`;
             const createBoxplotOptions = {
               chartOptions: options,
               i,
@@ -411,7 +419,8 @@ export default function () {
     console.log('value from chart.data', value);
     console.log('args from chart.data', args);
     if (!args) return dataSet;
-    value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
+    // this appears to be specific to the @tennisvisuals atpWta.json dataset
+    // value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
     dataSet = JSON.parse(JSON.stringify(value));
     return chart;
   };

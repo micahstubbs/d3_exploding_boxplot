@@ -1,11 +1,12 @@
 import * as d3 from 'd3';
 
-export function createJitter() {
+export function createJitter(...args) {
   console.log('createJitter() was called');
   const selector = this;
-  console.log('this from createJitter', this);
+  // console.log('selection from createJitter', selector;
+  console.log('args from createJitter', args);
 
-  d3.select(selector)
+  d3.select(selector) 
     .append('g')
     .attr('class', 'explodingBoxplot outliers-points');
 
