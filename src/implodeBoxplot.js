@@ -19,7 +19,7 @@ export function implodeBoxplot(selector, options, state) {
       d3.select(this)
         .selectAll('circle')
         .transition()
-          .ease(d3.ease('back-out'))
+          .ease(d3.easeBackOut)
           .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
           .attr('cx', xScale.bandwidth() * 0.5)
           .attr('cy', yScale(g.quartiles[1]))
@@ -28,7 +28,7 @@ export function implodeBoxplot(selector, options, state) {
 
   selector.selectAll('.boxcontent')
     .transition()
-      .ease(d3.ease('back-out'))
+      .ease(d3.easeBackOut)
       .duration((transitionTime * 1.5))
       .delay(transitionTime)
       .each((d, i) => {

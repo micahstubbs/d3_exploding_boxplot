@@ -83,7 +83,7 @@
       constituents: constituents
     };
 
-    displayOutliers.enter().append('circle').merge(displayOutliers).attr('cx', xScale.bandwidth() * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3$1.ease('back-out')).delay(function () {
+    displayOutliers.enter().append('circle').merge(displayOutliers).attr('cx', xScale.bandwidth() * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3$1.easeBackOut).delay(function () {
       return transitionTime * 1.5 + 100 * Math.random();
     }).duration(function () {
       return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
@@ -127,7 +127,7 @@
       yScale: yScale
     };
 
-    d3$1.select('#explodingBoxplot' + chartOptions.id + i).select('g.box').transition().ease(d3$1.ease('back-in')).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
+    d3$1.select('#explodingBoxplot' + chartOptions.id + i).select('g.box').transition().ease(d3$1.easeBackIn).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
 
     var explodeNormal = d3$1.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
 
@@ -150,7 +150,7 @@
       constituents: constituents
     };
 
-    explodeNormal.enter().append('circle').merge(explodeNormal).attr('cx', xScale.bandwidth() * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3$1.ease('back-out')).delay(function () {
+    explodeNormal.enter().append('circle').merge(explodeNormal).attr('cx', xScale.bandwidth() * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3$1.easeBackOut).delay(function () {
       return transitionTime * 1.5 + 100 * Math.random();
     }).duration(function () {
       return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
@@ -264,12 +264,12 @@
     state.explodedBoxplots = [];
     console.log('state.explodedBoxplots', state.explodedBoxplots);
     selector.selectAll('.normal-points').each(function (g) {
-      d3$1.select(this).selectAll('circle').transition().ease(d3$1.ease('back-out')).duration(function () {
+      d3$1.select(this).selectAll('circle').transition().ease(d3$1.easeBackOut).duration(function () {
         return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
       }).attr('cx', xScale.bandwidth() * 0.5).attr('cy', yScale(g.quartiles[1])).remove();
     });
 
-    selector.selectAll('.boxcontent').transition().ease(d3$1.ease('back-out')).duration(transitionTime * 1.5).delay(transitionTime).each(function (d, i) {
+    selector.selectAll('.boxcontent').transition().ease(d3$1.easeBackOut).duration(transitionTime * 1.5).delay(transitionTime).each(function (d, i) {
       var drawBoxplotOptions = {
         chartOptions: chartOptions,
         transitionTime: transitionTime,

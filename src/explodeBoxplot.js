@@ -22,7 +22,7 @@ export function explodeBoxplot(i, options) {
 
   d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('g.box').transition()
-    .ease(d3.ease('back-in'))
+    .ease(d3.easeBackIn)
     .duration((transitionTime * 1.5))
     .call(hideBoxplot, hideBoxplotOptions);
 
@@ -59,7 +59,7 @@ export function explodeBoxplot(i, options) {
       .attr('cy', yScale(groups[i].quartiles[1]))
       .call(initJitter, initJitterOptions)
       .transition()
-      .ease(d3.ease('back-out'))
+      .ease(d3.easeBackOut)
       .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
       .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
       .call(drawJitter, drawJitterOptions);

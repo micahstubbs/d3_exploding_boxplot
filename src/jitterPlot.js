@@ -48,7 +48,7 @@ export function jitterPlot(i, options) {
       .attr('cy', yScale(groups[i].quartiles[1]))
       .call(initJitter, initJitterOptions)
       .transition()
-      .ease(d3.ease('back-out'))
+      .ease(d3.easeBackOut)
       .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
       .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
       .call(drawJitter, drawJitterOptions);
