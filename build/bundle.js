@@ -213,7 +213,7 @@
     // box
     s.select('rect.box').transition().duration(transitionTime).attr('x', 0).attr('width', xScale.bandwidth()).attr('y', function (e) {
       console.log('e from drawBoxplotBoxSelection', e);
-      yScale(e.quartiles[2]);
+      return yScale(e.quartiles[2]);
     }).attr('height', function (e) {
       return yScale(e.quartiles[0]) - yScale(e.quartiles[2]);
     }).attr('fill', function (e) {
@@ -226,7 +226,7 @@
     // median line
     s.select('line.median').transition().duration(transitionTime).attr('x1', 0).attr('x2', xScale.bandwidth()).attr('y1', function (e) {
       console.log('e from drawBoxplotMedianLineSelection', e);
-      yScale(e.previousSibling.quartiles[1]);
+      return yScale(e.quartiles[1]);
     }).attr('y2', function (e) {
       return yScale(e.quartiles[1]);
     });

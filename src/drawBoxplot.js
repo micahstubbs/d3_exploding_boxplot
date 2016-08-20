@@ -65,7 +65,7 @@ export function drawBoxplot(d, i, options, state) {
       .attr('width', xScale.bandwidth())
       .attr('y', e => {
         console.log('e from drawBoxplotBoxSelection', e);
-        yScale(e.quartiles[2])
+        return yScale(e.quartiles[2])
       })
       .attr('height', e => yScale(e.quartiles[0]) - yScale(e.quartiles[2]))
       .attr('fill', e => colorScale(e.normal[0][chartOptions.data.color_index]));
@@ -80,7 +80,7 @@ export function drawBoxplot(d, i, options, state) {
       .attr('x1', 0).attr('x2', xScale.bandwidth())
       .attr('y1', e => {
         console.log('e from drawBoxplotMedianLineSelection', e);
-        yScale(e.previousSibling.quartiles[1])
+        return yScale(e.quartiles[1])
       })
       .attr('y2', e => yScale(e.quartiles[1]));
 
