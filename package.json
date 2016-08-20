@@ -5,7 +5,7 @@
   "main": "build/bundle.js",
   "scripts": {
     "prepublish": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js",
-    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/explodingBoxplot.js",
+    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/explodingBoxplot.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/01/explodingBoxplot.js",
     "lint": "eslint index.js src --fix"
   },
   "repository": {

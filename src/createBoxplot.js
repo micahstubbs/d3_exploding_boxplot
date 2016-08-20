@@ -20,7 +20,10 @@ export function createBoxplot(selector, data, options) {
 
   s.append('rect')
     .attr('class', 'explodingBoxplot box')
-    .attr('fill', d => colorScale(d.normal[0][chartOptions.data.color_index]));
+    .attr('fill', d => {
+      console.log('d from createBoxplot', d);
+      colorScale(d.normal[0][chartOptions.data.color_index])
+    });
 
   s.append('line').attr('class', 'explodingBoxplot median line');    // median line
   s.append('line').attr('class', 'explodingBoxplot min line hline'); // min line

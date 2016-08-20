@@ -166,7 +166,7 @@ export default function () {
         // console.log('events.update.begin', events.update.begin);
         if (events.update.begin) { events.update.begin(constituents, options, events); }
 
-        // console.log('options.data.group', options.data.group);
+        console.log('options.data.group', options.data.group);
         if (options.data.group) {
           groups = d3.nest()
             .key(k => k[options.data.group])
@@ -192,6 +192,7 @@ export default function () {
 
         // create boxplot data
         groups = groups.map(g => {
+          console.log('g from groups map', g);
           const o = computeBoxplot(g.values, options.display.iqr, options.axes.y.label);
           o.group = g.key;
           return o;
@@ -407,7 +408,8 @@ export default function () {
   chart.data = function (value, ...args) {
     console.log('chart.data() was called');
     if (!args) return dataSet;
-    value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
+    // this appears to be specific to the @tennisvisuals atpWta.json dataset
+    // value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
     dataSet = JSON.parse(JSON.stringify(value));
     return chart;
   };

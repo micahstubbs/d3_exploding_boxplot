@@ -304,7 +304,8 @@
     var s = d3$1.select(selector).append('g').attr('class', 'explodingBoxplot box').attr('id', 'explodingBoxplot_box' + chartOptions.id + i).selectAll('.box').data([g]).enter();
 
     s.append('rect').attr('class', 'explodingBoxplot box').attr('fill', function (d) {
-      return colorScale(d.normal[0][chartOptions.data.color_index]);
+      console.log('d from createBoxplot', d);
+      colorScale(d.normal[0][chartOptions.data.color_index]);
     });
 
     s.append('line').attr('class', 'explodingBoxplot median line'); // median line
@@ -340,13 +341,17 @@
 
   function computeBoxplot(data, iqrScalingFactor, value) {
     console.log('computeBoxplot() was called');
+
+    console.log('arguments from computeBoxplot: data, iqrScalingFactor, value', arguments);
     iqrScalingFactor = iqrScalingFactor || 1.5;
     value = value || Number;
     var seriev = data.map(function (m) {
       return m[value];
     }).sort(d3$1.ascending);
     var quartiles = [d3$1.quantile(seriev, 0.25), d3$1.quantile(seriev, 0.5), d3$1.quantile(seriev, 0.75)];
+    console.log('quartiles from computeBoxplot', quartiles);
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
+    console.log('iqr from computeBoxplot', iqr);
     // separate outliers
     var max = Number.MIN_VALUE;
     var min = Number.MAX_VALUE;
@@ -508,7 +513,7 @@
             events.update.begin(constituents, options, events);
           }
 
-          // console.log('options.data.group', options.data.group);
+          console.log('options.data.group', options.data.group);
           if (options.data.group) {
             groups = d3.nest().key(function (k) {
               return k[options.data.group];
@@ -531,6 +536,7 @@
 
           // create boxplot data
           groups = groups.map(function (g) {
+            console.log('g from groups map', g);
             var o = computeBoxplot(g.values, options.display.iqr, options.axes.y.label);
             o.group = g.key;
             return o;
@@ -732,9 +738,8 @@
 
       console.log('chart.data() was called');
       if (!args) return dataSet;
-      value.sort(function (x, y) {
-        return x['Set Score'].split('-').join('') - y['Set Score'].split('-').join('');
-      });
+      // this appears to be specific to the @tennisvisuals atpWta.json dataset
+      // value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
       dataSet = JSON.parse(JSON.stringify(value));
       return chart;
     };
