@@ -12,7 +12,6 @@ import { drawBoxplot } from './drawBoxplot';
 import { createJitter } from './createJitter';
 import { drawJitter } from './drawJitter';
 import { createBoxplot } from './createBoxplot';
-import { hideBoxplot } from './hideBoxplot';
 import { keyWalk } from './keyWalk';
 import { computeBoxplot } from './computeBoxplot';
 import { initJitter } from './initJitter';
