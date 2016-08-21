@@ -392,10 +392,25 @@ export default function () {
         .style('background', '#333333')
         .style('color', '#DDDDDD')
         .style('border-radius', '2px')
+
+      chartWrapper.selectAll('g.tick text')
+        .style('-webkit-user-select', 'none')
+        .style('-khtml-user-select', 'none')
+        .style('-moz-user-select', 'none')
+        .style('-o-user-select', 'none')
+        .style('user-select', 'none')
+        .style('cursor', 'default');
+
+      chartWrapper.selectAll('g.axis text')
+        .style('-webkit-user-select', 'none')
+        .style('-khtml-user-select', 'none')
+        .style('-moz-user-select', 'none')
+        .style('-o-user-select', 'none')
+        .style('user-select', 'none')
+        .style('cursor', 'default');
       }; // end update()
     });
 }
-
 
   // ACCESSORS
 
