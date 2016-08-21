@@ -31,9 +31,11 @@ export function createBoxplot(selector, data, options) {
         colorScale(d.normal[0][chartOptions.data.color_index])
       });
 
-  createBoxplotSelection.append('line').attr('class', 'explodingBoxplot median line');    // median line
-  createBoxplotSelection.append('line').attr('class', 'explodingBoxplot min line hline'); // min line
-  createBoxplotSelection.append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
-  createBoxplotSelection.append('line').attr('class', 'explodingBoxplot max line hline'); // max line
-  createBoxplotSelection.append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
+  const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;
+  
+  d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot median line');    // median line
+  d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot min line hline'); // min line
+  d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
+  d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot max line hline'); // max line
+  d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
 }
