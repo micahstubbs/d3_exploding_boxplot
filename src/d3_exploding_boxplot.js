@@ -378,6 +378,8 @@ export default function () {
         .style('stroke', '#888')
         .style('stroke-width', '2px');
 
+      chartWrapper.selectAll('line.explodingBoxplot.vline')
+        .style('stroke-dasharray', '5,5');
 
       }; // end update()
     });
