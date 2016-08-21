@@ -266,6 +266,7 @@ export default function () {
             .attr('x', (options.width - options.margins.left - options.margins.right) / 2)
             .attr('dy', '.71em')
             .attr('y', options.margins.bottom - 10)
+            .style('font', '10px sans-serif')
             .style('text-anchor', 'middle')
             .style('fill', 'black')
             .text(options.axes.x.label);
@@ -291,9 +292,14 @@ export default function () {
             .attr('x', -options.margins.top - d3.mean(yScale.range()))
             .attr('dy', '.71em')
             .attr('y', -options.margins.left + 5)
+            .style('font', '10px sans-serif')
             .style('text-anchor', 'middle')
             .style('fill', 'black')
             .text(options.axes.y.label);
+
+        // style the axis text
+        chartWrapper.selectAll('.axis text')
+          .style('font', '10px sans-serif');
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);

@@ -178,10 +178,10 @@
       groups: groups
     };
 
-    console.log('chartOptions.id', chartOptions.id);
-    console.log('i', i);
+    // console.log('chartOptions.id', chartOptions.id);
+    // console.log('i', i);
     var currentBoxplotBoxSelector = '#explodingBoxplot_box' + chartOptions.id + i;
-    console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
+    // console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
     var s = d3$1.select(currentBoxplotBoxSelector);
     // const s = d3.select(this);
     // console.log('s from drawBoxplot', s);
@@ -616,39 +616,23 @@
           });
 
           var updateXAxis = chartWrapper.selectAll('#xpb_xAxis').data([0]);
-          // console.log('updateXAxis', updateXAxis);
-          // console.log('updateXAxis[0]', updateXAxis[0])
-
-          // updateXAxis.enter()
-          //   .append('g')
-          //   .merge(updateXAxis)
-          //     .attr('class', 'explodingBoxplot x axis')
-          //     .attr('id', 'xpb_xAxis')
-          //   .append('text')
-          //     .attr('class', 'axis text');
 
           updateXAxis.exit().remove();
 
           updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').attr('transform', 'translate(0,' + (options.height - options.margins.top - options.margins.bottom) + ')').call(xAxis);
 
-          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', (options.width - options.margins.left - options.margins.right) / 2).attr('dy', '.71em').attr('y', options.margins.bottom - 10).style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
-          // console.log(`d3.selectAll('.x.axis')`, d3.selectAll('.x.axis'));
+          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', (options.width - options.margins.left - options.margins.right) / 2).attr('dy', '.71em').attr('y', options.margins.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
 
           var updateYAxis = chartWrapper.selectAll('#xpb_yAxis').data([0]);
-
-          // updateYAxis.enter()
-          //   .append('g')
-          //   .merge(updateYAxis)
-          //     .attr('class', 'explodingBoxplot y axis')
-          //     .attr('id', 'xpb_yAxis')
-          //   .append('text')
-          //     .attr('class', 'axis text');
 
           updateYAxis.exit().remove();
 
           updateYAxis.enter().append('g').merge(updateYAxis).attr('class', 'explodingBoxplot y axis').attr('id', 'xpb_yAxis').call(yAxis);
 
-          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text').attr('transform', 'rotate(-90)').attr('x', -options.margins.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margins.left + 5).style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
+          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text').attr('transform', 'rotate(-90)').attr('x', -options.margins.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margins.left + 5).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
+
+          // style the axis text
+          chartWrapper.selectAll('.axis text').style('font', '30px sans-serif'); // 10px
 
           var boxContent = chartWrapper.selectAll('.boxcontent').data(groups);
           // console.log('boxContent', boxContent);
