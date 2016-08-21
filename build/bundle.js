@@ -683,7 +683,11 @@
           }
 
           // styles
-          chartWrapper.selectAll('rect.box').style('fill-opacity', 0.8);
+          chartWrapper.selectAll('rect.box').style('fill-opacity', 1);
+
+          chartWrapper.selectAll('.axis path').style('fill', 'none').style('stroke', 'black').style('shape-rendering', 'crispEdges');
+
+          chartWrapper.selectAll('.axis line').style('fill', 'none').style('stroke', 'black').style('shape-rendering', 'crispEdges');
         }; // end update()
       });
     }

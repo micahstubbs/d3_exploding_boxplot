@@ -359,6 +359,16 @@ export default function () {
       // styles
       chartWrapper.selectAll('rect.box')
         .style('fill-opacity', 1);
+
+      chartWrapper.selectAll('.axis path')
+        .style('fill', 'none')
+        .style('stroke', 'black')
+        .style('shape-rendering', 'crispEdges');
+
+      chartWrapper.selectAll('.axis line')
+        .style('fill', 'none')
+        .style('stroke', 'black')
+        .style('shape-rendering', 'crispEdges');      
         
       }; // end update()
     });
