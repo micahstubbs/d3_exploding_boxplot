@@ -284,25 +284,34 @@ export default function () {
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
           .data([0]);
 
-        updateYAxis.enter()
-          .append('g')
-          .merge(updateYAxis)
-            .attr('class', 'explodingBoxplot y axis')
-            .attr('id', 'xpb_yAxis')
-          .append('text')
-            .attr('class', 'axis text');
+        // updateYAxis.enter()
+        //   .append('g')
+        //   .merge(updateYAxis)
+        //     .attr('class', 'explodingBoxplot y axis')
+        //     .attr('id', 'xpb_yAxis')
+        //   .append('text')
+        //     .attr('class', 'axis text');
 
         updateYAxis.exit()
           .remove();
 
         updateYAxis
-          .call(yAxis)
-          .select('.axis.text')
+          .enter()
+          .append('g')
+          .merge(updateYAxis)
+            .attr('class', 'explodingBoxplot y axis')
+            .attr('id', 'xpb_yAxis')
+          .call(yAxis);
+
+        chartWrapper.selectAll('g.y.axis')
+          .append('text')
+            .attr('class', 'axis text')
             .attr('transform', 'rotate(-90)')
             .attr('x', -options.margins.top - d3.mean(yScale.range()))
             .attr('dy', '.71em')
             .attr('y', -options.margins.left + 5)
             .style('text-anchor', 'middle')
+            .style('fill', 'black')
             .text(options.axes.y.label);
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
