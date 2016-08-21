@@ -399,7 +399,7 @@
     return boxData;
   }
 
-  function d3_exploding_boxplot () {
+  function d3ExplodingBoxplot () {
     // options which should be accessible via ACCESSORS
     var dataSet = [];
     var privateDataSet = [];
@@ -851,7 +851,7 @@
     return chart;
   }
 
-  exports.plot = d3_exploding_boxplot;
+  exports.plot = d3ExplodingBoxplot;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
