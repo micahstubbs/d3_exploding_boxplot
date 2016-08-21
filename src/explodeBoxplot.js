@@ -4,7 +4,7 @@ import { drawJitter } from './drawJitter';
 import * as d3 from 'd3';
 
 export function explodeBoxplot(i, options) {
-  console.log('explodeBoxplot() was called');
+  // console.log('explodeBoxplot() was called');
 
   const xScale = options.xScale;
   const yScale = options.yScale;

@@ -6,7 +6,7 @@
 }(this, function (exports,d3$1) { 'use strict';
 
   function initJitter(s, options) {
-    console.log('initJitter() was called');
+    // console.log('initJitter() was called');
 
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
@@ -31,7 +31,7 @@
   }
 
   function drawJitter(selection, options) {
-    console.log('drawJitter() was called');
+    // console.log('drawJitter() was called');
 
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
@@ -49,7 +49,7 @@
   }
 
   function jitterPlot(i, options) {
-    console.log('jitterPlot() was called');
+    // console.log('jitterPlot() was called');
 
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
@@ -91,7 +91,7 @@
   }
 
   function hideBoxplot(d, options) {
-    console.log('hideBoxplot() was called');
+    // console.log('hideBoxplot() was called');
 
     // console.log('arguments from hideBoxplot()', arguments);
     var xScale = options.xScale;
@@ -110,7 +110,7 @@
   }
 
   function explodeBoxplot(i, options) {
-    console.log('explodeBoxplot() was called');
+    // console.log('explodeBoxplot() was called');
 
     var xScale = options.xScale;
     var yScale = options.yScale;
@@ -157,7 +157,7 @@
   }
 
   function drawBoxplot(d, i, options, state) {
-    console.log('drawBoxplot() was called');
+    // console.log('drawBoxplot() was called');
     var chartOptions = options.chartOptions; // TODO: better names here
     var transitionTime = options.transitionTime;
     var xScale = options.xScale;
@@ -265,7 +265,7 @@
   }
 
   function implodeBoxplot(selector, options, state) {
-    console.log('implodeBoxplot() was called');
+    // console.log('implodeBoxplot() was called');
     var xScale = options.xScale;
     var yScale = options.yScale;
     var transitionTime = options.transitionTime;
@@ -299,7 +299,7 @@
   }
 
   function createJitter() {
-    console.log('createJitter() was called');
+    // console.log('createJitter() was called');
     var selector = this;
     // console.log('selection from createJitter', selector;
     // console.log('args from createJitter', args);
@@ -310,7 +310,7 @@
   }
 
   function createBoxplot(selector, data, options) {
-    console.log('createBoxplot() was called');
+    // console.log('createBoxplot() was called');
 
     // console.log('selector from createBoxplot', selector);
     // console.log('d3.select(selector)', d3.select(selector));
@@ -348,7 +348,7 @@
   };
 
   function keyWalk(valuesObject, optionsObject) {
-    console.log('keyWalk() was called');
+    // console.log('keyWalk() was called');
     if (!valuesObject || !optionsObject) return;
     var vKeys = Object.keys(valuesObject);
     var oKeys = Object.keys(optionsObject);
@@ -366,7 +366,7 @@
   }
 
   function computeBoxplot(data, iqrScalingFactor, value) {
-    console.log('computeBoxplot() was called');
+    // console.log('computeBoxplot() was called');
     // console.log('data from computeBoxplot', data);
     // console.log('iqrScalingFactor', iqrScalingFactor);
     // console.log('value from computeBoxplot', value);
@@ -513,7 +513,7 @@
     };
 
     function chart(selection) {
-      console.log('chart() was called');
+      // console.log('chart() was called');
       // console.log('selection from chart()', selection);
       selection.each(function () {
         var domParent = d3.select(this);
@@ -535,7 +535,7 @@
 
         // boolean resize used to disable transitions during resize operation
         update = function update(resize) {
-          console.log('update/resize function was called');
+          // console.log('update/resize function was called');
           chartRoot.attr('width', options.width + options.margins.left + options.margins.right).attr('height', options.height + options.margins.top + options.margins.bottom);
 
           chartWrapper.attr('transform', 'translate(' + options.margins.left + ',' + options.margins.top + ')');
@@ -719,7 +719,7 @@
         args[_key - 1] = arguments[_key];
       }
 
-      console.log('chart.options() was called');
+      // console.log('chart.options() was called');
       if (!args) return options;
       keyWalk(values, options);
       return chart;
@@ -730,7 +730,7 @@
         args[_key2 - 1] = arguments[_key2];
       }
 
-      console.log('chart.events() was called');
+      // console.log('chart.events() was called');
       if (!args) return events;
       keyWalk(functions, events);
       return chart;
@@ -745,7 +745,7 @@
         args[_key3 - 1] = arguments[_key3];
       }
 
-      console.log('chart.colors() was called');
+      // console.log('chart.colors() was called');
       // no arguments, return present value
       if (!args) return colors;
 
@@ -774,7 +774,7 @@
         args[_key4 - 1] = arguments[_key4];
       }
 
-      console.log('chart.width() was called');
+      // console.log('chart.width() was called');
       if (!args) return options.width;
       options.width = value;
       return chart;
@@ -785,7 +785,7 @@
         args[_key5 - 1] = arguments[_key5];
       }
 
-      console.log('chart.height() was called');
+      // console.log('chart.height() was called');
       if (!args) return options.height;
       options.height = value;
       return chart;
@@ -796,7 +796,7 @@
         args[_key6 - 1] = arguments[_key6];
       }
 
-      console.log('chart.data() was called');
+      // console.log('chart.data() was called');
       // console.log('value from chart.data', value);
       // console.log('args from chart.data', args);
       if (!args) return dataSet;
@@ -811,7 +811,7 @@
         args[_key7 - 1] = arguments[_key7];
       }
 
-      console.log('chart.push() was called');
+      // console.log('chart.push() was called');
       var privateValue = JSON.parse(JSON.stringify(value));
       if (!args) return false;
       if (privateValue.constructor === Array) {
@@ -827,7 +827,7 @@
     };
 
     chart.pop = function () {
-      console.log('chart.pop() was called');
+      // console.log('chart.pop() was called');
       if (!dataSet.length) return undefined;
       // const count = dataSet.length;
       privateDataSet.pop();
@@ -835,7 +835,7 @@
     };
 
     chart.update = function (resize) {
-      console.log('chart.update() was called');
+      // console.log('chart.update() was called');
       if (typeof update === 'function') update(resize);
     };
 
@@ -844,7 +844,7 @@
         args[_key8 - 1] = arguments[_key8];
       }
 
-      console.log('chart.duration() was called');
+      // console.log('chart.duration() was called');
       if (!args) return transitionTime;
       transitionTime = value;
       return chart;

@@ -3,7 +3,7 @@ import { drawJitter } from './drawJitter';
 import * as d3 from 'd3';
 
 export function jitterPlot(i, options) {
-  console.log('jitterPlot() was called');
+  // console.log('jitterPlot() was called');
 
   const chartOptions = options.chartOptions;
   const colorScale = options.colorScale;

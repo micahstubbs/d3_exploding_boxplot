@@ -129,7 +129,7 @@ export default function () {
   };
 
   function chart(selection) {
-    console.log('chart() was called');
+    // console.log('chart() was called');
     // console.log('selection from chart()', selection);
     selection.each(function () {
       const domParent = d3.select(this);
@@ -162,7 +162,7 @@ export default function () {
 
       // boolean resize used to disable transitions during resize operation
       update = resize => {
-        console.log('update/resize function was called');
+        // console.log('update/resize function was called');
         chartRoot
           .attr('width', (options.width + options.margins.left + options.margins.right))
           .attr('height', (options.height + options.margins.top + options.margins.bottom));
@@ -423,14 +423,14 @@ export default function () {
   // chart.options() allows updating individual options and suboptions
   // while preserving state of other options
   chart.options = function (values, ...args) {
-    console.log('chart.options() was called');
+    // console.log('chart.options() was called');
     if (!args) return options;
     keyWalk(values, options);
     return chart;
   };
 
   chart.events = function (functions, ...args) {
-    console.log('chart.events() was called');
+    // console.log('chart.events() was called');
     if (!args) return events;
     keyWalk(functions, events);
     return chart;
@@ -439,7 +439,7 @@ export default function () {
   chart.constituents = () => state.constituents;
 
   chart.colors = function (color3s, ...args) {
-    console.log('chart.colors() was called');
+    // console.log('chart.colors() was called');
     // no arguments, return present value
     if (!args) return colors;
 
@@ -464,21 +464,21 @@ export default function () {
   };
 
   chart.width = function (value, ...args) {
-    console.log('chart.width() was called');
+    // console.log('chart.width() was called');
     if (!args) return options.width;
     options.width = value;
     return chart;
   };
 
   chart.height = function (value, ...args) {
-    console.log('chart.height() was called');
+    // console.log('chart.height() was called');
     if (!args) return options.height;
     options.height = value;
     return chart;
   };
 
   chart.data = function (value, ...args) {
-    console.log('chart.data() was called');
+    // console.log('chart.data() was called');
     // console.log('value from chart.data', value);
     // console.log('args from chart.data', args);
     if (!args) return dataSet;
@@ -489,7 +489,7 @@ export default function () {
   };
 
   chart.push = function (value, ...args) {
-    console.log('chart.push() was called');
+    // console.log('chart.push() was called');
     const privateValue = JSON.parse(JSON.stringify(value));
     if (!args) return false;
     if (privateValue.constructor === Array) {
@@ -505,7 +505,7 @@ export default function () {
   };
 
   chart.pop = () => {
-    console.log('chart.pop() was called');
+    // console.log('chart.pop() was called');
     if (!dataSet.length) return undefined;
     // const count = dataSet.length;
     privateDataSet.pop();
@@ -513,12 +513,12 @@ export default function () {
   };
 
   chart.update = resize => {
-    console.log('chart.update() was called');
+    // console.log('chart.update() was called');
     if (typeof update === 'function') update(resize);
   };
 
   chart.duration = function (value, ...args) {
-    console.log('chart.duration() was called');
+    // console.log('chart.duration() was called');
     if (!args) return transitionTime;
     transitionTime = value;
     return chart;

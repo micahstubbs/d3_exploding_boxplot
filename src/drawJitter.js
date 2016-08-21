@@ -1,5 +1,5 @@
 export function drawJitter(selection, options) {
-  console.log('drawJitter() was called');
+  // console.log('drawJitter() was called');
 
   const chartOptions = options.chartOptions;
   const colorScale = options.colorScale;

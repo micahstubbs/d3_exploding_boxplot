@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 export function computeBoxplot(data, iqrScalingFactor, value) {
-  console.log('computeBoxplot() was called');
+  // console.log('computeBoxplot() was called');
   // console.log('data from computeBoxplot', data);
   // console.log('iqrScalingFactor', iqrScalingFactor);
   // console.log('value from computeBoxplot', value);
