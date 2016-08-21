@@ -246,16 +246,6 @@ export default function () {
 
         const updateXAxis = chartWrapper.selectAll('#xpb_xAxis')
           .data([0]);
-        // console.log('updateXAxis', updateXAxis);
-        // console.log('updateXAxis[0]', updateXAxis[0])
-
-        // updateXAxis.enter()
-        //   .append('g')
-        //   .merge(updateXAxis)
-        //     .attr('class', 'explodingBoxplot x axis')
-        //     .attr('id', 'xpb_xAxis')
-        //   .append('text')
-        //     .attr('class', 'axis text');
 
         updateXAxis.exit()
           .remove();
@@ -279,18 +269,9 @@ export default function () {
             .style('text-anchor', 'middle')
             .style('fill', 'black')
             .text(options.axes.x.label);
-            // console.log(`d3.selectAll('.x.axis')`, d3.selectAll('.x.axis'));
 
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
           .data([0]);
-
-        // updateYAxis.enter()
-        //   .append('g')
-        //   .merge(updateYAxis)
-        //     .attr('class', 'explodingBoxplot y axis')
-        //     .attr('id', 'xpb_yAxis')
-        //   .append('text')
-        //     .attr('class', 'axis text');
 
         updateYAxis.exit()
           .remove();
