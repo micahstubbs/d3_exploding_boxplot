@@ -355,6 +355,11 @@ export default function () {
             events.update.end(constituents, options, events);
           }, transitionTime);
         }
+      
+      // styles
+      chartWrapper.selectAll('rect.box')
+        .style('fill-opacity', 1);
+        
       }; // end update()
     });
 }

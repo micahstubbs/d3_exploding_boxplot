@@ -632,7 +632,7 @@
           chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text').attr('transform', 'rotate(-90)').attr('x', -options.margins.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margins.left + 5).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
 
           // style the axis text
-          chartWrapper.selectAll('.axis text').style('font', '30px sans-serif'); // 10px
+          chartWrapper.selectAll('.axis text').style('font', '10px sans-serif');
 
           var boxContent = chartWrapper.selectAll('.boxcontent').data(groups);
           // console.log('boxContent', boxContent);
@@ -681,6 +681,9 @@
               events.update.end(constituents, options, events);
             }, transitionTime);
           }
+
+          // styles
+          chartWrapper.selectAll('rect.box').style('fill-opacity', 0.8);
         }; // end update()
       });
     }
