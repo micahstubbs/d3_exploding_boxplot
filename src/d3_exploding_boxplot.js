@@ -355,8 +355,10 @@ export default function () {
             events.update.end(constituents, options, events);
           }, transitionTime);
         }
-      
+
+      //
       // styles
+      //
       chartWrapper.selectAll('rect.box')
         .style('fill-opacity', 1);
 
@@ -381,6 +383,15 @@ export default function () {
       chartWrapper.selectAll('line.explodingBoxplot.vline')
         .style('stroke-dasharray', '5,5');
 
+      // style the tooltip
+      domParent.selectAll('explodingBoxplot.tip')
+        .style('font', 'normal 13px Lato, Open sans, sans-serif')
+        .style('line-height', 1)
+        .style('font-weight', 'bold')
+        .style('padding', '12px')
+        .style('background', '#333333')
+        .style('color', '#DDDDDD')
+        .style('border-radius', '2px')
       }; // end update()
     });
 }
