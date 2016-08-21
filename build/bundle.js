@@ -14,7 +14,7 @@
     var constituents = options.constituents;
 
     s.attr('class', 'explodingBoxplot point').attr('r', chartOptions.datapoints.radius).attr('fill', function (d) {
-      return colorScale(d[chartOptions.data.color_index]);
+      return colorScale(d[chartOptions.data.colorIndex]);
     }).on('mouseover', function (d, i /* , self */) {
       if (events.point && typeof events.point.mouseover === 'function') {
         events.point.mouseover(d, i, d3$1.select(this), constituents, chartOptions);
@@ -39,7 +39,7 @@
     var yScale = options.yScale;
 
     selection.attr('r', chartOptions.datapoints.radius).attr('fill', function (d) {
-      return colorScale(d[chartOptions.data.color_index]);
+      return colorScale(d[chartOptions.data.colorIndex]);
     }).attr('cx', function () /* d */{
       var w = xScale.bandwidth();
       return Math.floor(Math.random() * w);
@@ -221,7 +221,7 @@
     }).attr('height', function (e) {
       return yScale(e.quartiles[0]) - yScale(e.quartiles[2]);
     }).attr('fill', function (e) {
-      return colorScale(e.normal[0][chartOptions.data.color_index]);
+      return colorScale(e.normal[0][chartOptions.data.colorIndex]);
     });
 
     var drawBoxplotMedianLineSelection = s.select('line.median');
@@ -329,7 +329,7 @@
 
     createBoxplotSelection.enter().append('rect').merge(createBoxplotSelection).attr('class', 'explodingBoxplot box').attr('fill', function (d) {
       // console.log('d from createBoxplot', d);
-      colorScale(d.normal[0][chartOptions.data.color_index]);
+      colorScale(d.normal[0][chartOptions.data.colorIndex]);
     });
 
     var currentBoxplotBoxSelector = '#explodingBoxplot_box' + chartOptions.id + i;
@@ -444,7 +444,7 @@
         }
       },
       data: {
-        color_index: 'color',
+        colorIndex: 'color',
         label: 'undefined',
         group: undefined,
         identifier: undefined
@@ -472,7 +472,9 @@
       }
     };
 
-    var mobileScreen = $(window).innerWidth() < options.mobileScreenMax;
+    var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+    var mobileScreen = windowWidth < options.mobileScreenMax;
 
     var defaultColors = {
       0: '#a6cee3',
@@ -527,8 +529,9 @@
         // main chart area
         var chartWrapper = chartRoot.append('g').attr('class', 'chartWrapper').attr('id', 'chartWrapper' + options.id);
 
-        mobileScreen = $(window).innerWidth() < options.mobileScreenMax;
-        // console.log('mobileScreen', mobileScreen);
+        windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+        mobileScreen = windowWidth < options.mobileScreenMax;
 
         // boolean resize used to disable transitions during resize operation
         update = function update(resize) {
@@ -580,7 +583,7 @@
           // console.log('yScale.range()', yScale.range());
 
           var colorScale = d3.scaleOrdinal().domain(d3.set(dataSet.map(function (m) {
-            return m[options.data.color_index];
+            return m[options.data.colorIndex];
           })).values()).range(Object.keys(colors).map(function (m) {
             return colors[m];
           }));

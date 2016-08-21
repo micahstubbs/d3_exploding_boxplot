@@ -28,7 +28,7 @@ export function createBoxplot(selector, data, options) {
       .attr('class', 'explodingBoxplot box')
       .attr('fill', d => {
         // console.log('d from createBoxplot', d);
-        colorScale(d.normal[0][chartOptions.data.color_index])
+        colorScale(d.normal[0][chartOptions.data.colorIndex])
       });
 
   const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;

@@ -6,6 +6,8 @@ DONE + abstract out hideBoxplot()
 DONE + abstract out keyWalk()
 DONE + get lines to appear
 DONE + get axes to appear
-+ debug colorScale across states and options in the example
-+ convert color_index to camelCase colorIndex
-+ remove jQuery dependency
+DONE + remove jQuery dependency
+DONE + in @tennivisuals example: convert colorIndex to camelCase colorIndex
+
++ in @tennivisuals example: debug colorScale across states and options in the example
+

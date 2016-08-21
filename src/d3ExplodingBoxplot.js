@@ -58,7 +58,7 @@ export default function () {
       }
     },
     data: {
-      color_index: 'color',
+      colorIndex: 'color',
       label: 'undefined',
       group: undefined,
       identifier: undefined
@@ -86,7 +86,11 @@ export default function () {
     }
   };
 
-  let mobileScreen = ($(window).innerWidth() < options.mobileScreenMax);
+  let windowWidth = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+
+  let mobileScreen = (windowWidth < options.mobileScreenMax);
 
   const defaultColors = {
     0: '#a6cee3',
@@ -150,8 +154,11 @@ export default function () {
         .attr('class', 'chartWrapper')
         .attr('id', `chartWrapper${options.id}`);
 
-      mobileScreen = ($(window).innerWidth() < options.mobileScreenMax);
-      // console.log('mobileScreen', mobileScreen);
+      windowWidth = window.innerWidth
+        || document.documentElement.clientWidth
+        || document.body.clientWidth;
+
+      mobileScreen = (windowWidth < options.mobileScreenMax);
 
       // boolean resize used to disable transitions during resize operation
       update = resize => {
@@ -208,7 +215,7 @@ export default function () {
         // console.log('yScale.range()', yScale.range());
 
         const colorScale = d3.scaleOrdinal()
-          .domain(d3.set(dataSet.map(m => m[options.data.color_index])).values())
+          .domain(d3.set(dataSet.map(m => m[options.data.colorIndex])).values())
           .range(Object.keys(colors).map(m => colors[m]));
         // console.log('colorScale.domain()', colorScale.domain());
         // console.log('colorScale.range()', colorScale.range());
