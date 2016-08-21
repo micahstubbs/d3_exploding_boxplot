@@ -688,6 +688,10 @@
           chartWrapper.selectAll('.axis path').style('fill', 'none').style('stroke', 'black').style('shape-rendering', 'crispEdges');
 
           chartWrapper.selectAll('.axis line').style('fill', 'none').style('stroke', 'black').style('shape-rendering', 'crispEdges');
+
+          chartWrapper.selectAll('line.explodingBoxplot.line').style('stroke', '#888').style('stroke-width', '2px');
+
+          chartWrapper.selectAll('rect.explodingBoxplot.box').style('stroke', '#888').style('stroke-width', '2px');
         }; // end update()
       });
     }
