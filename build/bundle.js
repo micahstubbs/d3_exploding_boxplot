@@ -619,11 +619,19 @@
           // console.log('updateXAxis', updateXAxis);
           // console.log('updateXAxis[0]', updateXAxis[0])
 
-          updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').append('text').attr('class', 'axis text');
+          // updateXAxis.enter()
+          //   .append('g')
+          //   .merge(updateXAxis)
+          //     .attr('class', 'explodingBoxplot x axis')
+          //     .attr('id', 'xpb_xAxis')
+          //   .append('text')
+          //     .attr('class', 'axis text');
 
           updateXAxis.exit().remove();
 
-          updateXAxis.attr('transform', 'translate(0,' + (options.height - options.margins.top - options.margins.bottom) + ')').call(xAxis).select('.axis.text').attr('x', (options.width - options.margins.left - options.margins.right) / 2).attr('dy', '.71em').attr('y', options.margins.bottom - 10).style('text-anchor', 'middle').text(options.axes.x.label);
+          updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').attr('transform', 'translate(0,' + (options.height - options.margins.top - options.margins.bottom) + ')').call(xAxis);
+
+          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', (options.width - options.margins.left - options.margins.right) / 2).attr('dy', '.71em').attr('y', options.margins.bottom - 10).style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
           // console.log(`d3.selectAll('.x.axis')`, d3.selectAll('.x.axis'));
 
           var updateYAxis = chartWrapper.selectAll('#xpb_yAxis').data([0]);
