@@ -6,7 +6,6 @@ no-use-before-define: "off",
 no-console: "off",
 no-unused-vars: "off"
 */
-// import d3Tip from './d3-tip';
 import { implodeBoxplot } from './implodeBoxplot';
 import { drawBoxplot } from './drawBoxplot';
 import { createJitter } from './createJitter';
