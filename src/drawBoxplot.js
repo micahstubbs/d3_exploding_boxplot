@@ -24,10 +24,10 @@ export function drawBoxplot(d, i, options, state) {
     groups
   };
   
-  console.log('chartOptions.id', chartOptions.id);
-  console.log('i', i);
+  // console.log('chartOptions.id', chartOptions.id);
+  // console.log('i', i);
   const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;
-  console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
+  // console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
   const s = d3.select(currentBoxplotBoxSelector);
   // const s = d3.select(this);
   // console.log('s from drawBoxplot', s);
