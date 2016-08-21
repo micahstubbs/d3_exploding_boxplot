@@ -27,7 +27,7 @@ export function createBoxplot(selector, data, options) {
     .merge(createBoxplotSelection)
       .attr('class', 'explodingBoxplot box')
       .attr('fill', d => {
-        console.log('d from createBoxplot', d);
+        // console.log('d from createBoxplot', d);
         colorScale(d.normal[0][chartOptions.data.color_index])
       });
 

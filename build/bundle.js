@@ -180,7 +180,7 @@
 
     var s = d3$1.select('#explodingBoxplot_box' + chartOptions.id + i);
     // const s = d3.select(this);
-    console.log('s from drawBoxplot', s);
+    // console.log('s from drawBoxplot', s);
 
     s.on('click', function () /* d */{
       explodeBoxplot(i, explodeBoxplotOptions);
@@ -209,10 +209,10 @@
     jitterPlot(i, jitterPlotOptions);
 
     var drawBoxplotBoxSelection = s.select('rect.box');
-    console.log('drawBoxplotBoxSelection', drawBoxplotBoxSelection);
+    // console.log('drawBoxplotBoxSelection', drawBoxplotBoxSelection);
     // box
     s.select('rect.box').transition().duration(transitionTime).attr('x', 0).attr('width', xScale.bandwidth()).attr('y', function (e) {
-      console.log('e from drawBoxplotBoxSelection', e);
+      // console.log('e from drawBoxplotBoxSelection', e);
       return yScale(e.quartiles[2]);
     }).attr('height', function (e) {
       return yScale(e.quartiles[0]) - yScale(e.quartiles[2]);
@@ -221,11 +221,11 @@
     });
 
     var drawBoxplotMedianLineSelection = s.select('line.median');
-    console.log('drawBoxplotMedianLineSelection', drawBoxplotMedianLineSelection);
+    // console.log('drawBoxplotMedianLineSelection', drawBoxplotMedianLineSelection);
 
     // median line
     s.select('line.median').transition().duration(transitionTime).attr('x1', 0).attr('x2', xScale.bandwidth()).attr('y1', function (e) {
-      console.log('e from drawBoxplotMedianLineSelection', e);
+      // console.log('e from drawBoxplotMedianLineSelection', e);
       return yScale(e.quartiles[1]);
     }).attr('y2', function (e) {
       return yScale(e.quartiles[1]);
@@ -298,12 +298,7 @@
     console.log('createJitter() was called');
     var selector = this;
     // console.log('selection from createJitter', selector;
-
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    console.log('args from createJitter', args);
+    // console.log('args from createJitter', args);
 
     d3$1.select(selector).append('g').attr('class', 'explodingBoxplot outliers-points');
 
@@ -329,7 +324,7 @@
     var createBoxplotSelection = s.selectAll('.box').data([g]);
 
     createBoxplotSelection.enter().append('rect').merge(createBoxplotSelection).attr('class', 'explodingBoxplot box').attr('fill', function (d) {
-      console.log('d from createBoxplot', d);
+      // console.log('d from createBoxplot', d);
       colorScale(d.normal[0][chartOptions.data.color_index]);
     });
 
@@ -366,9 +361,9 @@
 
   function computeBoxplot(data, iqrScalingFactor, value) {
     console.log('computeBoxplot() was called');
-    console.log('data from computeBoxplot', data);
-    console.log('iqrScalingFactor', iqrScalingFactor);
-    console.log('value from computeBoxplot', value);
+    // console.log('data from computeBoxplot', data);
+    // console.log('iqrScalingFactor', iqrScalingFactor);
+    // console.log('value from computeBoxplot', value);
     iqrScalingFactor = iqrScalingFactor || 1.5;
     value = value || Number;
     var seriev = data.map(function (m) {
@@ -376,7 +371,7 @@
     }).sort(d3$1.ascending);
     var quartiles = [d3$1.quantile(seriev, 0.25), d3$1.quantile(seriev, 0.5), d3$1.quantile(seriev, 0.75)];
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
-    console.log('iqr', iqr);
+    // console.log('iqr', iqr);
     // separate outliers
     var max = Number.MIN_VALUE;
     var min = Number.MAX_VALUE;
@@ -394,7 +389,7 @@
     boxData.iqr = iqr;
     boxData.max = max;
     boxData.min = min;
-    console.log('boxData', boxData);
+    // console.log('boxData', boxData);
     return boxData;
   }
 
@@ -511,10 +506,8 @@
 
     function chart(selection) {
       console.log('chart() was called');
-      console.log('selection from chart()', selection);
+      // console.log('selection from chart()', selection);
       selection.each(function () {
-        var _this = this;
-
         var domParent = d3.select(this);
         // console.log('domParent', domParent);
         constituents.elements.domParent = domParent;
@@ -529,7 +522,7 @@
         var chartWrapper = chartRoot.append('g').attr('class', 'chartWrapper').attr('id', 'chartWrapper' + options.id);
 
         mobileScreen = $(window).innerWidth() < options.mobileScreenMax;
-        console.log('mobileScreen', mobileScreen);
+        // console.log('mobileScreen', mobileScreen);
 
         // boolean resize used to disable transitions during resize operation
         update = function update(resize) {
@@ -636,26 +629,26 @@
           updateYAxis.call(yAxis).select('.axis.text').attr('transform', 'rotate(-90)').attr('x', -options.margins.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margins.left + 5).style('text-anchor', 'middle').text(options.axes.y.label);
 
           var boxContent = chartWrapper.selectAll('.boxcontent').data(groups);
-          console.log('boxContent', boxContent);
+          // console.log('boxContent', boxContent);
 
           boxContent.enter().append('g').merge(boxContent).attr('class', 'explodingBoxplot boxcontent').attr('id', function (d, i) {
             return 'explodingBoxplot' + options.id + i;
           });
-          console.log('boxContent after enter', boxContent);
+          // console.log('boxContent after enter', boxContent);
 
           boxContent.exit().remove();
-          console.log('boxContent after exit', boxContent);
+          // console.log('boxContent after exit', boxContent);
 
-          chartWrapper.selectAll('g.boxcontent').attr('transform', function (d) {
+          d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent').attr('transform', function (d) {
             return 'translate(' + xScale(d.group) + ',0)';
           }).each(function (d, i) {
-            console.log('d, testing selection.each', d);
-            console.log('i, testing selection.each', i);
+            // console.log('d, testing selection.each', d);
+            // console.log('i, testing selection.each', i);
           }).each(createJitter).each(function (d, i) {
-            console.log('d from boxContent each', d);
-            console.log('this from boxContent each', _this);
-            var selector = '#' + d3.select(_this).attr('id');
-            // const selector = `#${d.attr('id')}`;
+            // console.log('d from boxContent each', d);
+            // console.log('this from boxContent each', this);
+            var selector = '#explodingBoxplot' + i;
+            // console.log('selector from createBoxplot call', selector);
             var createBoxplotOptions = {
               chartOptions: options,
               i: i,
@@ -773,8 +766,8 @@
       }
 
       console.log('chart.data() was called');
-      console.log('value from chart.data', value);
-      console.log('args from chart.data', args);
+      // console.log('value from chart.data', value);
+      // console.log('args from chart.data', args);
       if (!args) return dataSet;
       // this appears to be specific to the @tennisvisuals atpWta.json dataset
       // value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));

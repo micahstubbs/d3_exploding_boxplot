@@ -127,7 +127,7 @@ export default function () {
 
   function chart(selection) {
     console.log('chart() was called');
-    console.log('selection from chart()', selection);
+    // console.log('selection from chart()', selection);
     selection.each(function () {
       const domParent = d3.select(this);
       // console.log('domParent', domParent);
@@ -152,7 +152,7 @@ export default function () {
         .attr('id', `chartWrapper${options.id}`);
 
       mobileScreen = ($(window).innerWidth() < options.mobileScreenMax);
-      console.log('mobileScreen', mobileScreen);
+      // console.log('mobileScreen', mobileScreen);
 
       // boolean resize used to disable transitions during resize operation
       update = resize => {
@@ -298,31 +298,31 @@ export default function () {
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);
-        console.log('boxContent', boxContent);
+        // console.log('boxContent', boxContent);
 
         boxContent.enter()
           .append('g')
           .merge(boxContent)
           .attr('class', 'explodingBoxplot boxcontent')
           .attr('id', (d, i) => `explodingBoxplot${options.id}${i}`);
-        console.log('boxContent after enter', boxContent);
+        // console.log('boxContent after enter', boxContent);
 
         boxContent.exit()
           .remove();
-        console.log('boxContent after exit', boxContent);
+        // console.log('boxContent after exit', boxContent);
 
-        chartWrapper.selectAll('g.boxcontent')
+        d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(function (d, i) {
-            console.log('d, testing selection.each', d);
-            console.log('i, testing selection.each', i);
+            // console.log('d, testing selection.each', d);
+            // console.log('i, testing selection.each', i);
           })
           .each(createJitter)
           .each((d, i) => {
-            console.log('d from boxContent each', d);
-            console.log('this from boxContent each', this);
-            const selector = `#${d3.select(this).attr('id')}`;
-            // const selector = `#${d.attr('id')}`;
+            // console.log('d from boxContent each', d);
+            // console.log('this from boxContent each', this);
+            const selector = `#explodingBoxplot${i}`;
+            // console.log('selector from createBoxplot call', selector);
             const createBoxplotOptions = {
               chartOptions: options,
               i,
@@ -416,8 +416,8 @@ export default function () {
 
   chart.data = function (value, ...args) {
     console.log('chart.data() was called');
-    console.log('value from chart.data', value);
-    console.log('args from chart.data', args);
+    // console.log('value from chart.data', value);
+    // console.log('args from chart.data', args);
     if (!args) return dataSet;
     // this appears to be specific to the @tennisvisuals atpWta.json dataset
     // value.sort((x, y) => x['Set Score'].split('-').join('') - y['Set Score'].split('-').join(''));
