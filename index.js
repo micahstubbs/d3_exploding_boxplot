@@ -1,1 +1,1 @@
-export { default as plot } from './src/d3ExplodingBoxplot';
+export { default as d3ExplodingBoxplot } from './src/d3ExplodingBoxplot';

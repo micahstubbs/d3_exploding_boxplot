@@ -5,7 +5,7 @@
   "main": "build/bundle.js",
   "scripts": {
     "prepublish": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js",
-    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/explodingBoxplot.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/01/explodingBoxplot.js",
+    "test": "rm -rf build && mkdir build && rollup -c --banner \"$(preamble)\" -- index.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/explodingBoxplot.js && cp build/bundle.js ~/workspace/exploding-boxplot-example-project/01/explodingBoxplot.js && cp build/bundle.js ~/workspace/visualizations/residuals/vis/06/src/d3-exploding-boxplot.js",
     "lint": "eslint index.js src --fix"
   },
   "repository": {
@@ -45,8 +45,7 @@
     "rollup-plugin-json": "^2.0.1"
   },
   "dependencies": {
-    "d3": "~3.5.6",
-    "d3-tip": "~0.6.7"
+    "d3": "^4.2.0"
   },
   "license": "MIT",
   "bugs": {

@@ -16,6 +16,7 @@ import { computeBoxplot } from './computeBoxplot';
 import { initJitter } from './initJitter';
 import { jitterPlot } from './jitterPlot';
 import { explodeBoxplot } from './explodeBoxplot';
+import * as d3 from 'd3';
 export default function () {
   // options which should be accessible via ACCESSORS
   let dataSet = [];
@@ -199,6 +200,7 @@ export default function () {
 
         // create boxplot data
         groups = groups.map(g => {
+          console.log('options from inside of groups map', options);
           const o = computeBoxplot(g.values, options.display.iqr, options.axes.y.label);
           o.group = g.key;
           return o;

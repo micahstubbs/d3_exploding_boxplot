@@ -8,7 +8,7 @@ export default {
     d3: 'd3',
     lodash: '_'
   },
-  moduleName: 'explodingBoxplot',
+  moduleName: 'd3ExplodingBoxplot',
   plugins: [ json(), babel() ],
   dest: 'build/bundle.js'
 };
