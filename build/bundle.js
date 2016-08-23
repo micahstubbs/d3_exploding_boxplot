@@ -471,6 +471,7 @@
         x: {
           variable: '',
           label: '',
+          labelPosition: undefined,
           ticks: 10,
           scale: 'linear',
           nice: true,
@@ -481,6 +482,7 @@
         y: {
           variable: '',
           label: '',
+          labelPosition: undefined,
           ticks: 10,
           scale: 'linear',
           nice: true,
@@ -708,7 +710,7 @@
 
           updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').attr('transform', 'translate(0,' + chartBottomTranslate + ')').call(xAxis);
 
-          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', boxPlotWidth / 2).attr('dy', '.71em').attr('y', options.margin.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
+          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text label').attr('x', boxPlotWidth / 2).attr('dy', '.71em').attr('y', options.margin.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
 
           // set y-position of x-axis line
           chartWrapper.selectAll('.x.axis path').attr('transform', 'translate(0,' + xAxisYTranslate + ')');
@@ -719,10 +721,13 @@
 
           updateYAxis.enter().append('g').merge(updateYAxis).attr('class', 'explodingBoxplot y axis').attr('id', 'xpb_yAxis').call(yAxis);
 
-          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text').attr('transform', 'rotate(-90)').attr('x', -options.margin.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margin.left + 5).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
+          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text label').attr('transform', 'rotate(-90)').attr('x', -options.margin.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margin.left + 5).style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
 
-          // style the axis text
-          chartWrapper.selectAll('.axis text').style('font', '10px sans-serif');
+          chartWrapper.selectAll('g.y.axis').selectAll('text.label').style('font-famiy', 'Times, serif');
+
+          if (options.axes.y.labelPosition === 'origin') {
+            chartWrapper.selectAll('g.y.axis').selectAll('text.label').attr('x', 0).attr('y', 0).attr('dy', '0.35em').style('text-anchor', 'end').style('font-size', '12px').attr('transform', 'rotate(0) translate(' + -(options.margin.left / 4) + ',' + yScale(0) + ')');
+          }
 
           var boxContent = chartWrapper.selectAll('.boxcontent').data(groups);
           console.log('boxContent after variable declaration', boxContent);
@@ -777,6 +782,7 @@
           //
           // styles
           //
+
           chartWrapper.selectAll('rect.box').style('fill-opacity', 1);
 
           chartWrapper.selectAll('.axis path').style('fill', 'none').style('stroke', 'black').style('shape-rendering', 'crispEdges');
@@ -792,7 +798,7 @@
           // style the tooltip
           domParent.selectAll('explodingBoxplot.tip').style('font', 'normal 13px Lato, Open sans, sans-serif').style('line-height', 1).style('font-weight', 'bold').style('padding', '12px').style('background', '#333333').style('color', '#DDDDDD').style('border-radius', '2px');
 
-          chartWrapper.selectAll('g.tick text').style('-webkit-user-select', 'none').style('-khtml-user-select', 'none').style('-moz-user-select', 'none').style('-o-user-select', 'none').style('user-select', 'none').style('cursor', 'default');
+          chartWrapper.selectAll('g.tick text').style('font', '10px sans-serif').style('-webkit-user-select', 'none').style('-khtml-user-select', 'none').style('-moz-user-select', 'none').style('-o-user-select', 'none').style('user-select', 'none').style('cursor', 'default');
 
           chartWrapper.selectAll('g.axis text').style('-webkit-user-select', 'none').style('-khtml-user-select', 'none').style('-moz-user-select', 'none').style('-o-user-select', 'none').style('user-select', 'none').style('cursor', 'default');
         }; // end update()

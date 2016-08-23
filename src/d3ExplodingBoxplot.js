@@ -44,6 +44,7 @@ export default function () {
       x: {
         variable: '',
         label: '',
+        labelPosition: undefined,
         ticks: 10,
         scale: 'linear',
         nice: true,
@@ -54,6 +55,7 @@ export default function () {
       y: {
         variable: '',
         label: '',
+        labelPosition: undefined,
         ticks: 10,
         scale: 'linear',
         nice: true,
@@ -323,7 +325,7 @@ export default function () {
 
         chartWrapper.selectAll('g.x.axis')
           .append('text')
-            .attr('class', 'axis text')
+            .attr('class', 'axis text label')
             .attr('x', boxPlotWidth / 2)
             .attr('dy', '.71em')
             .attr('y', options.margin.bottom - 10)
@@ -352,19 +354,27 @@ export default function () {
 
         chartWrapper.selectAll('g.y.axis')
           .append('text')
-            .attr('class', 'axis text')
+            .attr('class', 'axis text label')
             .attr('transform', 'rotate(-90)')
             .attr('x', -options.margin.top - d3.mean(yScale.range()))
             .attr('dy', '.71em')
             .attr('y', -options.margin.left + 5)
-            .style('font', '10px sans-serif')
             .style('text-anchor', 'middle')
             .style('fill', 'black')
             .text(options.axes.y.label);
 
-        // style the axis text
-        chartWrapper.selectAll('.axis text')
-          .style('font', '10px sans-serif');
+        chartWrapper.selectAll('g.y.axis').selectAll('text.label')
+          .style('font-famiy', 'Times, serif')
+
+        if (options.axes.y.labelPosition === 'origin') {
+          chartWrapper.selectAll('g.y.axis').selectAll('text.label')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('dy', '0.35em')
+            .style('text-anchor', 'end')
+            .style('font-size', '12px')
+            .attr('transform', `rotate(0) translate(${-(options.margin.left / 4)},${yScale(0)})`)
+        }
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);
@@ -426,6 +436,7 @@ export default function () {
       //
       // styles
       //
+
       chartWrapper.selectAll('rect.box')
         .style('fill-opacity', 1);
 
@@ -461,6 +472,7 @@ export default function () {
         .style('border-radius', '2px')
 
       chartWrapper.selectAll('g.tick text')
+        .style('font', '10px sans-serif')
         .style('-webkit-user-select', 'none')
         .style('-khtml-user-select', 'none')
         .style('-moz-user-select', 'none')
