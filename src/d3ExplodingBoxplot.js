@@ -45,6 +45,7 @@ export default function () {
         variable: '',
         label: '',
         labelPosition: undefined,
+        showTitle: undefined,
         ticks: 10,
         scale: 'linear',
         nice: true,
@@ -338,15 +339,17 @@ export default function () {
         chartWrapper.selectAll('.x.axis path')
           .attr('transform', `translate(0,${xAxisYTranslate})`);
 
-        // Set up X axis label
-        chartWrapper.append('g')
-          .append('text')
-          .attr('class', 'x title')
-          .attr('text-anchor', 'start')
-          .style('font-size', '12px')
-          .style('font-weight', 600)
-          .attr('transform', `translate(${30},${-10})`)
-          .text(`${options.axes.x.label}`);
+        if (typeof options.axes.x.showTitle !== 'undefined') {
+          // Set up X axis title
+          chartWrapper.append('g')
+            .append('text')
+            .attr('class', 'x title')
+            .attr('text-anchor', 'start')
+            .style('font-size', '12px')
+            .style('font-weight', 600)
+            .attr('transform', `translate(${30},${-10})`)
+            .text(`${options.axes.x.label}`);
+        }
 
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
           .data([0]);
