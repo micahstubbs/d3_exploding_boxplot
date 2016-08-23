@@ -270,7 +270,8 @@ export default function () {
         if (events.update.ready) { events.update.ready(constituents, options, events); }
 
         const xAxis = d3.axisBottom()
-          .scale(xScale);
+          .scale(xScale)
+          .tickSizeOuter(0);
         // console.log('xAxis', xAxis);
 
         const yAxis = d3.axisLeft()

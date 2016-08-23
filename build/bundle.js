@@ -672,7 +672,7 @@
             events.update.ready(constituents, options, events);
           }
 
-          var xAxis = d3.axisBottom().scale(xScale);
+          var xAxis = d3.axisBottom().scale(xScale).tickSizeOuter(0);
           // console.log('xAxis', xAxis);
 
           var yAxis = d3.axisLeft().scale(yScale).ticks(options.axes.y.ticks).tickFormat(options.axes.y.tickFormat);
