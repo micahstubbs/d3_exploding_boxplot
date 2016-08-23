@@ -360,11 +360,9 @@ export default function () {
             .attr('dy', '.71em')
             .attr('y', -options.margin.left + 5)
             .style('text-anchor', 'middle')
+            .style('font-family', 'Times')
             .style('fill', 'black')
-            .text(options.axes.y.label);
-
-        chartWrapper.selectAll('g.y.axis').selectAll('text.label')
-          .style('font-famiy', 'Times, serif')
+            .text(options.axes.y.label);    
 
         if (options.axes.y.labelPosition === 'origin') {
           chartWrapper.selectAll('g.y.axis').selectAll('text.label')

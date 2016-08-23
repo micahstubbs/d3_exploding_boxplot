@@ -721,9 +721,7 @@
 
           updateYAxis.enter().append('g').merge(updateYAxis).attr('class', 'explodingBoxplot y axis').attr('id', 'xpb_yAxis').call(yAxis);
 
-          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text label').attr('transform', 'rotate(-90)').attr('x', -options.margin.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margin.left + 5).style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
-
-          chartWrapper.selectAll('g.y.axis').selectAll('text.label').style('font-famiy', 'Times, serif');
+          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text label').attr('transform', 'rotate(-90)').attr('x', -options.margin.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margin.left + 5).style('text-anchor', 'middle').style('font-family', 'Times').style('fill', 'black').text(options.axes.y.label);
 
           if (options.axes.y.labelPosition === 'origin') {
             chartWrapper.selectAll('g.y.axis').selectAll('text.label').attr('x', 0).attr('y', 0).attr('dy', '0.35em').style('text-anchor', 'end').style('font-size', '12px').attr('transform', 'rotate(0) translate(' + -(options.margin.left / 4) + ',' + yScale(0) + ')');
