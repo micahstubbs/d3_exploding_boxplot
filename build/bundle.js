@@ -13,8 +13,10 @@
     var events = options.events;
     var constituents = options.constituents;
 
-    s.attr('class', 'explodingBoxplot point').attr('r', chartOptions.datapoints.radius).attr('fill', function (d) {
+    s.attr('class', 'explodingBoxplot point').attr('r', chartOptions.dataPoints.radius).attr('fill', function (d) {
       return colorScale(d[chartOptions.data.colorIndex]);
+    }).attr('fill-opacity', function (d) {
+      return chartOptions.dataPoints.fillOpacity;
     }).on('mouseover', function (d, i /* , self */) {
       if (events.point && typeof events.point.mouseover === 'function') {
         events.point.mouseover(d, i, d3.select(this), constituents, chartOptions);
@@ -38,7 +40,7 @@
     var xScale = options.xScale;
     var yScale = options.yScale;
 
-    selection.attr('r', chartOptions.datapoints.radius).attr('fill', function (d) {
+    selection.attr('r', chartOptions.dataPoints.radius).attr('fill', function (d) {
       return colorScale(d[chartOptions.data.colorIndex]);
     }).attr('cx', function () /* d */{
       var w = xScale.bandwidth();
@@ -416,7 +418,7 @@
       class: 'xBoxPlot',
       width: window.innerWidth,
       height: window.innerHeight,
-      margins: {
+      margin: {
         top: 10,
         right: 10,
         bottom: 30,
@@ -449,15 +451,17 @@
         group: undefined,
         identifier: undefined
       },
-      datapoints: {
-        radius: 3
+      dataPoints: {
+        radius: 3,
+        fillOpacity: 1
       },
       display: {
         iqr: 1.5, // interquartile range
         boxpadding: 0.2
       },
       resize: true,
-      mobileScreenMax: 500
+      mobileScreenMax: 500,
+      boxColors: ['#a6cee3', '#ff7f00', '#b2df8a', '#1f78b4', '#fdbf6f', '#33a02c', '#cab2d6', '#6a3d9a', '#fb9a99', '#e31a1c', '#ffff99', '#b15928']
     };
 
     var constituents = {
@@ -476,22 +480,7 @@
 
     var mobileScreen = windowWidth < options.mobileScreenMax;
 
-    var defaultColors = {
-      0: '#a6cee3',
-      1: '#ff7f00',
-      2: '#b2df8a',
-      3: '#1f78b4',
-      4: '#fdbf6f',
-      5: '#33a02c',
-      6: '#cab2d6',
-      7: '#6a3d9a',
-      8: '#fb9a99',
-      9: '#e31a1c',
-      10: '#ffff99',
-      11: '#b15928'
-    };
-    var colors = JSON.parse(JSON.stringify(defaultColors));
-
+    var colors = options.boxColors;
     var update = void 0;
 
     // programmatic
@@ -521,6 +510,7 @@
         constituents.elements.domParent = domParent;
 
         var chartRoot = domParent.append('svg').attr('class', 'svg-class');
+
         constituents.elements.chartRoot = chartRoot;
 
         // background click area added first
@@ -536,9 +526,9 @@
         // boolean resize used to disable transitions during resize operation
         update = function update(resize) {
           // console.log('update/resize function was called');
-          chartRoot.attr('width', options.width + options.margins.left + options.margins.right).attr('height', options.height + options.margins.top + options.margins.bottom);
+          chartRoot.attr('width', options.width + options.margin.left + options.margin.right).attr('height', options.height + options.margin.top + options.margin.bottom);
 
-          chartWrapper.attr('transform', 'translate(' + options.margins.left + ',' + options.margins.top + ')');
+          chartWrapper.attr('transform', 'translate(' + options.margin.left + ',' + options.margin.top + ')');
 
           // console.log('events.update.begin', events.update.begin);
           if (events.update.begin) {
@@ -560,7 +550,7 @@
 
           var xScale = d3.scaleBand().domain(groups.map(function (d) {
             return d.key;
-          })).padding(options.display.boxpadding).rangeRound([0, options.width - options.margins.left - options.margins.right]);
+          })).padding(options.display.boxpadding).rangeRound([0, options.width - options.margin.left - options.margin.right]);
 
           constituents.scales.X = xScale;
           // console.log('xScale.domain()', xScale.domain());
@@ -577,7 +567,7 @@
 
           var yScale = d3.scaleLinear().domain(d3.extent(dataSet.map(function (m) {
             return m[options.axes.y.label];
-          }))).range([options.height - options.margins.top - options.margins.bottom, 0]).nice();
+          }))).range([options.height - options.margin.top - options.margin.bottom, 0]).nice();
 
           constituents.scales.Y = yScale;
           // console.log('yScale.domain()', yScale.domain());
@@ -623,9 +613,9 @@
 
           updateXAxis.exit().remove();
 
-          updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').attr('transform', 'translate(0,' + (options.height - options.margins.top - options.margins.bottom) + ')').call(xAxis);
+          updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').attr('transform', 'translate(0,' + (options.height - options.margin.top - options.margin.bottom) + ')').call(xAxis);
 
-          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', (options.width - options.margins.left - options.margins.right) / 2).attr('dy', '.71em').attr('y', options.margins.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
+          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', (options.width - options.margin.left - options.margin.right) / 2).attr('dy', '.71em').attr('y', options.margin.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
 
           var updateYAxis = chartWrapper.selectAll('#xpb_yAxis').data([0]);
 
@@ -633,7 +623,7 @@
 
           updateYAxis.enter().append('g').merge(updateYAxis).attr('class', 'explodingBoxplot y axis').attr('id', 'xpb_yAxis').call(yAxis);
 
-          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text').attr('transform', 'rotate(-90)').attr('x', -options.margins.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margins.left + 5).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
+          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text').attr('transform', 'rotate(-90)').attr('x', -options.margin.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -options.margin.left + 5).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.y.label);
 
           // style the axis text
           chartWrapper.selectAll('.axis text').style('font', '10px sans-serif');

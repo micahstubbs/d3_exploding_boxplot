@@ -64,15 +64,30 @@ export default function () {
       group: undefined,
       identifier: undefined
     },
-    datapoints: {
-      radius: 3
+    dataPoints: {
+      radius: 3,
+      fillOpacity: 1
     },
     display: {
       iqr: 1.5, // interquartile range
       boxpadding: 0.2
     },
     resize: true,
-    mobileScreenMax: 500
+    mobileScreenMax: 500,
+    boxColors: [
+      '#a6cee3',
+      '#ff7f00',
+      '#b2df8a',
+      '#1f78b4',
+      '#fdbf6f',
+      '#33a02c',
+      '#cab2d6',
+      '#6a3d9a',
+      '#fb9a99',
+      '#e31a1c',
+      '#ffff99',
+      '#b15928'
+    ]
   };
 
   const constituents = {
@@ -93,22 +108,7 @@ export default function () {
 
   let mobileScreen = (windowWidth < options.mobileScreenMax);
 
-  const defaultColors = {
-    0: '#a6cee3',
-    1: '#ff7f00',
-    2: '#b2df8a',
-    3: '#1f78b4',
-    4: '#fdbf6f',
-    5: '#33a02c',
-    6: '#cab2d6',
-    7: '#6a3d9a',
-    8: '#fb9a99',
-    9: '#e31a1c',
-    10: '#ffff99',
-    11: '#b15928'
-  };
-  let colors = JSON.parse(JSON.stringify(defaultColors));
-
+  let colors = options.boxColors;
   let update;
 
   // programmatic
@@ -139,6 +139,7 @@ export default function () {
 
       const chartRoot = domParent.append('svg')
         .attr('class', 'svg-class');
+
       constituents.elements.chartRoot = chartRoot;
 
       // background click area added first

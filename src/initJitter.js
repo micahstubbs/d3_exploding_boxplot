@@ -9,8 +9,9 @@ export function initJitter(s, options) {
   const constituents = options.constituents;
 
   s.attr('class', 'explodingBoxplot point')
-    .attr('r', chartOptions.datapoints.radius)
+    .attr('r', chartOptions.dataPoints.radius)
     .attr('fill', d => colorScale(d[chartOptions.data.colorIndex]))
+    .attr('fill-opacity', d =>  chartOptions.dataPoints.fillOpacity)
     .on('mouseover', function (d, i/* , self */) {
       if (events.point && typeof events.point.mouseover === 'function') {
         events.point.mouseover(d, i, d3.select(this), constituents, chartOptions);

@@ -6,7 +6,7 @@ export function drawJitter(selection, options) {
   const xScale = options.xScale;
   const yScale = options.yScale;
 
-  selection.attr('r', chartOptions.datapoints.radius)
+  selection.attr('r', chartOptions.dataPoints.radius)
     .attr('fill', d => colorScale(d[chartOptions.data.colorIndex]))
     .attr('cx', (/* d */) => {
       const w = xScale.bandwidth();
