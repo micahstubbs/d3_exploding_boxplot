@@ -699,7 +699,7 @@
 
           updateXAxis.enter().append('g').merge(updateXAxis).attr('class', 'explodingBoxplot x axis').attr('id', 'xpb_xAxis').attr('transform', 'translate(0,' + (options.height - options.margin.top - options.margin.bottom) + ')').call(xAxis);
 
-          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', (boxPlotWidth - options.margin.left - options.margin.right) / 2).attr('dy', '.71em').attr('y', options.margin.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
+          chartWrapper.selectAll('g.x.axis').append('text').attr('class', 'axis text').attr('x', boxPlotWidth / 2).attr('dy', '.71em').attr('y', options.margin.bottom - 10).style('font', '10px sans-serif').style('text-anchor', 'middle').style('fill', 'black').text(options.axes.x.label);
 
           var updateYAxis = chartWrapper.selectAll('#xpb_yAxis').data([0]);
 

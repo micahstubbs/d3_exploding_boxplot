@@ -315,7 +315,7 @@ export default function () {
         chartWrapper.selectAll('g.x.axis')
           .append('text')
             .attr('class', 'axis text')
-            .attr('x', (boxPlotWidth - options.margin.left - options.margin.right) / 2)
+            .attr('x', boxPlotWidth / 2)
             .attr('dy', '.71em')
             .attr('y', options.margin.bottom - 10)
             .style('font', '10px sans-serif')
