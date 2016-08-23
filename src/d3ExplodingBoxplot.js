@@ -48,7 +48,8 @@ export default function () {
         scale: 'linear',
         nice: true,
         tickFormat: undefined,
-        domain: undefined
+        domain: undefined,
+        yTranslate: undefined // unscaled value
       },
       y: {
         variable: '',
@@ -301,6 +302,14 @@ export default function () {
 
         updateXAxis.exit()
           .remove();
+ 
+        const chartBottomTranslate = options.height - options.margin.top - options.margin.bottom;
+        let xAxisYTranslate;
+        if (typeof options.axes.x.yTranslate !== 'undefined') {
+          xAxisYTranslate = yScale(options.axes.x.yTranslate) - chartBottomTranslate;
+        } else {
+          xAxisYTranslate = options.height - options.margin.top - options.margin.bottom;
+        }
 
         updateXAxis
           .enter()
@@ -309,7 +318,7 @@ export default function () {
             .attr('class', 'explodingBoxplot x axis')
             .attr('id', 'xpb_xAxis')
             .attr('transform',
-              `translate(0,${options.height - options.margin.top - options.margin.bottom})`)
+              `translate(0,${chartBottomTranslate})`)
             .call(xAxis);
 
         chartWrapper.selectAll('g.x.axis')
@@ -322,6 +331,10 @@ export default function () {
             .style('text-anchor', 'middle')
             .style('fill', 'black')
             .text(options.axes.x.label);
+
+        // set y-position of x-axis line
+        chartWrapper.selectAll('.x.axis path')
+          .attr('transform', `translate(0,${xAxisYTranslate})`);
 
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
           .data([0]);
