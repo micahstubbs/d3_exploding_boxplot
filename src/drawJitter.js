@@ -12,5 +12,5 @@ export function drawJitter(selection, options) {
       const w = xScale.bandwidth();
       return Math.floor(Math.random() * w);
     })
-    .attr('cy', d => yScale(d[chartOptions.axes.y.label]));
+    .attr('cy', d => yScale(d[chartOptions.axes.y.variable]));
 }

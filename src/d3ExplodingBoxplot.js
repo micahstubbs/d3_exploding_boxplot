@@ -42,6 +42,7 @@ export default function () {
     },
     axes: {
       x: {
+        variable: '',
         label: '',
         ticks: 10,
         scale: 'linear',
@@ -50,6 +51,7 @@ export default function () {
         domain: undefined
       },
       y: {
+        variable: '',
         label: '',
         ticks: 10,
         scale: 'linear',
@@ -202,14 +204,14 @@ export default function () {
         // create boxplot data
         groups = groups.map(g => {
           console.log('options from inside of groups map', options);
-          const o = computeBoxplot(g.values, options.display.iqr, options.axes.y.label);
+          const o = computeBoxplot(g.values, options.display.iqr, options.axes.y.variable);
           o.group = g.key;
           return o;
         });
         // console.log('groups after map', groups);
 
         const yScale = d3.scaleLinear()
-          .domain(d3.extent(dataSet.map(m => m[options.axes.y.label])))
+          .domain(d3.extent(dataSet.map(m => m[options.axes.y.variable])))
           .range([options.height - options.margin.top - options.margin.bottom, 0])
           .nice();
 
@@ -234,6 +236,7 @@ export default function () {
 
         const yAxis = d3.axisLeft()
           .scale(yScale)
+          .ticks(options.axes.y.ticks)
           .tickFormat(options.axes.y.tickFormat);
         // console.log('yAxis', yAxis);
 
