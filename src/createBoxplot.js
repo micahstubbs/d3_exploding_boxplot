@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
 export function createBoxplot(selector, data, options) {
-  // console.log('createBoxplot() was called');
+  console.log('createBoxplot() was called');
 
-  // console.log('selector from createBoxplot', selector);
-  // console.log('d3.select(selector)', d3.select(selector));
+  console.log('selector from createBoxplot', selector);
+  console.log('d3.select(selector)', d3.select(selector));
   const i = options.i;
   const g = data;
   const chartOptions = options.chartOptions;

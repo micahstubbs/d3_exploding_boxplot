@@ -130,7 +130,7 @@ export default function () {
   };
 
   function chart(selection) {
-    // console.log('chart() was called');
+    console.log('chart() was called');
     // console.log('selection from chart()', selection);
     selection.each(function () {
       const domParent = d3.select(this);
@@ -224,7 +224,7 @@ export default function () {
 
         constituents.scales.color = colorScale;
 
-        // console.log('events.update.ready', events.update.ready);
+        console.log('events.update.ready', events.update.ready);
         if (events.update.ready) { events.update.ready(constituents, options, events); }
 
         const xAxis = d3.axisBottom()
@@ -311,20 +311,21 @@ export default function () {
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);
-        // console.log('boxContent', boxContent);
+        console.log('boxContent after variable declaration', boxContent);
 
         boxContent.enter()
           .append('g')
           .merge(boxContent)
           .attr('class', 'explodingBoxplot boxcontent')
           .attr('id', (d, i) => `explodingBoxplot${options.id}${i}`);
-        // console.log('boxContent after enter', boxContent);
+        console.log('boxContent after enter', boxContent);
 
         boxContent.exit()
           .remove();
-        // console.log('boxContent after exit', boxContent);
-
-        d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
+        console.log('boxContent after exit', boxContent);
+ 
+        // d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
+        chartWrapper.selectAll('g.explodingBoxplot.boxcontent')
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(function (d, i) {
             // console.log('d, testing selection.each', d);
@@ -332,10 +333,10 @@ export default function () {
           })
           .each(createJitter)
           .each((d, i) => {
-            // console.log('d from boxContent each', d);
+            console.log('d from boxContent each', d);
             // console.log('this from boxContent each', this);
             const selector = `#explodingBoxplot${i}`;
-            // console.log('selector from createBoxplot call', selector);
+            console.log('selector from createBoxplot call', selector);
             const createBoxplotOptions = {
               chartOptions: options,
               i,
@@ -345,6 +346,7 @@ export default function () {
             createBoxplot(selector, d, createBoxplotOptions);
           })
           .each((d, i) =>{
+            console.log('inside of each containing drawBoxplot call');
             const drawBoxplotOptions = {
               chartOptions: options,
               transitionTime,

@@ -6,7 +6,7 @@
 }(this, function (exports,d3) { 'use strict';
 
   function initJitter(s, options) {
-    // console.log('initJitter() was called');
+    console.log('initJitter() was called');
 
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
@@ -31,7 +31,7 @@
   }
 
   function drawJitter(selection, options) {
-    // console.log('drawJitter() was called');
+    console.log('drawJitter() was called');
 
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
@@ -49,7 +49,7 @@
   }
 
   function jitterPlot(i, options) {
-    // console.log('jitterPlot() was called');
+    console.log('jitterPlot() was called');
 
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
@@ -91,7 +91,7 @@
   }
 
   function hideBoxplot(d, options) {
-    // console.log('hideBoxplot() was called');
+    console.log('hideBoxplot() was called');
 
     // console.log('arguments from hideBoxplot()', arguments);
     var xScale = options.xScale;
@@ -157,7 +157,7 @@
   }
 
   function drawBoxplot(d, i, options, state) {
-    // console.log('drawBoxplot() was called');
+    console.log('drawBoxplot() was called');
     var chartOptions = options.chartOptions; // TODO: better names here
     var transitionTime = options.transitionTime;
     var xScale = options.xScale;
@@ -265,7 +265,7 @@
   }
 
   function implodeBoxplot(selector, options, state) {
-    // console.log('implodeBoxplot() was called');
+    console.log('implodeBoxplot() was called');
     var xScale = options.xScale;
     var yScale = options.yScale;
     var transitionTime = options.transitionTime;
@@ -299,7 +299,7 @@
   }
 
   function createJitter() {
-    // console.log('createJitter() was called');
+    console.log('createJitter() was called');
     var selector = this;
     // console.log('selection from createJitter', selector;
     // console.log('args from createJitter', args);
@@ -310,10 +310,10 @@
   }
 
   function createBoxplot(selector, data, options) {
-    // console.log('createBoxplot() was called');
+    console.log('createBoxplot() was called');
 
-    // console.log('selector from createBoxplot', selector);
-    // console.log('d3.select(selector)', d3.select(selector));
+    console.log('selector from createBoxplot', selector);
+    console.log('d3.select(selector)', d3.select(selector));
     var i = options.i;
     var g = data;
     var chartOptions = options.chartOptions;
@@ -348,7 +348,7 @@
   };
 
   function keyWalk(valuesObject, optionsObject) {
-    // console.log('keyWalk() was called');
+    console.log('keyWalk() was called');
     if (!valuesObject || !optionsObject) return;
     var vKeys = Object.keys(valuesObject);
     var oKeys = Object.keys(optionsObject);
@@ -366,10 +366,10 @@
   }
 
   function computeBoxplot(data, iqrScalingFactor, value) {
-    // console.log('computeBoxplot() was called');
-    // console.log('data from computeBoxplot', data);
-    // console.log('iqrScalingFactor', iqrScalingFactor);
-    // console.log('value from computeBoxplot', value);
+    console.log('computeBoxplot() was called');
+    console.log('data from computeBoxplot', data);
+    console.log('iqrScalingFactor', iqrScalingFactor);
+    console.log('value from computeBoxplot', value);
     iqrScalingFactor = iqrScalingFactor || 1.5;
     value = value || Number;
     var seriev = data.map(function (m) {
@@ -377,7 +377,7 @@
     }).sort(d3.ascending);
     var quartiles = [d3.quantile(seriev, 0.25), d3.quantile(seriev, 0.5), d3.quantile(seriev, 0.75)];
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
-    // console.log('iqr', iqr);
+    console.log('iqr', iqr);
     // separate outliers
     var max = Number.MIN_VALUE;
     var min = Number.MAX_VALUE;
@@ -395,7 +395,7 @@
     boxData.iqr = iqr;
     boxData.max = max;
     boxData.min = min;
-    // console.log('boxData', boxData);
+    console.log('boxData', boxData);
     return boxData;
   }
 
@@ -513,7 +513,7 @@
     };
 
     function chart(selection) {
-      // console.log('chart() was called');
+      console.log('chart() was called');
       // console.log('selection from chart()', selection);
       selection.each(function () {
         var domParent = d3.select(this);
@@ -593,7 +593,7 @@
 
           constituents.scales.color = colorScale;
 
-          // console.log('events.update.ready', events.update.ready);
+          console.log('events.update.ready', events.update.ready);
           if (events.update.ready) {
             events.update.ready(constituents, options, events);
           }
@@ -639,26 +639,27 @@
           chartWrapper.selectAll('.axis text').style('font', '10px sans-serif');
 
           var boxContent = chartWrapper.selectAll('.boxcontent').data(groups);
-          // console.log('boxContent', boxContent);
+          console.log('boxContent after variable declaration', boxContent);
 
           boxContent.enter().append('g').merge(boxContent).attr('class', 'explodingBoxplot boxcontent').attr('id', function (d, i) {
             return 'explodingBoxplot' + options.id + i;
           });
-          // console.log('boxContent after enter', boxContent);
+          console.log('boxContent after enter', boxContent);
 
           boxContent.exit().remove();
-          // console.log('boxContent after exit', boxContent);
+          console.log('boxContent after exit', boxContent);
 
-          d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent').attr('transform', function (d) {
+          // d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
+          chartWrapper.selectAll('g.explodingBoxplot.boxcontent').attr('transform', function (d) {
             return 'translate(' + xScale(d.group) + ',0)';
           }).each(function (d, i) {
             // console.log('d, testing selection.each', d);
             // console.log('i, testing selection.each', i);
           }).each(createJitter).each(function (d, i) {
-            // console.log('d from boxContent each', d);
+            console.log('d from boxContent each', d);
             // console.log('this from boxContent each', this);
             var selector = '#explodingBoxplot' + i;
-            // console.log('selector from createBoxplot call', selector);
+            console.log('selector from createBoxplot call', selector);
             var createBoxplotOptions = {
               chartOptions: options,
               i: i,
@@ -667,6 +668,7 @@
 
             createBoxplot(selector, d, createBoxplotOptions);
           }).each(function (d, i) {
+            console.log('inside of each containing drawBoxplot call');
             var drawBoxplotOptions = {
               chartOptions: options,
               transitionTime: transitionTime,

@@ -1,5 +1,5 @@
 export function hideBoxplot(d, options) {
-  // console.log('hideBoxplot() was called');
+  console.log('hideBoxplot() was called');
 
   // console.log('arguments from hideBoxplot()', arguments);
   const xScale = options.xScale;

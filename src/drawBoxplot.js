@@ -3,7 +3,7 @@ import { explodeBoxplot } from './explodeBoxplot';
 import * as d3 from 'd3';
 
 export function drawBoxplot(d, i, options, state) {
-  // console.log('drawBoxplot() was called');
+  console.log('drawBoxplot() was called');
   const chartOptions = options.chartOptions; // TODO: better names here
   const transitionTime = options.transitionTime;
   const xScale = options.xScale;
