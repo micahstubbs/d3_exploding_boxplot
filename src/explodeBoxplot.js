@@ -17,7 +17,8 @@ export function explodeBoxplot(i, options) {
 
   const hideBoxplotOptions = {
     xScale,
-    yScale
+    yScale,
+    chartOptions
   };
 
   d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
@@ -51,11 +52,18 @@ export function explodeBoxplot(i, options) {
     constituents
   };
 
+  let boxWidth;
+  if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
+    boxWidth = chartOptions.display.maxBoxWidth;
+  } else {
+    boxWidth = xScale.bandwidth();
+  }
+
   explodeNormal
     .enter()
     .append('circle')
     .merge(explodeNormal)
-      .attr('cx', xScale.bandwidth() * 0.5)
+      .attr('cx', boxWidth * 0.5)
       .attr('cy', yScale(groups[i].quartiles[1]))
       .call(initJitter, initJitterOptions)
       .transition()

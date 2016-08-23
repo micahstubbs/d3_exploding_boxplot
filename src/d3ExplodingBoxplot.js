@@ -72,7 +72,9 @@ export default function () {
     },
     display: {
       iqr: 1.5, // interquartile range
-      boxpadding: 0.2
+      boxPadddingProportion: 0.2,
+      maxBoxWidth: undefined,
+      boxLineWidth: 2
     },
     resize: true,
     mobileScreenMax: 500,
@@ -144,11 +146,47 @@ export default function () {
 
       constituents.elements.chartRoot = chartRoot;
 
+      // calculate boxPlotWidth based on number of classes or groups
+      // console.log('options.data.group', options.data.group);
+      if (options.data.group) {
+        groups = d3.nest()
+          .key(k => k[options.data.group])
+          .entries(dataSet);
+      } else {
+        groups = [{
+          key: '',
+          values: dataSet
+        }];
+      }
+
+      const boxLineWidth = options.display.boxLineWidth;
+      const boxPadddingProportion = options.display.boxPadddingProportion;
+      let boxWidth = undefined;
+      if (typeof options.display.maxBoxWidth !== 'undefined') {
+        boxWidth = options.display.maxBoxWidth;
+      }
+      console.log('boxWidth', boxWidth);
+
+      let groupsKeys = groups.map(d => d.key);
+      const groupsCount = groupsKeys.length;
+      console.log('groupsKeys', groupsKeys);
+      console.log('groupsCount', groupsCount);
+      let boxPlotWidth;
+      if (typeof boxWidth !== 'undefined') {
+        boxPlotWidth = (boxWidth * groupsCount)
+         + (boxLineWidth * 2 * groupsCount) // lines on both sides
+         + (boxPadddingProportion * boxWidth * (groupsCount + 1))
+         + 12; // outerPadding?
+      } else {
+        boxPlotWidth = options.width;
+      }
+      console.log('boxPlotWidth', boxPlotWidth);
+
       // background click area added first
       const resetArea = chartRoot.append('g')
         .append('rect')
           .attr('id', 'resetArea')
-          .attr('width', options.width)
+          .attr('width', boxPlotWidth)
           .attr('height', options.height)
           .style('color', 'white')
           .style('opacity', 0);
@@ -168,7 +206,7 @@ export default function () {
       update = resize => {
         // console.log('update/resize function was called');
         chartRoot
-          .attr('width', (options.width + options.margin.left + options.margin.right))
+          .attr('width', (boxPlotWidth + options.margin.left + options.margin.right))
           .attr('height', (options.height + options.margin.top + options.margin.bottom));
 
         chartWrapper
@@ -189,12 +227,13 @@ export default function () {
           }];
         }
         // console.log('groups after nest', groups);
+        groupsKeys = groups.map(d => d.key);
 
         const xScale = d3.scaleBand()
-          .domain(groups.map(d => d.key)) 
-          .padding(options.display.boxpadding)
+          .domain(groupsKeys) 
+          .padding(options.display.boxPadddingProportion)
           .rangeRound(
-            [0, options.width - options.margin.left - options.margin.right]
+            [0, boxPlotWidth /* - options.margin.left - options.margin.right*/]
           );
 
         constituents.scales.X = xScale;
@@ -275,7 +314,7 @@ export default function () {
         chartWrapper.selectAll('g.x.axis')
           .append('text')
             .attr('class', 'axis text')
-            .attr('x', (options.width - options.margin.left - options.margin.right) / 2)
+            .attr('x', (boxPlotWidth - options.margin.left - options.margin.right) / 2)
             .attr('dy', '.71em')
             .attr('y', options.margin.bottom - 10)
             .style('font', '10px sans-serif')
@@ -329,7 +368,8 @@ export default function () {
         console.log('boxContent after exit', boxContent);
  
         // d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
-        chartWrapper.selectAll('g.explodingBoxplot.boxcontent')          .attr('transform', d => `translate(${xScale(d.group)},0)`)
+        chartWrapper.selectAll('g.explodingBoxplot.boxcontent')
+          .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(function (d, i) {
             // console.log('d, testing selection.each', d);
             // console.log('i, testing selection.each', i);
@@ -387,11 +427,11 @@ export default function () {
         
       chartWrapper.selectAll('line.explodingBoxplot.line')
         .style('stroke', '#888')
-        .style('stroke-width', '2px');
+        .style('stroke-width', `${boxLineWidth}px`);
 
       chartWrapper.selectAll('rect.explodingBoxplot.box')
         .style('stroke', '#888')
-        .style('stroke-width', '2px');
+        .style('stroke-width', `${boxLineWidth}px`);
 
       chartWrapper.selectAll('line.explodingBoxplot.vline')
         .style('stroke-dasharray', '5,5');

@@ -6,10 +6,17 @@ export function drawJitter(selection, options) {
   const xScale = options.xScale;
   const yScale = options.yScale;
 
+  let boxWidth;
+  if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
+    boxWidth = chartOptions.display.maxBoxWidth;
+  } else {
+    boxWidth = xScale.bandwidth();
+  }
+
   selection.attr('r', chartOptions.dataPoints.radius)
     .attr('fill', d => colorScale(d[chartOptions.data.colorIndex]))
     .attr('cx', (/* d */) => {
-      const w = xScale.bandwidth();
+      const w = boxWidth;
       return Math.floor(Math.random() * w);
     })
     .attr('cy', d => yScale(d[chartOptions.axes.y.variable]));

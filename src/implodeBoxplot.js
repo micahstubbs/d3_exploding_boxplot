@@ -12,6 +12,13 @@ export function implodeBoxplot(selector, options, state) {
   const events = options.events;
   const constituents = options.constituents;
 
+  let boxWidth;
+  if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
+    boxWidth = chartOptions.display.maxBoxWidth;
+  } else {
+    boxWidth = xScale.bandwidth();
+  }
+
   state.explodedBoxplots = [];
   console.log('state.explodedBoxplots', state.explodedBoxplots);
   selector.selectAll('.normal-points')
@@ -21,7 +28,7 @@ export function implodeBoxplot(selector, options, state) {
         .transition()
           .ease(d3.easeBackOut)
           .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-          .attr('cx', xScale.bandwidth() * 0.5)
+          .attr('cx', boxWidth * 0.5)
           .attr('cy', yScale(g.quartiles[1]))
           .remove();
     });
