@@ -34,7 +34,7 @@ export default function () {
     class: 'xBoxPlot',
     width: window.innerWidth,
     height: window.innerHeight,
-    margins: {
+    margin: {
       top: 10,
       right: 10,
       bottom: 30,
@@ -165,11 +165,11 @@ export default function () {
       update = resize => {
         // console.log('update/resize function was called');
         chartRoot
-          .attr('width', (options.width + options.margins.left + options.margins.right))
-          .attr('height', (options.height + options.margins.top + options.margins.bottom));
+          .attr('width', (options.width + options.margin.left + options.margin.right))
+          .attr('height', (options.height + options.margin.top + options.margin.bottom));
 
         chartWrapper
-          .attr('transform', `translate(${options.margins.left},${options.margins.top})`);
+          .attr('transform', `translate(${options.margin.left},${options.margin.top})`);
 
         // console.log('events.update.begin', events.update.begin);
         if (events.update.begin) { events.update.begin(constituents, options, events); }
@@ -191,7 +191,7 @@ export default function () {
           .domain(groups.map(d => d.key)) 
           .padding(options.display.boxpadding)
           .rangeRound(
-            [0, options.width - options.margins.left - options.margins.right]
+            [0, options.width - options.margin.left - options.margin.right]
           );
 
         constituents.scales.X = xScale;
@@ -209,7 +209,7 @@ export default function () {
 
         const yScale = d3.scaleLinear()
           .domain(d3.extent(dataSet.map(m => m[options.axes.y.label])))
-          .range([options.height - options.margins.top - options.margins.bottom, 0])
+          .range([options.height - options.margin.top - options.margin.bottom, 0])
           .nice();
 
         constituents.scales.Y = yScale;
@@ -265,15 +265,15 @@ export default function () {
             .attr('class', 'explodingBoxplot x axis')
             .attr('id', 'xpb_xAxis')
             .attr('transform',
-              `translate(0,${options.height - options.margins.top - options.margins.bottom})`)
+              `translate(0,${options.height - options.margin.top - options.margin.bottom})`)
             .call(xAxis);
 
         chartWrapper.selectAll('g.x.axis')
           .append('text')
             .attr('class', 'axis text')
-            .attr('x', (options.width - options.margins.left - options.margins.right) / 2)
+            .attr('x', (options.width - options.margin.left - options.margin.right) / 2)
             .attr('dy', '.71em')
-            .attr('y', options.margins.bottom - 10)
+            .attr('y', options.margin.bottom - 10)
             .style('font', '10px sans-serif')
             .style('text-anchor', 'middle')
             .style('fill', 'black')
@@ -297,9 +297,9 @@ export default function () {
           .append('text')
             .attr('class', 'axis text')
             .attr('transform', 'rotate(-90)')
-            .attr('x', -options.margins.top - d3.mean(yScale.range()))
+            .attr('x', -options.margin.top - d3.mean(yScale.range()))
             .attr('dy', '.71em')
-            .attr('y', -options.margins.left + 5)
+            .attr('y', -options.margin.left + 5)
             .style('font', '10px sans-serif')
             .style('text-anchor', 'middle')
             .style('fill', 'black')
@@ -325,8 +325,7 @@ export default function () {
         console.log('boxContent after exit', boxContent);
  
         // d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
-        chartWrapper.selectAll('g.explodingBoxplot.boxcontent')
-          .attr('transform', d => `translate(${xScale(d.group)},0)`)
+        chartWrapper.selectAll('g.explodingBoxplot.boxcontent')          .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(function (d, i) {
             // console.log('d, testing selection.each', d);
             // console.log('i, testing selection.each', i);
