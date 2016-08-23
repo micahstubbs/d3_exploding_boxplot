@@ -338,6 +338,16 @@ export default function () {
         chartWrapper.selectAll('.x.axis path')
           .attr('transform', `translate(0,${xAxisYTranslate})`);
 
+        // Set up X axis label
+        chartWrapper.append('g')
+          .append('text')
+          .attr('class', 'x title')
+          .attr('text-anchor', 'start')
+          .style('font-size', '12px')
+          .style('font-weight', 600)
+          .attr('transform', `translate(${30},${-10})`)
+          .text(`${options.axes.x.label}`);
+
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
           .data([0]);
 
