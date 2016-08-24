@@ -339,7 +339,7 @@ export default function () {
           .attr('transform', `translate(0,${xAxisYTranslate})`);
 
         if (typeof options.axes.x.showTitle !== 'undefined') {
-          // Set up X axis title
+          // Set up the x-axis title
           chartWrapper.append('g')
             .append('text')
             .attr('class', 'x title')
@@ -348,6 +348,10 @@ export default function () {
             .style('font-weight', 600)
             .attr('transform', `translate(${30},${-10})`)
             .text(`${options.axes.x.label}`);
+
+          // hide the bottom x-axis label
+          chartWrapper.selectAll('.x.axis text.label')
+            .style('fill-opacity', 0);
         }
 
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')

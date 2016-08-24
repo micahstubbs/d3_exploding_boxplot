@@ -735,8 +735,11 @@
           chartWrapper.selectAll('.x.axis path').attr('transform', 'translate(0,' + xAxisYTranslate + ')');
 
           if (typeof options.axes.x.showTitle !== 'undefined') {
-            // Set up X axis title
+            // Set up the x-axis title
             chartWrapper.append('g').append('text').attr('class', 'x title').attr('text-anchor', 'start').style('font-size', '12px').style('font-weight', 600).attr('transform', 'translate(' + 30 + ',' + -10 + ')').text('' + options.axes.x.label);
+
+            // hide the bottom x-axis label
+            chartWrapper.selectAll('.x.axis text.label').style('fill-opacity', 0);
           }
 
           var updateYAxis = chartWrapper.selectAll('#xpb_yAxis').data([0]);
