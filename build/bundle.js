@@ -81,9 +81,6 @@
 
     var displayOutliers = elem.selectAll('.point').data(groups[i].outlier);
 
-    // displayOutliers.enter()
-    //   .append('circle');
-
     displayOutliers.exit().remove();
 
     var drawJitterOptions = {
@@ -110,17 +107,9 @@
     // styled before being shown
     var displayNormalPoints = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
 
-    // explodeNormal.enter()
-    //   .append('circle');
-
     displayNormalPoints.exit().remove();
 
-    displayNormalPoints.enter().append('circle').merge(displayNormalPoints).attr('visibility', 'hidden').attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions)
-    // .transition()
-    // .ease(d3.easeBackOut)
-    // .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
-    // .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-    .call(drawJitter, drawJitterOptions);
+    displayNormalPoints.enter().append('circle').merge(displayNormalPoints).attr('visibility', 'hidden').attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).call(drawJitter, drawJitterOptions);
   }
 
   function hideBoxplot(d, options) {
@@ -172,13 +161,6 @@
     chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('g.box').transition().ease(d3.easeBackIn).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
 
     var explodeNormal = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point');
-    //   .data(groups[i].normal);
-
-    // explodeNormal.enter()
-    //   .append('circle');
-
-    // explodeNormal.exit()
-    //   .remove();
 
     var drawJitterOptions = {
       chartOptions: chartOptions,
@@ -201,11 +183,7 @@
       boxWidth = xScale.bandwidth();
     }
 
-    explodeNormal
-    // .enter()
-    // .append('circle')
-    // .merge(explodeNormal)
-    .attr('visibility', 'visible').attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3.easeBackOut).delay(function () {
+    explodeNormal.attr('visibility', 'visible').attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3.easeBackOut).delay(function () {
       return transitionTime * 1.5 + 100 * Math.random();
     }).duration(function () {
       return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();

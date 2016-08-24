@@ -31,13 +31,6 @@ export function explodeBoxplot(i, options) {
   const explodeNormal = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.normal-points')
     .selectAll('.point');
-  //   .data(groups[i].normal);
-
-  // explodeNormal.enter()
-  //   .append('circle');
-
-  // explodeNormal.exit()
-  //   .remove();
 
   const drawJitterOptions = {
     chartOptions,
@@ -61,9 +54,6 @@ export function explodeBoxplot(i, options) {
   }
 
   explodeNormal
-    // .enter()
-    // .append('circle')
-    // .merge(explodeNormal)
     .attr('visibility', 'visible')
     .attr('cx', boxWidth * 0.5)
     .attr('cy', yScale(groups[i].quartiles[1]))
