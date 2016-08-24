@@ -618,7 +618,7 @@
         console.log('boxPlotWidth', boxPlotWidth);
 
         // background click area added first
-        var resetArea = chartRoot.append('g').append('rect').attr('id', 'resetArea').attr('width', boxPlotWidth).attr('height', options.height).style('color', 'white').style('opacity', 0);
+        var resetArea = chartRoot.append('g').append('rect').attr('id', 'resetArea').attr('width', boxPlotWidth + options.margin.left + options.margin.right).attr('height', options.height).style('color', 'white').style('opacity', 0);
 
         // main chart area
         var chartWrapper = chartRoot.append('g').attr('class', 'chartWrapper').attr('id', 'chartWrapper' + options.id);

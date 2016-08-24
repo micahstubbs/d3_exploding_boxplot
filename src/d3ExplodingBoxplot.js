@@ -188,7 +188,7 @@ export default function () {
       const resetArea = chartRoot.append('g')
         .append('rect')
           .attr('id', 'resetArea')
-          .attr('width', boxPlotWidth)
+          .attr('width', boxPlotWidth + options.margin.left + options.margin.right)
           .attr('height', options.height)
           .style('color', 'white')
           .style('opacity', 0);
