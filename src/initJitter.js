@@ -8,7 +8,8 @@ export function initJitter(s, options) {
   const events = options.events;
   const constituents = options.constituents;
 
-  s.attr('class', 'explodingBoxplot point')
+  s
+    .classed('explodingBoxplot point marks', true)
     .attr('r', chartOptions.dataPoints.radius)
     .attr('fill', d => colorScale(d[chartOptions.data.colorIndex]))
     .attr('fill-opacity', d =>  chartOptions.dataPoints.fillOpacity)

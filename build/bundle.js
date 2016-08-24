@@ -13,7 +13,7 @@
     var events = options.events;
     var constituents = options.constituents;
 
-    s.attr('class', 'explodingBoxplot point').attr('r', chartOptions.dataPoints.radius).attr('fill', function (d) {
+    s.classed('explodingBoxplot point marks', true).attr('r', chartOptions.dataPoints.radius).attr('fill', function (d) {
       return colorScale(d[chartOptions.data.colorIndex]);
     }).attr('fill-opacity', function (d) {
       return chartOptions.dataPoints.fillOpacity;
