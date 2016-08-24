@@ -60,4 +60,31 @@ export function jitterPlot(i, options) {
       .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
       .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
       .call(drawJitter, drawJitterOptions);
+
+  // append normal points here as well so that they can be
+  // styled before being shown
+    const displayNormalPoints = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
+    .select('.normal-points')
+    .selectAll('.point')
+    .data(groups[i].normal);
+
+  // explodeNormal.enter()
+  //   .append('circle');
+
+  displayNormalPoints.exit()
+    .remove();
+
+  displayNormalPoints
+    .enter()
+    .append('circle')
+    .merge(displayNormalPoints)
+      .attr('visibility', 'hidden')
+      .attr('cx', boxWidth * 0.5)
+      .attr('cy', yScale(groups[i].quartiles[1]))
+      .call(initJitter, initJitterOptions)
+      // .transition()
+      // .ease(d3.easeBackOut)
+      // .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
+      // .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
+      .call(drawJitter, drawJitterOptions);
 }

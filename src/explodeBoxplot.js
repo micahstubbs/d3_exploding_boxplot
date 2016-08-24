@@ -30,14 +30,14 @@ export function explodeBoxplot(i, options) {
 
   const explodeNormal = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.normal-points')
-    .selectAll('.point')
-    .data(groups[i].normal);
+    .selectAll('.point');
+  //   .data(groups[i].normal);
 
   // explodeNormal.enter()
   //   .append('circle');
 
-  explodeNormal.exit()
-    .remove();
+  // explodeNormal.exit()
+  //   .remove();
 
   const drawJitterOptions = {
     chartOptions,
@@ -51,7 +51,7 @@ export function explodeBoxplot(i, options) {
     colorScale,
     events,
     constituents
-  };
+  }
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -61,15 +61,16 @@ export function explodeBoxplot(i, options) {
   }
 
   explodeNormal
-    .enter()
-    .append('circle')
-    .merge(explodeNormal)
-      .attr('cx', boxWidth * 0.5)
-      .attr('cy', yScale(groups[i].quartiles[1]))
-      .call(initJitter, initJitterOptions)
-      .transition()
-      .ease(d3.easeBackOut)
-      .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
-      .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-      .call(drawJitter, drawJitterOptions);
+    // .enter()
+    // .append('circle')
+    // .merge(explodeNormal)
+    .attr('visibility', 'visible')
+    .attr('cx', boxWidth * 0.5)
+    .attr('cy', yScale(groups[i].quartiles[1]))
+    .call(initJitter, initJitterOptions)
+    .transition()
+    .ease(d3.easeBackOut)
+    .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
+    .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
+    .call(drawJitter, drawJitterOptions);
 }

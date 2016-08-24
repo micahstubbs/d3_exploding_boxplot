@@ -31,7 +31,8 @@ export function implodeBoxplot(selector, options, state) {
           .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
           .attr('cx', boxWidth * 0.5)
           .attr('cy', yScale(g.quartiles[1]))
-          .remove();
+          .attr('visibility', 'hidden');
+          // .remove();
     });
 
   selector.selectAll('.boxcontent')
