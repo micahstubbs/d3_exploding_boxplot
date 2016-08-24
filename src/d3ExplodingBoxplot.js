@@ -177,8 +177,7 @@ export default function () {
       if (typeof boxWidth !== 'undefined') {
         boxPlotWidth = (boxWidth * groupsCount)
          + (boxLineWidth * 2 * groupsCount) // lines on both sides
-         + (boxPadddingProportion * boxWidth * (groupsCount + 1))
-         + 12; // outerPadding?
+         + (boxPadddingProportion * boxWidth * (groupsCount + 1));
       } else {
         boxPlotWidth = options.width;
       }
@@ -352,6 +351,14 @@ export default function () {
           // hide the bottom x-axis label
           chartWrapper.selectAll('.x.axis text.label')
             .style('fill-opacity', 0);
+
+          // hide the x-axis tick lines
+          chartWrapper.selectAll('.x.axis .tick line')
+            .style('stroke-opacity', 0);
+
+          // move the x-axis tick labels up a bit
+          chartWrapper.selectAll('g.x.axis').selectAll('.tick text')
+            .attr('dy', '0.2em');
         }
 
         const updateYAxis = chartWrapper.selectAll('#xpb_yAxis')
