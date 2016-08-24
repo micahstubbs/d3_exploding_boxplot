@@ -493,6 +493,10 @@ export default function () {
         .style('color', '#DDDDDD')
         .style('border-radius', '2px')
 
+      // ensure that text is not highlighted
+      // when the users double clicks on the 
+      // reset area to implode the points 
+      // into a box
       chartWrapper.selectAll('g.tick text')
         .style('font', '10px sans-serif')
         .style('-webkit-user-select', 'none')
@@ -503,6 +507,14 @@ export default function () {
         .style('cursor', 'default');
 
       chartWrapper.selectAll('g.axis text')
+        .style('-webkit-user-select', 'none')
+        .style('-khtml-user-select', 'none')
+        .style('-moz-user-select', 'none')
+        .style('-o-user-select', 'none')
+        .style('user-select', 'none')
+        .style('cursor', 'default');
+
+      chartWrapper.selectAll('text.title')
         .style('-webkit-user-select', 'none')
         .style('-khtml-user-select', 'none')
         .style('-moz-user-select', 'none')
