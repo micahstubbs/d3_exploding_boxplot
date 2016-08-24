@@ -14,8 +14,6 @@ import { createBoxplot } from './createBoxplot';
 import { keyWalk } from './keyWalk';
 import { computeBoxplot } from './computeBoxplot';
 import { initJitter } from './initJitter';
-import { jitterPlot } from './jitterPlot';
-import { explodeBoxplot } from './explodeBoxplot';
 import * as d3 from 'd3';
 export default function () {
   // options which should be accessible via ACCESSORS
@@ -403,7 +401,6 @@ export default function () {
           .remove();
         console.log('boxContent after exit', boxContent);
  
-        // d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
         chartWrapper.selectAll('g.explodingBoxplot.boxcontent')
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
           .each(function (d, i) {

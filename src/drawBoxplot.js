@@ -22,7 +22,8 @@ export function drawBoxplot(d, i, options, state) {
     events,
     constituents,
     transitionTime,
-    groups
+    groups,
+    chartWrapper
   };
   
   // console.log('chartOptions.id', chartOptions.id);
@@ -30,7 +31,7 @@ export function drawBoxplot(d, i, options, state) {
   const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;
   // console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
   const s = chartWrapper.select(currentBoxplotBoxSelector);
-  // const s = d3.select(this);
+  // const s = chartWrapper.select(this);
   // console.log('s from drawBoxplot', s);
 
   s.on('click', (/* d */) => {
@@ -39,14 +40,6 @@ export function drawBoxplot(d, i, options, state) {
       // console.log('state.explodedBoxplots', state.explodedBoxplots);
     });
 
-
-  if (state.explodedBoxplots.indexOf(i) >= 0) {
-    explodeBoxplot(i, explodeBoxplotOptions);
-    jitterPlot(i, chartOptions);
-    return;
-  }
-
-  // console.log('s from drawBoxplot', s);
   const jitterPlotOptions = {
     chartOptions,
     colorScale,
@@ -55,9 +48,17 @@ export function drawBoxplot(d, i, options, state) {
     groups,
     events,
     constituents,
-    transitionTime
+    transitionTime,
+    chartWrapper
   };
 
+  if (state.explodedBoxplots.indexOf(i) >= 0) {
+    explodeBoxplot(i, explodeBoxplotOptions);
+    jitterPlot(i, jitterPlotOptions);
+    return;
+  }
+
+  // console.log('s from drawBoxplot', s);
   jitterPlot(i, jitterPlotOptions);
 
   let boxWidth;

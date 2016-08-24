@@ -14,6 +14,7 @@ export function explodeBoxplot(i, options) {
   const constituents = options.constituents;
   const transitionTime = options.transitionTime;
   const groups = options.groups;
+  const chartWrapper = options.chartWrapper;
 
   const hideBoxplotOptions = {
     xScale,
@@ -21,13 +22,13 @@ export function explodeBoxplot(i, options) {
     chartOptions
   };
 
-  d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
+  chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('g.box').transition()
     .ease(d3.easeBackIn)
     .duration((transitionTime * 1.5))
     .call(hideBoxplot, hideBoxplotOptions);
 
-  const explodeNormal = d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
+  const explodeNormal = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.normal-points')
     .selectAll('.point')
     .data(groups[i].normal);

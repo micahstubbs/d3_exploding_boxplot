@@ -13,6 +13,7 @@ export function jitterPlot(i, options) {
   const events = options.events;
   const constituents = options.constituents;
   const transitionTime = options.transitionTime;
+  const chartWrapper = options.chartWrapper;
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -21,7 +22,7 @@ export function jitterPlot(i, options) {
     boxWidth = xScale.bandwidth();
   }
 
-  const elem = d3.select(`#explodingBoxplot${chartOptions.id}${i}`)
+  const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.outliers-points');
 
   const displayOutliers = elem.selectAll('.point')

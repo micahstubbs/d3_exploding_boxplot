@@ -68,6 +68,7 @@
     var events = options.events;
     var constituents = options.constituents;
     var transitionTime = options.transitionTime;
+    var chartWrapper = options.chartWrapper;
 
     var boxWidth = void 0;
     if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -76,7 +77,7 @@
       boxWidth = xScale.bandwidth();
     }
 
-    var elem = d3.select('#explodingBoxplot' + chartOptions.id + i).select('.outliers-points');
+    var elem = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.outliers-points');
 
     var displayOutliers = elem.selectAll('.point').data(groups[i].outlier);
 
@@ -144,6 +145,7 @@
     var constituents = options.constituents;
     var transitionTime = options.transitionTime;
     var groups = options.groups;
+    var chartWrapper = options.chartWrapper;
 
     var hideBoxplotOptions = {
       xScale: xScale,
@@ -151,9 +153,9 @@
       chartOptions: chartOptions
     };
 
-    d3.select('#explodingBoxplot' + chartOptions.id + i).select('g.box').transition().ease(d3.easeBackIn).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
+    chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('g.box').transition().ease(d3.easeBackIn).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
 
-    var explodeNormal = d3.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
+    var explodeNormal = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
 
     // explodeNormal.enter()
     //   .append('circle');
@@ -208,7 +210,8 @@
       events: events,
       constituents: constituents,
       transitionTime: transitionTime,
-      groups: groups
+      groups: groups,
+      chartWrapper: chartWrapper
     };
 
     // console.log('chartOptions.id', chartOptions.id);
@@ -216,7 +219,7 @@
     var currentBoxplotBoxSelector = '#explodingBoxplot_box' + chartOptions.id + i;
     // console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
     var s = chartWrapper.select(currentBoxplotBoxSelector);
-    // const s = d3.select(this);
+    // const s = chartWrapper.select(this);
     // console.log('s from drawBoxplot', s);
 
     s.on('click', function () /* d */{
@@ -225,13 +228,6 @@
       // console.log('state.explodedBoxplots', state.explodedBoxplots);
     });
 
-    if (state.explodedBoxplots.indexOf(i) >= 0) {
-      explodeBoxplot(i, explodeBoxplotOptions);
-      jitterPlot(i, chartOptions);
-      return;
-    }
-
-    // console.log('s from drawBoxplot', s);
     var jitterPlotOptions = {
       chartOptions: chartOptions,
       colorScale: colorScale,
@@ -240,9 +236,17 @@
       groups: groups,
       events: events,
       constituents: constituents,
-      transitionTime: transitionTime
+      transitionTime: transitionTime,
+      chartWrapper: chartWrapper
     };
 
+    if (state.explodedBoxplots.indexOf(i) >= 0) {
+      explodeBoxplot(i, explodeBoxplotOptions);
+      jitterPlot(i, jitterPlotOptions);
+      return;
+    }
+
+    // console.log('s from drawBoxplot', s);
     jitterPlot(i, jitterPlotOptions);
 
     var boxWidth = void 0;
@@ -360,13 +364,13 @@
   function createBoxplot(selector, data, options) {
     console.log('createBoxplot() was called');
 
-    console.log('selector from createBoxplot', selector);
-    console.log('d3.select(selector)', d3.select(selector));
     var i = options.i;
     var g = data;
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
     var chartWrapper = options.chartWrapper;
+    console.log('selector from createBoxplot', selector);
+    console.log('chartWrapper.select(selector)', chartWrapper.select(selector));
 
     // console.log('this from createBoxplot', this);
     var s = chartWrapper.select(selector).append('g').attr('class', 'explodingBoxplot box').attr('id', 'explodingBoxplot_box' + chartOptions.id + i);
@@ -758,7 +762,6 @@
           boxContent.exit().remove();
           console.log('boxContent after exit', boxContent);
 
-          // d3.select('.chartWrapper').selectAll('g.explodingBoxplot.boxcontent')
           chartWrapper.selectAll('g.explodingBoxplot.boxcontent').attr('transform', function (d) {
             return 'translate(' + xScale(d.group) + ',0)';
           }).each(function (d, i) {

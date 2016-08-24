@@ -3,13 +3,13 @@ import * as d3 from 'd3';
 export function createBoxplot(selector, data, options) {
   console.log('createBoxplot() was called');
 
-  console.log('selector from createBoxplot', selector);
-  console.log('d3.select(selector)', d3.select(selector));
   const i = options.i;
   const g = data;
   const chartOptions = options.chartOptions;
   const colorScale = options.colorScale;
   const chartWrapper = options.chartWrapper;
+  console.log('selector from createBoxplot', selector);
+  console.log('chartWrapper.select(selector)', chartWrapper.select(selector));
 
   // console.log('this from createBoxplot', this);
   const s = chartWrapper.select(selector).append('g')
