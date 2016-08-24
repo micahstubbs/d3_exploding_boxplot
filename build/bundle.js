@@ -198,6 +198,7 @@
     var groups = options.groups;
     var events = options.events;
     var constituents = options.constituents;
+    var chartWrapper = options.chartWrapper;
 
     var explodeBoxplotOptions = {
       xScale: xScale,
@@ -214,7 +215,7 @@
     // console.log('i', i);
     var currentBoxplotBoxSelector = '#explodingBoxplot_box' + chartOptions.id + i;
     // console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
-    var s = d3.select(currentBoxplotBoxSelector);
+    var s = chartWrapper.select(currentBoxplotBoxSelector);
     // const s = d3.select(this);
     // console.log('s from drawBoxplot', s);
 
@@ -312,6 +313,7 @@
     var groups = options.groups;
     var events = options.events;
     var constituents = options.constituents;
+    var chartWrapper = options.chartWrapper;
 
     var boxWidth = void 0;
     if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -337,7 +339,8 @@
         colorScale: colorScale,
         groups: groups,
         events: events,
-        constituents: constituents
+        constituents: constituents,
+        chartWrapper: chartWrapper
       };
       drawBoxplot(d, i, drawBoxplotOptions, state);
     });
@@ -363,9 +366,10 @@
     var g = data;
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
+    var chartWrapper = options.chartWrapper;
 
     // console.log('this from createBoxplot', this);
-    var s = d3.select(selector).append('g').attr('class', 'explodingBoxplot box').attr('id', 'explodingBoxplot_box' + chartOptions.id + i);
+    var s = chartWrapper.select(selector).append('g').attr('class', 'explodingBoxplot box').attr('id', 'explodingBoxplot_box' + chartOptions.id + i);
     // .selectAll('.box')
     // .data([g])
     // .enter();
@@ -379,11 +383,20 @@
 
     var currentBoxplotBoxSelector = '#explodingBoxplot_box' + chartOptions.id + i;
 
-    d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot median line'); // median line
-    d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot min line hline'); // min line
-    d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot line min vline'); // min vline
-    d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot max line hline'); // max line
-    d3.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot line max vline'); // max vline
+    // median line
+    chartWrapper.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot median line');
+
+    // min line
+    chartWrapper.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot min line hline');
+
+    // min vline
+    chartWrapper.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot line min vline');
+
+    // max line
+    chartWrapper.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot max line hline');
+
+    // max vline
+    chartWrapper.select(currentBoxplotBoxSelector).append('line').attr('class', 'explodingBoxplot line max vline');
   }
 
   var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
@@ -690,7 +703,8 @@
             chartOptions: options,
             groups: groups,
             events: events,
-            constituents: constituents
+            constituents: constituents,
+            chartWrapper: chartWrapper
           };
 
           resetArea.on('dblclick', function () {
@@ -758,7 +772,8 @@
             var createBoxplotOptions = {
               chartOptions: options,
               i: i,
-              colorScale: colorScale
+              colorScale: colorScale,
+              chartWrapper: chartWrapper
             };
 
             createBoxplot(selector, d, createBoxplotOptions);
@@ -772,7 +787,8 @@
               colorScale: colorScale,
               groups: groups,
               events: events,
-              constituents: constituents
+              constituents: constituents,
+              chartWrapper: chartWrapper
             };
             drawBoxplot(d, i, drawBoxplotOptions, state);
           });

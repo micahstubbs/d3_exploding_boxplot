@@ -12,6 +12,7 @@ export function drawBoxplot(d, i, options, state) {
   const groups = options.groups;
   const events = options.events;
   const constituents = options.constituents;
+  const chartWrapper = options.chartWrapper;
 
   const explodeBoxplotOptions = {
     xScale,
@@ -28,7 +29,7 @@ export function drawBoxplot(d, i, options, state) {
   // console.log('i', i);
   const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;
   // console.log('currentBoxplotBoxSelector', currentBoxplotBoxSelector);
-  const s = d3.select(currentBoxplotBoxSelector);
+  const s = chartWrapper.select(currentBoxplotBoxSelector);
   // const s = d3.select(this);
   // console.log('s from drawBoxplot', s);
 

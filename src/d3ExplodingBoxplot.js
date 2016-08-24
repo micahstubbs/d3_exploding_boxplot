@@ -292,7 +292,8 @@ export default function () {
           chartOptions: options,
           groups,
           events,
-          constituents
+          constituents,
+          chartWrapper
         };
 
         resetArea
@@ -418,7 +419,8 @@ export default function () {
             const createBoxplotOptions = {
               chartOptions: options,
               i,
-              colorScale
+              colorScale,
+              chartWrapper
             };
 
             createBoxplot(selector, d, createBoxplotOptions);
@@ -433,7 +435,8 @@ export default function () {
               colorScale,
               groups,
               events,
-              constituents
+              constituents,
+              chartWrapper
             };
             drawBoxplot(d, i, drawBoxplotOptions, state);
           });

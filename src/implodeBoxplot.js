@@ -11,6 +11,7 @@ export function implodeBoxplot(selector, options, state) {
   const groups = options.groups;
   const events = options.events;
   const constituents = options.constituents;
+  const chartWrapper = options.chartWrapper;
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -47,7 +48,8 @@ export function implodeBoxplot(selector, options, state) {
           colorScale,
           groups,
           events,
-          constituents
+          constituents,
+          chartWrapper
         };
         drawBoxplot(d, i, drawBoxplotOptions, state);
       });
