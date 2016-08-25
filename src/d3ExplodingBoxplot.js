@@ -27,7 +27,7 @@ export default function () {
   const state = {};
   state.explodedBoxplots = [];
 
-  const options = {
+  const chartOptions = {
     id: '',
     class: 'xBoxPlot',
     width: window.innerWidth,
@@ -96,6 +96,11 @@ export default function () {
     ]
   };
 
+  // create local variables from chartOptions
+  const margin = chartOptions.margin;
+  const mobileScreenMax = chartOptions.mobileScreenMax;
+  const boxColors = chartOptions.boxColors;
+
   const constituents = {
     elements: {
       domParent: undefined,
@@ -112,9 +117,9 @@ export default function () {
     || document.documentElement.clientWidth
     || document.body.clientWidth;
 
-  let mobileScreen = (windowWidth < options.mobileScreenMax);
+  let mobileScreen = (windowWidth < mobileScreenMax);
 
-  let colors = options.boxColors;
+  let colors = boxColors;
   let update;
 
   // programmatic
@@ -149,10 +154,10 @@ export default function () {
       constituents.elements.chartRoot = chartRoot;
 
       // calculate boxPlotWidth based on number of classes or groups
-      // console.log('options.data.group', options.data.group);
-      if (options.data.group) {
+      // console.log('chartOptions.data.group', chartOptions.data.group);
+      if (chartOptions.data.group) {
         groups = d3.nest()
-          .key(k => k[options.data.group])
+          .key(k => k[chartOptions.data.group])
           .entries(dataSet);
       } else {
         groups = [{
@@ -161,11 +166,11 @@ export default function () {
         }];
       }
 
-      const boxLineWidth = options.display.boxLineWidth;
-      const boxPadddingProportion = options.display.boxPadddingProportion;
+      const boxLineWidth = chartOptions.display.boxLineWidth;
+      const boxPadddingProportion = chartOptions.display.boxPadddingProportion;
       let boxWidth = undefined;
-      if (typeof options.display.maxBoxWidth !== 'undefined') {
-        boxWidth = options.display.maxBoxWidth;
+      if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
+        boxWidth = chartOptions.display.maxBoxWidth;
       }
       console.log('boxWidth', boxWidth);
 
@@ -179,7 +184,7 @@ export default function () {
          + (boxLineWidth * 2 * groupsCount) // lines on both sides
          + (boxPadddingProportion * boxWidth * (groupsCount + 1));
       } else {
-        boxPlotWidth = options.width;
+        boxPlotWidth = chartOptions.width;
       }
       console.log('boxPlotWidth', boxPlotWidth);
 
@@ -187,39 +192,39 @@ export default function () {
       const resetArea = chartRoot.append('g')
         .append('rect')
           .attr('id', 'resetArea')
-          .attr('width', boxPlotWidth + options.margin.left + options.margin.right)
-          .attr('height', options.height)
+          .attr('width', boxPlotWidth + margin.left + margin.right)
+          .attr('height', chartOptions.height)
           .style('color', 'white')
           .style('opacity', 0);
 
       // main chart area
       const chartWrapper = chartRoot.append('g')
         .attr('class', 'chartWrapper')
-        .attr('id', `chartWrapper${options.id}`);
+        .attr('id', `chartWrapper${chartOptions.id}`);
 
       windowWidth = window.innerWidth
         || document.documentElement.clientWidth
         || document.body.clientWidth;
 
-      mobileScreen = (windowWidth < options.mobileScreenMax);
+      mobileScreen = (windowWidth < mobileScreenMax);
 
       // boolean resize used to disable transitions during resize operation
       update = resize => {
         // console.log('update/resize function was called');
         chartRoot
-          .attr('width', (boxPlotWidth + options.margin.left + options.margin.right))
-          .attr('height', (options.height + options.margin.top + options.margin.bottom));
+          .attr('width', (boxPlotWidth + margin.left + margin.right))
+          .attr('height', (chartOptions.height + margin.top + margin.bottom));
 
         chartWrapper
-          .attr('transform', `translate(${options.margin.left},${options.margin.top})`);
+          .attr('transform', `translate(${margin.left},${margin.top})`);
 
         // console.log('events.update.begin', events.update.begin);
-        if (events.update.begin) { events.update.begin(constituents, options, events); }
+        if (events.update.begin) { events.update.begin(constituents, chartOptions, events); }
 
-        // console.log('options.data.group', options.data.group);
-        if (options.data.group) {
+        // console.log('chartOptions.data.group', chartOptions.data.group);
+        if (chartOptions.data.group) {
           groups = d3.nest()
-            .key(k => k[options.data.group])
+            .key(k => k[chartOptions.data.group])
             .entries(dataSet);
         } else {
           groups = [{
@@ -232,9 +237,9 @@ export default function () {
 
         const xScale = d3.scaleBand()
           .domain(groupsKeys) 
-          .padding(options.display.boxPadddingProportion)
+          .padding(chartOptions.display.boxPadddingProportion)
           .rangeRound(
-            [0, boxPlotWidth /* - options.margin.left - options.margin.right*/]
+            [0, boxPlotWidth /* - margin.left - margin.right*/]
           );
 
         constituents.scales.X = xScale;
@@ -243,16 +248,16 @@ export default function () {
 
         // create boxplot data
         groups = groups.map(g => {
-          console.log('options from inside of groups map', options);
-          const o = computeBoxplot(g.values, options.display.iqr, options.axes.y.variable);
+          console.log('chartOptions from inside of groups map', chartOptions);
+          const o = computeBoxplot(g.values, chartOptions.display.iqr, chartOptions.axes.y.variable);
           o.group = g.key;
           return o;
         });
         // console.log('groups after map', groups);
 
         const yScale = d3.scaleLinear()
-          .domain(d3.extent(dataSet.map(m => m[options.axes.y.variable])))
-          .range([options.height - options.margin.top - options.margin.bottom, 0])
+          .domain(d3.extent(dataSet.map(m => m[chartOptions.axes.y.variable])))
+          .range([chartOptions.height - margin.top - margin.bottom, 0])
           .nice();
 
         constituents.scales.Y = yScale;
@@ -260,7 +265,7 @@ export default function () {
         // console.log('yScale.range()', yScale.range());
 
         const colorScale = d3.scaleOrdinal()
-          .domain(d3.set(dataSet.map(m => m[options.data.colorIndex])).values())
+          .domain(d3.set(dataSet.map(m => m[chartOptions.data.colorIndex])).values())
           .range(Object.keys(colors).map(m => colors[m]));
         // console.log('colorScale.domain()', colorScale.domain());
         // console.log('colorScale.range()', colorScale.range());
@@ -268,7 +273,7 @@ export default function () {
         constituents.scales.color = colorScale;
 
         console.log('events.update.ready', events.update.ready);
-        if (events.update.ready) { events.update.ready(constituents, options, events); }
+        if (events.update.ready) { events.update.ready(constituents, chartOptions, events); }
 
         const xAxis = d3.axisBottom()
           .scale(xScale)
@@ -277,8 +282,8 @@ export default function () {
 
         const yAxis = d3.axisLeft()
           .scale(yScale)
-          .ticks(options.axes.y.ticks)
-          .tickFormat(options.axes.y.tickFormat);
+          .ticks(chartOptions.axes.y.ticks)
+          .tickFormat(chartOptions.axes.y.tickFormat);
         // console.log('yAxis', yAxis);
 
         const implodeBoxplotOptions = {
@@ -286,7 +291,7 @@ export default function () {
           yScale,
           transitionTime,
           colorScale,
-          chartOptions: options,
+          chartOptions,
           groups,
           events,
           constituents,
@@ -304,12 +309,12 @@ export default function () {
         updateXAxis.exit()
           .remove();
  
-        const chartBottomTranslate = options.height - options.margin.top - options.margin.bottom;
+        const chartBottomTranslate = chartOptions.height - margin.top - margin.bottom;
         let xAxisYTranslate;
-        if (typeof options.axes.x.yTranslate !== 'undefined') {
-          xAxisYTranslate = yScale(options.axes.x.yTranslate) - chartBottomTranslate;
+        if (typeof chartOptions.axes.x.yTranslate !== 'undefined') {
+          xAxisYTranslate = yScale(chartOptions.axes.x.yTranslate) - chartBottomTranslate;
         } else {
-          xAxisYTranslate = options.height - options.margin.top - options.margin.bottom;
+          xAxisYTranslate = chartOptions.height - margin.top - margin.bottom;
         }
 
         updateXAxis
@@ -327,17 +332,17 @@ export default function () {
             .attr('class', 'axis text label')
             .attr('x', boxPlotWidth / 2)
             .attr('dy', '.71em')
-            .attr('y', options.margin.bottom - 10)
+            .attr('y', margin.bottom - 10)
             .style('font', '10px sans-serif')
             .style('text-anchor', 'middle')
             .style('fill', 'black')
-            .text(options.axes.x.label);
+            .text(chartOptions.axes.x.label);
 
         // set y-position of x-axis line
         chartWrapper.selectAll('.x.axis path')
           .attr('transform', `translate(0,${xAxisYTranslate})`);
 
-        if (typeof options.axes.x.showTitle !== 'undefined') {
+        if (typeof chartOptions.axes.x.showTitle !== 'undefined') {
           // Set up the x-axis title
           chartWrapper.append('g')
             .append('text')
@@ -346,7 +351,7 @@ export default function () {
             .style('font-size', '12px')
             .style('font-weight', 600)
             .attr('transform', `translate(${30},${-10})`)
-            .text(`${options.axes.x.label}`);
+            .text(`${chartOptions.axes.x.label}`);
 
           // hide the bottom x-axis label
           chartWrapper.selectAll('.x.axis text.label')
@@ -379,22 +384,22 @@ export default function () {
           .append('text')
             .attr('class', 'axis text label')
             .attr('transform', 'rotate(-90)')
-            .attr('x', -options.margin.top - d3.mean(yScale.range()))
+            .attr('x', -margin.top - d3.mean(yScale.range()))
             .attr('dy', '.71em')
-            .attr('y', -options.margin.left + 5)
+            .attr('y', -margin.left + 5)
             .style('text-anchor', 'middle')
             .style('font-family', 'Times')
             .style('fill', 'black')
-            .text(options.axes.y.label);    
+            .text(chartOptions.axes.y.label);    
 
-        if (options.axes.y.labelPosition === 'origin') {
+        if (chartOptions.axes.y.labelPosition === 'origin') {
           chartWrapper.selectAll('g.y.axis').selectAll('text.label')
             .attr('x', 0)
             .attr('y', 0)
             .attr('dy', '0.35em')
             .style('text-anchor', 'end')
             .style('font-size', '12px')
-            .attr('transform', `rotate(0) translate(${-(options.margin.left / 4)},${yScale(0)})`)
+            .attr('transform', `rotate(0) translate(${-(margin.left / 4)},${yScale(0)})`)
         }
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
@@ -405,7 +410,7 @@ export default function () {
           .append('g')
           .merge(boxContent)
           .attr('class', 'explodingBoxplot boxcontent')
-          .attr('id', (d, i) => `explodingBoxplot${options.id}${i}`);
+          .attr('id', (d, i) => `explodingBoxplot${chartOptions.id}${i}`);
         console.log('boxContent after enter', boxContent);
 
         boxContent.exit()
@@ -425,7 +430,7 @@ export default function () {
             const selector = `#explodingBoxplot${i}`;
             console.log('selector from createBoxplot call', selector);
             const createBoxplotOptions = {
-              chartOptions: options,
+              chartOptions,
               i,
               colorScale,
               chartWrapper
@@ -436,7 +441,7 @@ export default function () {
           .each((d, i) =>{
             console.log('inside of each containing drawBoxplot call');
             const drawBoxplotOptions = {
-              chartOptions: options,
+              chartOptions,
               transitionTime,
               xScale,
               yScale,
@@ -451,7 +456,7 @@ export default function () {
 
         if (events.update.end) {
           setTimeout(() => {
-            events.update.end(constituents, options, events);
+            events.update.end(constituents, chartOptions, events);
           }, transitionTime);
         }
 
@@ -531,8 +536,8 @@ export default function () {
   // while preserving state of other options
   chart.options = function (values, ...args) {
     // console.log('chart.options() was called');
-    if (!args) return options;
-    keyWalk(values, options);
+    if (!args) return chartOptions;
+    keyWalk(values, chartOptions);
     return chart;
   };
 
@@ -572,15 +577,15 @@ export default function () {
 
   chart.width = function (value, ...args) {
     // console.log('chart.width() was called');
-    if (!args) return options.width;
-    options.width = value;
+    if (!args) return chartOptions.width;
+    chartOptions.width = value;
     return chart;
   };
 
   chart.height = function (value, ...args) {
     // console.log('chart.height() was called');
-    if (!args) return options.height;
-    options.height = value;
+    if (!args) return chartOptions.height;
+    chartOptions.height = value;
     return chart;
   };
 
