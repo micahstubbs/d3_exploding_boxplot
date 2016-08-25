@@ -93,7 +93,8 @@ export default function () {
       '#e31a1c',
       '#ffff99',
       '#b15928'
-    ]
+    ],
+    categoricalVariables: undefined
   };
 
   // create local variables from chartOptions
@@ -433,7 +434,8 @@ export default function () {
               chartOptions,
               i,
               colorScale,
-              chartWrapper
+              chartWrapper,
+              groups
             };
 
             createBoxplot(selector, d, createBoxplotOptions);

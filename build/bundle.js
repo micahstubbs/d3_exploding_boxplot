@@ -106,6 +106,7 @@
     // append normal points here as well so that they can be
     // styled before being shown
     var displayNormalPoints = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
+    console.log('groups[i].normal from jitterPlot', groups[i].normal);
 
     displayNormalPoints.exit().remove();
 
@@ -362,6 +363,48 @@
     d3.select(selector).append('g').attr('class', 'explodingBoxplot normal-points');
   }
 
+  function calculateClassProportions(data, options) {
+    var categoricalVariable = options.categoricalVariable;
+
+    // get a array of unique classes (values) for 
+    // the specified categoricalVariable
+    var uniqueClasses = d3.set(data, function (d) {
+      return d[categoricalVariable];
+    }).values();
+    console.log('uniqueClasses from calculateClassProportions', uniqueClasses);
+
+    // for each unique class, count the number of 
+    // times it occurs in data
+    var counts = {};
+    uniqueClasses.forEach(function (d) {
+      var currentCount = data.filter(function (e) {
+        return e[categoricalVariable] === d;
+      }).length;
+      counts[d] = currentCount;
+    });
+    console.log('counts from calculateClassProportions', counts);
+
+    // for each unique class, calculate proportions
+    // from the counts and the total count 
+    // from of all classes in the data
+    var proportions = {};
+    uniqueClasses.forEach(function (d) {
+      var currentProportion = counts[d] / data.length;
+      proportions[d] = currentProportion;
+    });
+
+    return proportions;
+  }
+
+  function collectClassProportions(data, options) {
+    var categoricalVariables = options.categoricalVariables;
+    var classProportionsByVariable = {};
+    categoricalVariables.forEach(function (key) {
+      classProportionsByVariable[key] = calculateClassProportions(data, { categoricalVariable: key });
+    });
+    return classProportionsByVariable;
+  }
+
   function createBoxplot(selector, data, options) {
     console.log('createBoxplot() was called');
 
@@ -370,8 +413,17 @@
     var chartOptions = options.chartOptions;
     var colorScale = options.colorScale;
     var chartWrapper = options.chartWrapper;
+    var groups = options.groups;
     console.log('selector from createBoxplot', selector);
     console.log('chartWrapper.select(selector)', chartWrapper.select(selector));
+    console.log('chartOptions from createBoxplot', chartOptions);
+
+    if (chartOptions.categoricalVariables.length > 0) {
+      console.log('groups from createBoxplot', groups);
+      var currentBoxNormalPointsData = groups[i].normal;
+      var classProportions = collectClassProportions(currentBoxNormalPointsData, { categoricalVariables: chartOptions.categoricalVariables });
+      console.log('classProportions from createBoxplot', classProportions);
+    }
 
     // console.log('this from createBoxplot', this);
     var s = chartWrapper.select(selector).append('g').attr('class', 'explodingBoxplot box').attr('id', 'explodingBoxplot_box' + chartOptions.id + i);
@@ -530,7 +582,8 @@
       },
       resize: true,
       mobileScreenMax: 500,
-      boxColors: ['#a6cee3', '#ff7f00', '#b2df8a', '#1f78b4', '#fdbf6f', '#33a02c', '#cab2d6', '#6a3d9a', '#fb9a99', '#e31a1c', '#ffff99', '#b15928']
+      boxColors: ['#a6cee3', '#ff7f00', '#b2df8a', '#1f78b4', '#fdbf6f', '#33a02c', '#cab2d6', '#6a3d9a', '#fb9a99', '#e31a1c', '#ffff99', '#b15928'],
+      categoricalVariables: undefined
     };
 
     // create local variables from chartOptions
@@ -791,7 +844,8 @@
               chartOptions: chartOptions,
               i: i,
               colorScale: colorScale,
-              chartWrapper: chartWrapper
+              chartWrapper: chartWrapper,
+              groups: groups
             };
 
             createBoxplot(selector, d, createBoxplotOptions);

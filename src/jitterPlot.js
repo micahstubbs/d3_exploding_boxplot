@@ -64,6 +64,7 @@ export function jitterPlot(i, options) {
     .select('.normal-points')
     .selectAll('.point')
     .data(groups[i].normal);
+    console.log('groups[i].normal from jitterPlot', groups[i].normal);
 
   displayNormalPoints.exit()
     .remove();

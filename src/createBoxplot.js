@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { collectClassProportions } from './collectClassProportions';
 
 export function createBoxplot(selector, data, options) {
   console.log('createBoxplot() was called');
@@ -8,8 +9,20 @@ export function createBoxplot(selector, data, options) {
   const chartOptions = options.chartOptions;
   const colorScale = options.colorScale;
   const chartWrapper = options.chartWrapper;
+  const groups = options.groups;
   console.log('selector from createBoxplot', selector);
   console.log('chartWrapper.select(selector)', chartWrapper.select(selector));
+  console.log('chartOptions from createBoxplot', chartOptions);
+
+  if (chartOptions.categoricalVariables.length > 0) {
+    console.log('groups from createBoxplot', groups);
+    const currentBoxNormalPointsData = groups[i].normal;
+    const classProportions = collectClassProportions(
+      currentBoxNormalPointsData,
+      { categoricalVariables: chartOptions.categoricalVariables }
+    );
+    console.log('classProportions from createBoxplot', classProportions);  
+  }
 
   // console.log('this from createBoxplot', this);
   const s = chartWrapper.select(selector).append('g')
