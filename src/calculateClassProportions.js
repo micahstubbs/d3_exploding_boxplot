@@ -5,6 +5,7 @@ export function calculateClassProportions(data, options) {
 
   // get a array of unique classes (values) for 
   // the specified categoricalVariable
+  console.log('current categoricalVariable from calculateClassProportions', categoricalVariable);
   const uniqueClasses = d3.set(data, d => d[categoricalVariable]).values();
   console.log('uniqueClasses from calculateClassProportions', uniqueClasses);
 
@@ -25,6 +26,8 @@ export function calculateClassProportions(data, options) {
   const proportions = {};
   uniqueClasses.forEach(d => {
     const currentProportion = counts[d] / data.length;
+    console.log('data.length', data.length);
+    console.log('currentProportion', currentProportion);
     proportions[d] = currentProportion;
   })
 

@@ -14,6 +14,7 @@ import { createBoxplot } from './createBoxplot';
 import { keyWalk } from './keyWalk';
 import { computeBoxplot } from './computeBoxplot';
 import { initJitter } from './initJitter';
+import { transitionY } from './transitionY';
 import * as d3 from 'd3';
 export default function () {
   // options which should be accessible via ACCESSORS
@@ -102,6 +103,15 @@ export default function () {
   const mobileScreenMax = chartOptions.mobileScreenMax;
   const boxColors = chartOptions.boxColors;
 
+  // define some variables we want to access
+  // outside of the update function scope
+  let colors = boxColors;
+  let update;
+  let chartWrapper;
+
+  // programmatic
+  let transitionTime = 200;
+
   const constituents = {
     elements: {
       domParent: undefined,
@@ -119,12 +129,6 @@ export default function () {
     || document.body.clientWidth;
 
   let mobileScreen = (windowWidth < mobileScreenMax);
-
-  let colors = boxColors;
-  let update;
-
-  // programmatic
-  let transitionTime = 200;
 
   // DEFINABLE EVENTS
   // Define with ACCESSOR function chart.events()
@@ -199,7 +203,7 @@ export default function () {
           .style('opacity', 0);
 
       // main chart area
-      const chartWrapper = chartRoot.append('g')
+      chartWrapper = chartRoot.append('g')
         .attr('class', 'chartWrapper')
         .attr('id', `chartWrapper${chartOptions.id}`);
 
@@ -222,6 +226,8 @@ export default function () {
         // console.log('events.update.begin', events.update.begin);
         if (events.update.begin) { events.update.begin(constituents, chartOptions, events); }
 
+        // create our groups or classes
+        // from our specified categorical grouping variable
         // console.log('chartOptions.data.group', chartOptions.data.group);
         if (chartOptions.data.group) {
           groups = d3.nest()
@@ -250,11 +256,12 @@ export default function () {
         // create boxplot data
         groups = groups.map(g => {
           console.log('chartOptions from inside of groups map', chartOptions);
-          const o = computeBoxplot(g.values, chartOptions.display.iqr, chartOptions.axes.y.variable);
+          const computeBoxplotOptions = { chartOptions };
+          const o = computeBoxplot(g.values, computeBoxplotOptions);
           o.group = g.key;
           return o;
         });
-        // console.log('groups after map', groups);
+        console.log('groups after map', groups);
 
         const yScale = d3.scaleLinear()
           .domain(d3.extent(dataSet.map(m => m[chartOptions.axes.y.variable])))
@@ -630,6 +637,21 @@ export default function () {
     // console.log('chart.update() was called');
     if (typeof update === 'function') update(resize);
   };
+
+  chart.transitionY = (selection) => {
+    // console.log('chart.transitionY was called')
+    console.log('transitionTime from chart.transitionY', transitionTime);
+    console.log('chartOptions from chart.transitionY', chartOptions);
+
+    const transitionYOptions = {
+       chartOptions,
+       transitionTime,
+       selection
+    }
+    if (typeof transitionY === 'function') {
+      transitionY(dataSet, transitionYOptions);
+    }
+  }
 
   chart.duration = function (value, ...args) {
     // console.log('chart.duration() was called');
