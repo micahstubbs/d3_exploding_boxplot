@@ -14,7 +14,7 @@ export function jitterPlot(i, options) {
   const constituents = options.constituents;
   const transitionTime = options.transitionTime;
   const chartWrapper = options.chartWrapper;
-  let boxExploded = undefined;
+  const boxExploded = options.boxExploded;
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -24,23 +24,23 @@ export function jitterPlot(i, options) {
   }
 
   // check for an `exploded` class on our boxcontent g element
-  console.log('chartWrapper from jitterPlot', chartWrapper);
-  console.log('i from jitterPlot', i);
-  const boxcontentG = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`);
-  console.log('boxcontentG from jitterPlot', boxcontentG);
+  // console.log('chartWrapper from jitterPlot', chartWrapper);
+  // console.log('i from jitterPlot', i);
+  // const boxcontentG = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`);
+  // console.log('boxcontentG from jitterPlot', boxcontentG);
 
-  console.log("boxcontentG['_groups'][0][0]", boxcontentG['_groups'][0][0]);
-  if (typeof boxcontentG['_groups'][0][0] !== 'undefined') {
-    const boxcontentGClasses = boxcontentG.property('classList');
-    console.log('boxcontentGClasses from jitterPlot', boxcontentGClasses);
-    const keys = Object.keys(boxcontentGClasses);
-    console.log('classList object keys from jitterPlot', keys);
-    const values = keys.map(d => boxcontentGClasses[d]);
-    console.log('classList object values from jitterPlot', values);
-    if(values.indexOf('exploded') !== -1) {
-      boxExploded = true;
-    }
-  }
+  // console.log("boxcontentG['_groups'][0][0]", boxcontentG['_groups'][0][0]);
+  // if (typeof boxcontentG['_groups'][0][0] !== 'undefined') {
+  //   const boxcontentGClasses = boxcontentG.property('classList');
+  //   // console.log('boxcontentGClasses from jitterPlot', boxcontentGClasses);
+  //   const keys = Object.keys(boxcontentGClasses);
+  //   // console.log('classList object keys from jitterPlot', keys);
+  //   const values = keys.map(d => boxcontentGClasses[d]);
+  //   // console.log('classList object values from jitterPlot', values);
+  //   if(values.indexOf('exploded') !== -1) {
+  //     boxExploded = true;
+  //   }
+  // }
 
   const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.outliers-points');

@@ -98,6 +98,23 @@ export function transitionY(data, options) {
   // if the box is not exploded
   // transition box rect and lines y-position
   groups.forEach((group, i) => {
+    let boxExploded = undefined;
+    const boxcontentG = selection.select(`#explodingBoxplot${chartOptions.id}${i}`);
+    // console.log('boxcontentG from jitterPlot', boxcontentG);
+
+    console.log("boxcontentG['_groups'][0][0]", boxcontentG['_groups'][0][0]);
+    if (typeof boxcontentG['_groups'][0][0] !== 'undefined') {
+      const boxcontentGClasses = boxcontentG.property('classList');
+      // console.log('boxcontentGClasses from jitterPlot', boxcontentGClasses);
+      const keys = Object.keys(boxcontentGClasses);
+      // console.log('classList object keys from jitterPlot', keys);
+      const values = keys.map(d => boxcontentGClasses[d]);
+      // console.log('classList object values from jitterPlot', values);
+      if(values.indexOf('exploded') !== -1) {
+        boxExploded = true;
+      }
+    }
+
     const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;
     const s = selection.select(currentBoxplotBoxSelector);
 
@@ -127,7 +144,14 @@ export function transitionY(data, options) {
       .transition()
         .duration(transitionTime)
         .attr('y1', () => yScale(Math.min(group.min, group.quartiles[0])))
-        .attr('y2', () => yScale(group.quartiles[0]));
+        .attr('y2', () => yScale(group.quartiles[0]))
+        .style('stroke-opacity', () => {
+          if (typeof boxExploded !== 'undefined') {
+            return 0;
+          } else {
+            return 1;
+          }
+        });
 
     // max line
     s.select('line.max.hline')
@@ -141,7 +165,14 @@ export function transitionY(data, options) {
       .transition()
         .duration(transitionTime)
         .attr('y1', () => yScale(group.quartiles[2]))
-        .attr('y2', () => yScale(Math.max(group.max, group.quartiles[2])));
+        .attr('y2', () => yScale(Math.max(group.max, group.quartiles[2])))
+        .style('stroke-opacity', () => {
+          if (typeof boxExploded !== 'undefined') {
+            return 0;
+          } else {
+            return 1;
+          }
+        });
 
     // // remove all points
     // s.selectAll('circle')
@@ -159,7 +190,8 @@ export function transitionY(data, options) {
       events,
       constituents,
       transitionTime,
-      chartWrapper: selection
+      chartWrapper: selection,
+      boxExploded
     };
 
     jitterPlot(i, jitterPlotOptions);
