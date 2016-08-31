@@ -22,6 +22,7 @@ export function jitterPlot(i, options) {
     boxWidth = xScale.bandwidth();
   }
 
+  console.log('chartWrapper from jitterPlot', chartWrapper);
   const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.outliers-points');
 

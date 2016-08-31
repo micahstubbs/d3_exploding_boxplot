@@ -1,4 +1,5 @@
 import { computeBoxplot } from './computeBoxplot';
+import { jitterPlot } from './jitterPlot';
 import * as d3 from 'd3';
 
 export function transitionY(data, options) {
@@ -10,8 +11,13 @@ export function transitionY(data, options) {
   const chartOptions = options.chartOptions;
   const transitionTime = options.transitionTime;
   const selection = options.selection;
+  const boxPlotWidth = options.boxPlotWidth;
+  const events = options.events;
+  const constituents = options.constituents;
+
   const margin = chartOptions.margin;
   const yDomain = chartOptions.axes.y.domain;
+
 
   if (typeof yDomain === 'undefined') {
     console.error('options.axes.y.domain must be defined in order to transition the Y series');
@@ -32,6 +38,14 @@ export function transitionY(data, options) {
       values: data
     }];
   }
+  const groupsKeys = groups.map(d => d.key);
+
+  const xScale = d3.scaleBand()
+    .domain(groupsKeys) 
+    .padding(chartOptions.display.boxPadddingProportion)
+    .rangeRound(
+      [0, boxPlotWidth /* - margin.left - margin.right*/]
+    );
 
   // compute new boxplot data with the new yVariable
   // for each group or class
@@ -66,21 +80,30 @@ export function transitionY(data, options) {
       .domain(d3.extent(data.map(d => d[chartOptions.axes.y.variable])))
       .nice();
 
+    // if yDomain is undefined,
     // transition y-axis as well
     // TODO: transition y-axis
   };
 
-
-
   // color scale remains the same
+  // calculate color scale here inside of transitionY
+  const colors = chartOptions.boxColors;
+
+  const colorScale = d3.scaleOrdinal()
+    .domain(d3.set(data.map(d => d[chartOptions.data.colorIndex])).values())
+    .range(Object.keys(colors).map(d => colors[d]));
 
   // ???
   // reset the implodeBoxplot() event handler
   // with new options?
 
+  // if the box is not exploded
+  // transition box rect and lines y-position
   groups.forEach((group, i) => {
     const currentBoxplotBoxSelector = `#explodingBoxplot_box${chartOptions.id}${i}`;
     const s = selection.select(currentBoxplotBoxSelector);
+
+    // transition box
     s.select('rect.box')
       .transition()
         .duration(transitionTime)
@@ -120,17 +143,27 @@ export function transitionY(data, options) {
       .transition()
         .duration(transitionTime)
         .attr('y1', () => yScale(group.quartiles[2]))
-        .attr('y2', () => yScale(Math.max(group.max, group.quartiles[2])));  
+        .attr('y2', () => yScale(Math.max(group.max, group.quartiles[2])));
+
+    // remove all points
+    s.selectAll('circle')
+      .transition()
+      .style('fill-opacity', 0)
+      .remove();
+
+    // re-draw all points from new groups data
+    const jitterPlotOptions = {
+      chartOptions,
+      colorScale,
+      xScale,
+      yScale,
+      groups,
+      events,
+      constituents,
+      transitionTime,
+      chartWrapper: selection
+    };
+
+    jitterPlot(i, jitterPlotOptions);
   })
-  // if the box is not exploded
-    // transition box rect and lines y-position
-    
-
-    // hide all points that are now normal points
-    // show all points that are now outlier points
-    // transition all points to new y-position
-
-  // if the box is exploded
-    // transition all points to new y-position
-
 }

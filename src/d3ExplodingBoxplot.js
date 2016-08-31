@@ -108,6 +108,8 @@ export default function () {
   let colors = boxColors;
   let update;
   let chartWrapper;
+  let colorScale;
+  let boxPlotWidth;
 
   // programmatic
   let transitionTime = 200;
@@ -183,7 +185,6 @@ export default function () {
       const groupsCount = groupsKeys.length;
       console.log('groupsKeys', groupsKeys);
       console.log('groupsCount', groupsCount);
-      let boxPlotWidth;
       if (typeof boxWidth !== 'undefined') {
         boxPlotWidth = (boxWidth * groupsCount)
          + (boxLineWidth * 2 * groupsCount) // lines on both sides
@@ -272,7 +273,7 @@ export default function () {
         // console.log('yScale.domain()', yScale.domain());
         // console.log('yScale.range()', yScale.range());
 
-        const colorScale = d3.scaleOrdinal()
+        colorScale = d3.scaleOrdinal()
           .domain(d3.set(dataSet.map(m => m[chartOptions.data.colorIndex])).values())
           .range(Object.keys(colors).map(m => colors[m]));
         // console.log('colorScale.domain()', colorScale.domain());
@@ -646,7 +647,10 @@ export default function () {
     const transitionYOptions = {
        chartOptions,
        transitionTime,
-       selection
+       boxPlotWidth,
+       selection,
+       events,
+       constituents
     }
     if (typeof transitionY === 'function') {
       transitionY(dataSet, transitionYOptions);
