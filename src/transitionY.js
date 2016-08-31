@@ -12,9 +12,9 @@ export function transitionY(data, options) {
   const boxPlotWidth = options.boxPlotWidth;
   const events = options.events;
   const constituents = options.constituents;
-
   const margin = chartOptions.margin;
   const yDomain = chartOptions.axes.y.domain;
+  const extraDelay = options.extraDelay || 0;
 
 
   if (typeof yDomain === 'undefined') {
@@ -174,12 +174,6 @@ export function transitionY(data, options) {
           }
         });
 
-    // // remove all points
-    // s.selectAll('circle')
-    //   .transition()
-    //   .style('fill-opacity', 0)
-    //   .remove();
-
     // re-draw all points from new groups data
     const jitterPlotOptions = {
       chartOptions,
@@ -191,7 +185,8 @@ export function transitionY(data, options) {
       constituents,
       transitionTime,
       chartWrapper: selection,
-      boxExploded
+      boxExploded,
+      extraDelay
     };
 
     jitterPlot(i, jitterPlotOptions);

@@ -639,7 +639,7 @@ export default function () {
     if (typeof update === 'function') update(resize);
   };
 
-  chart.transitionY = (selection) => {
+  chart.transitionY = (selection, extraDelay) => {
     // console.log('chart.transitionY was called')
     console.log('transitionTime from chart.transitionY', transitionTime);
     console.log('chartOptions from chart.transitionY', chartOptions);
@@ -650,7 +650,8 @@ export default function () {
        boxPlotWidth,
        selection,
        events,
-       constituents
+       constituents,
+       extraDelay
     }
     if (typeof transitionY === 'function') {
       transitionY(dataSet, transitionYOptions);
