@@ -5,8 +5,6 @@ import * as d3 from 'd3';
 export function transitionY(data, options) {
   // a version of the update function that 
   // transitions the y-position of existing elements
-  // and update the visibility
-  // no new elements are added or removed
 
   const chartOptions = options.chartOptions;
   const transitionTime = options.transitionTime;
@@ -145,11 +143,11 @@ export function transitionY(data, options) {
         .attr('y1', () => yScale(group.quartiles[2]))
         .attr('y2', () => yScale(Math.max(group.max, group.quartiles[2])));
 
-    // remove all points
-    s.selectAll('circle')
-      .transition()
-      .style('fill-opacity', 0)
-      .remove();
+    // // remove all points
+    // s.selectAll('circle')
+    //   .transition()
+    //   .style('fill-opacity', 0)
+    //   .remove();
 
     // re-draw all points from new groups data
     const jitterPlotOptions = {

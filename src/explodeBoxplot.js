@@ -23,6 +23,7 @@ export function explodeBoxplot(i, options) {
   };
 
   chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
+    .classed('exploded', true)
     .select('g.box').transition()
     .ease(d3.easeBackIn)
     .duration((transitionTime * 1.5))

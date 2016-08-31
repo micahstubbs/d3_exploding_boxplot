@@ -14,6 +14,7 @@ export function jitterPlot(i, options) {
   const constituents = options.constituents;
   const transitionTime = options.transitionTime;
   const chartWrapper = options.chartWrapper;
+  let boxExploded = undefined;
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -22,7 +23,25 @@ export function jitterPlot(i, options) {
     boxWidth = xScale.bandwidth();
   }
 
+  // check for an `exploded` class on our boxcontent g element
   console.log('chartWrapper from jitterPlot', chartWrapper);
+  console.log('i from jitterPlot', i);
+  const boxcontentG = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`);
+  console.log('boxcontentG from jitterPlot', boxcontentG);
+
+  console.log("boxcontentG['_groups'][0][0]", boxcontentG['_groups'][0][0]);
+  if (typeof boxcontentG['_groups'][0][0] !== 'undefined') {
+    const boxcontentGClasses = boxcontentG.property('classList');
+    console.log('boxcontentGClasses from jitterPlot', boxcontentGClasses);
+    const keys = Object.keys(boxcontentGClasses);
+    console.log('classList object keys from jitterPlot', keys);
+    const values = keys.map(d => boxcontentGClasses[d]);
+    console.log('classList object values from jitterPlot', values);
+    if(values.indexOf('exploded') !== -1) {
+      boxExploded = true;
+    }
+  }
+
   const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.outliers-points');
 
@@ -61,7 +80,7 @@ export function jitterPlot(i, options) {
 
   // append normal points here as well so that they can be
   // styled before being shown
-    const displayNormalPoints = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
+  const displayNormalPoints = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
     .select('.normal-points')
     .selectAll('.point')
     .data(groups[i].normal);
@@ -74,9 +93,16 @@ export function jitterPlot(i, options) {
     .enter()
     .append('circle')
     .merge(displayNormalPoints)
-      .attr('visibility', 'hidden')
+      .attr('visibility', () => {
+        if (typeof boxExploded !== 'undefined') {
+          return 'visible'
+        } else {
+          return 'hidden'
+        }
+      })
       .attr('cx', boxWidth * 0.5)
       .attr('cy', yScale(groups[i].quartiles[1]))
       .call(initJitter, initJitterOptions)
       .call(drawJitter, drawJitterOptions);
 }
+

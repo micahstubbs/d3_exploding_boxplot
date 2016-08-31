@@ -36,6 +36,7 @@ export function implodeBoxplot(selector, options, state) {
     });
 
   selector.selectAll('.boxcontent')
+    .classed('exploded', false)
     .transition()
       .ease(d3.easeBackOut)
       .duration((transitionTime * 1.5))
