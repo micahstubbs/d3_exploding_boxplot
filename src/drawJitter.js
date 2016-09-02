@@ -13,11 +13,19 @@ export function drawJitter(selection, options) {
     boxWidth = xScale.bandwidth();
   }
 
-  selection.attr('r', chartOptions.dataPoints.radius)
+  const boxWidthScale = d3.scaleLinear()
+    .range(0, boxWidth);
+
+  selection
+    .attr('r', chartOptions.dataPoints.radius)
     .attr('fill', d => colorScale(d[chartOptions.data.colorIndex]))
-    .attr('cx', (/* d */) => {
+    .attr('cx', (d, i) => {
       const w = boxWidth;
-      return Math.floor(Math.random() * w);
+      if (false) {
+        return chartOptions.dataPoints.radius * i;
+      } else {
+        return Math.floor(Math.random() * w);
+      } 
     })
     .attr('cy', d => yScale(d[chartOptions.axes.y.variable]));
 }
