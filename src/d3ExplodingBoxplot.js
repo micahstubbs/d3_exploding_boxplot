@@ -9,7 +9,6 @@ no-unused-vars: "off"
 import { implodeBoxplot } from './implodeBoxplot';
 import { drawBoxplot } from './drawBoxplot';
 import { createJitter } from './createJitter';
-import { drawJitter } from './drawJitter';
 import { createBoxplot } from './createBoxplot';
 import { keyWalk } from './keyWalk';
 import { computeBoxplot } from './computeBoxplot';
@@ -96,7 +95,9 @@ export default function () {
       '#b15928'
     ],
     categoricalVariables: undefined,
-    sortBoxplots: undefined
+    sortBoxplots: undefined,
+    skeletonBox: true,
+    oneSeries: true
   };
 
   // create local variables from chartOptions

@@ -12,5 +12,9 @@ export function createJitter(...args) {
 
   d3.select(selector)
     .append('g')
-    .attr('class', 'explodingBoxplot normal-points');
+    .attr('class', 'explodingBoxplot normal-points'); 
+
+  d3.select(selector)
+    .append('g')
+    .attr('class', 'explodingBoxplot all-points');
 }

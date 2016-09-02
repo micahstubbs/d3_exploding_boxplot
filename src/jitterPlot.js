@@ -15,6 +15,8 @@ export function jitterPlot(i, options) {
   const transitionTime = options.transitionTime;
   const chartWrapper = options.chartWrapper;
   const boxExploded = options.boxExploded;
+  const yVariable = chartOptions.axes.y.variable;
+  console.log('yVariable from jitterPlot', yVariable);
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -42,70 +44,142 @@ export function jitterPlot(i, options) {
   //   }
   // }
 
-  const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
-    .select('.outliers-points');
+  console.log('chartOptions.oneSeries', chartOptions.oneSeries);
+  if (typeof chartOptions.oneSeries !== 'undefined') {
+    const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
+      .select('.all-points');
 
-  const displayOutliers = elem.selectAll('.point')
-    .data(groups[i].outlier);
+    // sort by the yVariable
+    const allSorted = groups[i].all.sort((a, b) => {
+      return Number(b[yVariable]) - Number(a[yVariable]);
+    });
 
-  displayOutliers.exit()
-    .remove();
+    console.log('allSorted', allSorted);
+    console.log('groups from jitterPlot', groups);
 
-  const drawJitterOptions = {
-    chartOptions,
-    colorScale,
-    xScale,
-    yScale
-  };
+    const displayAllPoints = elem.selectAll('.point')
+      .data(groups[i].all);
 
-  const initJitterOptions = {
-    chartOptions,
-    colorScale,
-    events,
-    constituents
-  };
+    displayAllPoints.exit()
+      .remove();
 
-  displayOutliers
-    .enter()
-    .append('circle')
-    .merge(displayOutliers)
-      .attr('cx', boxWidth * 0.5)
-      .attr('cy', yScale(groups[i].quartiles[1]))
-      .call(initJitter, initJitterOptions)
-      .transition()
-        .ease(d3.easeBackOut)
-        .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
-        .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
-        .call(drawJitter, drawJitterOptions);
+    let drawJitterOptions = {
+      chartOptions,
+      colorScale,
+      xScale,
+      yScale,
+      group: groups[i],
+      pointsType: 'all'
+    };
 
-  // append normal points here as well so that they can be
-  // styled before being shown
-  const displayNormalPoints = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
-    .select('.normal-points')
-    .selectAll('.point')
-    .data(groups[i].normal);
-    // console.log('groups[i].normal from jitterPlot', groups[i].normal);
+    const initJitterOptions = {
+      chartOptions,
+      colorScale,
+      events,
+      constituents
+    };
 
-  displayNormalPoints.exit()
-    .remove();
+    displayAllPoints
+      .enter()
+      .append('circle')
+      .merge(displayAllPoints)
+        .attr('cx', boxWidth * 0.5)
+        .attr('cy', yScale(groups[i].quartiles[1]))
+        .call(initJitter, initJitterOptions)
+        .transition()
+          .ease(d3.easeBackOut)
+          .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
+          .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
+          .call(drawJitter, drawJitterOptions);
+  } else {
+    const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
+      .select('.outliers-points');
 
-  displayNormalPoints
-    .enter()
-    .append('circle')
-    .merge(displayNormalPoints)
-      .attr('visibility', () => {
-        if (typeof boxExploded !== 'undefined') {
-          return 'visible'
-        } else {
-          return 'hidden'
-        }
-      })
-      .attr('cx', boxWidth * 0.5)
-      .attr('cy', () => {
-        // console.log('groups[i] from jitterPlot', groups[i]);
-        return yScale(groups[i].quartiles[1])
-      })
-      .call(initJitter, initJitterOptions)
-      .call(drawJitter, drawJitterOptions);
+    // sort by the yVariable
+    const outlierSorted = groups[i].outlier.sort((a, b) => {
+      return Number(b[yVariable]) - Number(a[yVariable]);
+    });
+    const normalSorted = groups[i].normal.sort((a, b) => {
+      return Number(b[yVariable]) - Number(a[yVariable]);
+    });
+    
+    console.log('outlierSorted', outlierSorted);
+    console.log('normalSorted', normalSorted);
+    console.log('groups from jitterPlot', groups);
+
+    const displayOutliers = elem.selectAll('.point')
+      .data(groups[i].outlier);
+
+    displayOutliers.exit()
+      .remove();
+
+    let drawJitterOptions = {
+      chartOptions,
+      colorScale,
+      xScale,
+      yScale,
+      group: groups[i],
+      pointsType: 'outlier'
+    };
+
+    const initJitterOptions = {
+      chartOptions,
+      colorScale,
+      events,
+      constituents
+    };
+
+    displayOutliers
+      .enter()
+      .append('circle')
+      .merge(displayOutliers)
+        .attr('cx', boxWidth * 0.5)
+        .attr('cy', yScale(groups[i].quartiles[1]))
+        .call(initJitter, initJitterOptions)
+        .transition()
+          .ease(d3.easeBackOut)
+          .delay(() => (transitionTime * 1.5) + (100 * Math.random()))
+          .duration(() => (transitionTime * 1.5) + ((transitionTime * 1.5) * Math.random()))
+          .call(drawJitter, drawJitterOptions);
+
+    // append normal points here as well so that they can be
+    // styled before being shown
+    const displayNormalPoints = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
+      .select('.normal-points')
+      .selectAll('.point')
+      .data(groups[i].normal);
+      // console.log('groups[i].normal from jitterPlot', groups[i].normal);
+
+    displayNormalPoints.exit()
+      .remove();
+
+    drawJitterOptions = {
+      chartOptions,
+      colorScale,
+      xScale,
+      yScale,
+      group: groups[i],
+      pointsType: 'normal'
+    };
+
+    displayNormalPoints
+      .enter()
+      .append('circle')
+      .merge(displayNormalPoints)
+        .attr('visibility', () => {
+          if (typeof boxExploded !== 'undefined') {
+            return 'visible'
+          } else {
+            return 'hidden'
+          }
+        })
+        .attr('cx', boxWidth * 0.5)
+        .attr('cy', () => {
+          // console.log('groups[i] from jitterPlot', groups[i]);
+          return yScale(groups[i].quartiles[1])
+        })
+        .call(initJitter, initJitterOptions)
+        .call(drawJitter, drawJitterOptions); 
+    }
 }
 

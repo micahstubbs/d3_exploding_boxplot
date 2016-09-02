@@ -33,6 +33,7 @@ export function computeBoxplot(data, options) {
   console.log('quartiles', quartiles);
   const iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
   console.log('iqr', iqr);
+
   // separate outliers
   let max = Number.MIN_VALUE;
   let min = Number.MAX_VALUE;
@@ -48,6 +49,7 @@ export function computeBoxplot(data, options) {
       })
       .object(data);
   if (!boxData.outlier) boxData.outlier = [];
+
   // calculate class proportions
   let currentClassProportions;
   if (categoricalVariables.length > 0) {
@@ -66,6 +68,7 @@ export function computeBoxplot(data, options) {
   boxData.absoluteSum = absoluteSum;
   boxData.rootMeanSquaredValue = rmsv;
   boxData.classProportions = currentClassProportions;
+  boxData.all = data;
   console.log('boxData', boxData);
   return boxData;
 }

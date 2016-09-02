@@ -37,7 +37,9 @@ export function explodeBoxplot(i, options) {
     chartOptions,
     colorScale,
     xScale,
-    yScale
+    yScale,
+    group: groups[i],
+    pointsType: 'normal'
   };
 
   const initJitterOptions = {

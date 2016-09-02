@@ -3,7 +3,7 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3'], factory) :
   (factory((global.d3ExplodingBoxplot = global.d3ExplodingBoxplot || {}),global.d3));
-}(this, function (exports,d3$1) { 'use strict';
+}(this, function (exports,d3) { 'use strict';
 
   function initJitter(s, options) {
     console.log('initJitter() was called');
@@ -19,15 +19,15 @@
       return chartOptions.dataPoints.fillOpacity;
     }).on('mouseover', function (d, i /* , self */) {
       if (events.point && typeof events.point.mouseover === 'function') {
-        events.point.mouseover(d, i, d3$1.select(this), constituents, chartOptions);
+        events.point.mouseover(d, i, d3.select(this), constituents, chartOptions);
       }
     }).on('mouseout', function (d, i /* , self */) {
       if (events.point && typeof events.point.mouseout === 'function') {
-        events.point.mouseout(d, i, d3$1.select(this), constituents, chartOptions);
+        events.point.mouseout(d, i, d3.select(this), constituents, chartOptions);
       }
     }).on('click', function (d, i /* , self */) {
       if (events.point && typeof events.point.click === 'function') {
-        events.point.click(d, i, d3$1.select(this), constituents, chartOptions);
+        events.point.click(d, i, d3.select(this), constituents, chartOptions);
       }
     });
   }
@@ -39,6 +39,9 @@
     var colorScale = options.colorScale;
     var xScale = options.xScale;
     var yScale = options.yScale;
+    var group = options.group;
+    var pointsType = options.pointsType;
+    console.log('group from drawJitter', group);
 
     var boxWidth = void 0;
     if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -46,16 +49,20 @@
     } else {
       boxWidth = xScale.bandwidth();
     }
+    console.log('boxWidth from drawJitter', boxWidth);
+    // console.log('group[`${pointsType}`].length', group[`${pointsType}`].length - 1);
 
-    var boxWidthScale = d3.scaleLinear().range(0, boxWidth);
+    var boxWidthScale = d3.scaleLinear().domain([0, group['' + pointsType].length - 1]).range([0, boxWidth]);
 
     selection.attr('r', chartOptions.dataPoints.radius).attr('fill', function (d) {
       return colorScale(d[chartOptions.data.colorIndex]);
     }).attr('cx', function (d, i) {
+      console.log('i from drawJitter', i);
       var w = boxWidth;
-      if (false) {} else {
-        return Math.floor(Math.random() * w);
-      }
+      if (true) {
+        console.log('boxWidthScale(i)', boxWidthScale(i));
+        return boxWidthScale(i);
+      } else {}
     }).attr('cy', function (d) {
       return yScale(d[chartOptions.axes.y.variable]);
     });
@@ -74,6 +81,8 @@
     var transitionTime = options.transitionTime;
     var chartWrapper = options.chartWrapper;
     var boxExploded = options.boxExploded;
+    var yVariable = chartOptions.axes.y.variable;
+    console.log('yVariable from jitterPlot', yVariable);
 
     var boxWidth = void 0;
     if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -101,49 +110,111 @@
     //   }
     // }
 
-    var elem = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.outliers-points');
+    console.log('chartOptions.oneSeries', chartOptions.oneSeries);
+    if (typeof chartOptions.oneSeries !== 'undefined') {
+      var elem = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.all-points');
 
-    var displayOutliers = elem.selectAll('.point').data(groups[i].outlier);
+      // sort by the yVariable
+      var allSorted = groups[i].all.sort(function (a, b) {
+        return Number(b[yVariable]) - Number(a[yVariable]);
+      });
 
-    displayOutliers.exit().remove();
+      console.log('allSorted', allSorted);
+      console.log('groups from jitterPlot', groups);
 
-    var drawJitterOptions = {
-      chartOptions: chartOptions,
-      colorScale: colorScale,
-      xScale: xScale,
-      yScale: yScale
-    };
+      var displayAllPoints = elem.selectAll('.point').data(groups[i].all);
 
-    var initJitterOptions = {
-      chartOptions: chartOptions,
-      colorScale: colorScale,
-      events: events,
-      constituents: constituents
-    };
+      displayAllPoints.exit().remove();
 
-    displayOutliers.enter().append('circle').merge(displayOutliers).attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3$1.easeBackOut).delay(function () {
-      return transitionTime * 1.5 + 100 * Math.random();
-    }).duration(function () {
-      return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
-    }).call(drawJitter, drawJitterOptions);
+      var drawJitterOptions = {
+        chartOptions: chartOptions,
+        colorScale: colorScale,
+        xScale: xScale,
+        yScale: yScale,
+        group: groups[i],
+        pointsType: 'all'
+      };
 
-    // append normal points here as well so that they can be
-    // styled before being shown
-    var displayNormalPoints = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
-    // console.log('groups[i].normal from jitterPlot', groups[i].normal);
+      var initJitterOptions = {
+        chartOptions: chartOptions,
+        colorScale: colorScale,
+        events: events,
+        constituents: constituents
+      };
 
-    displayNormalPoints.exit().remove();
+      displayAllPoints.enter().append('circle').merge(displayAllPoints).attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3.easeBackOut).delay(function () {
+        return transitionTime * 1.5 + 100 * Math.random();
+      }).duration(function () {
+        return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
+      }).call(drawJitter, drawJitterOptions);
+    } else {
+      var _elem = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.outliers-points');
 
-    displayNormalPoints.enter().append('circle').merge(displayNormalPoints).attr('visibility', function () {
-      if (typeof boxExploded !== 'undefined') {
-        return 'visible';
-      } else {
-        return 'hidden';
-      }
-    }).attr('cx', boxWidth * 0.5).attr('cy', function () {
-      // console.log('groups[i] from jitterPlot', groups[i]);
-      return yScale(groups[i].quartiles[1]);
-    }).call(initJitter, initJitterOptions).call(drawJitter, drawJitterOptions);
+      // sort by the yVariable
+      var outlierSorted = groups[i].outlier.sort(function (a, b) {
+        return Number(b[yVariable]) - Number(a[yVariable]);
+      });
+      var normalSorted = groups[i].normal.sort(function (a, b) {
+        return Number(b[yVariable]) - Number(a[yVariable]);
+      });
+
+      console.log('outlierSorted', outlierSorted);
+      console.log('normalSorted', normalSorted);
+      console.log('groups from jitterPlot', groups);
+
+      var displayOutliers = _elem.selectAll('.point').data(groups[i].outlier);
+
+      displayOutliers.exit().remove();
+
+      var _drawJitterOptions = {
+        chartOptions: chartOptions,
+        colorScale: colorScale,
+        xScale: xScale,
+        yScale: yScale,
+        group: groups[i],
+        pointsType: 'outlier'
+      };
+
+      var _initJitterOptions = {
+        chartOptions: chartOptions,
+        colorScale: colorScale,
+        events: events,
+        constituents: constituents
+      };
+
+      displayOutliers.enter().append('circle').merge(displayOutliers).attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, _initJitterOptions).transition().ease(d3.easeBackOut).delay(function () {
+        return transitionTime * 1.5 + 100 * Math.random();
+      }).duration(function () {
+        return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
+      }).call(drawJitter, _drawJitterOptions);
+
+      // append normal points here as well so that they can be
+      // styled before being shown
+      var displayNormalPoints = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
+      // console.log('groups[i].normal from jitterPlot', groups[i].normal);
+
+      displayNormalPoints.exit().remove();
+
+      _drawJitterOptions = {
+        chartOptions: chartOptions,
+        colorScale: colorScale,
+        xScale: xScale,
+        yScale: yScale,
+        group: groups[i],
+        pointsType: 'normal'
+      };
+
+      displayNormalPoints.enter().append('circle').merge(displayNormalPoints).attr('visibility', function () {
+        if (typeof boxExploded !== 'undefined') {
+          return 'visible';
+        } else {
+          return 'hidden';
+        }
+      }).attr('cx', boxWidth * 0.5).attr('cy', function () {
+        // console.log('groups[i] from jitterPlot', groups[i]);
+        return yScale(groups[i].quartiles[1]);
+      }).call(initJitter, _initJitterOptions).call(drawJitter, _drawJitterOptions);
+    }
   }
 
   function hideBoxplot(d, options) {
@@ -192,7 +263,7 @@
       chartOptions: chartOptions
     };
 
-    chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).classed('exploded', true).select('g.box').transition().ease(d3$1.easeBackIn).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
+    chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).classed('exploded', true).select('g.box').transition().ease(d3.easeBackIn).duration(transitionTime * 1.5).call(hideBoxplot, hideBoxplotOptions);
 
     var explodeNormal = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point');
 
@@ -200,7 +271,9 @@
       chartOptions: chartOptions,
       colorScale: colorScale,
       xScale: xScale,
-      yScale: yScale
+      yScale: yScale,
+      group: groups[i],
+      pointsType: 'normal'
     };
 
     var initJitterOptions = {
@@ -217,7 +290,7 @@
       boxWidth = xScale.bandwidth();
     }
 
-    explodeNormal.attr('visibility', 'visible').attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3$1.easeBackOut).delay(function () {
+    explodeNormal.attr('visibility', 'visible').attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).transition().ease(d3.easeBackOut).delay(function () {
       return transitionTime * 1.5 + 100 * Math.random();
     }).duration(function () {
       return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
@@ -299,6 +372,9 @@
     }).attr('height', function (e) {
       return yScale(e.quartiles[0]) - yScale(e.quartiles[2]);
     }).attr('fill', function (e) {
+      if (typeof chartOptions.skeletonBox !== 'undefined') {
+        return 'none';
+      }
       return colorScale(e.normal[0][chartOptions.data.colorIndex]);
     });
 
@@ -364,13 +440,13 @@
     state.explodedBoxplots = [];
     console.log('state.explodedBoxplots', state.explodedBoxplots);
     selector.selectAll('.normal-points').each(function (g) {
-      d3$1.select(this).selectAll('circle').transition().ease(d3$1.easeBackOut).duration(function () {
+      d3.select(this).selectAll('circle').transition().ease(d3.easeBackOut).duration(function () {
         return transitionTime * 1.5 + transitionTime * 1.5 * Math.random();
       }).attr('cx', boxWidth * 0.5).attr('cy', yScale(g.quartiles[1])).attr('visibility', 'hidden');
       // .remove();
     });
 
-    selector.selectAll('.boxcontent').classed('exploded', false).transition().ease(d3$1.easeBackOut).duration(transitionTime * 1.5).delay(transitionTime).each(function (d, i) {
+    selector.selectAll('.boxcontent').classed('exploded', false).transition().ease(d3.easeBackOut).duration(transitionTime * 1.5).delay(transitionTime).each(function (d, i) {
       var drawBoxplotOptions = {
         chartOptions: chartOptions,
         transitionTime: transitionTime,
@@ -392,9 +468,11 @@
     // console.log('selection from createJitter', selector;
     // console.log('args from createJitter', args);
 
-    d3$1.select(selector).append('g').attr('class', 'explodingBoxplot outliers-points');
+    d3.select(selector).append('g').attr('class', 'explodingBoxplot outliers-points');
 
-    d3$1.select(selector).append('g').attr('class', 'explodingBoxplot normal-points');
+    d3.select(selector).append('g').attr('class', 'explodingBoxplot normal-points');
+
+    d3.select(selector).append('g').attr('class', 'explodingBoxplot all-points');
   }
 
   function createBoxplot(selector, data, options) {
@@ -472,7 +550,7 @@
     // get a array of unique classes (values) for 
     // the specified categoricalVariable
     console.log('current categoricalVariable from calculateClassProportions', categoricalVariable);
-    var uniqueClasses = d3$1.set(data, function (d) {
+    var uniqueClasses = d3.set(data, function (d) {
       return d[categoricalVariable];
     }).values();
     console.log('uniqueClasses from calculateClassProportions', uniqueClasses);
@@ -528,16 +606,16 @@
 
     var seriev = data.map(function (m) {
       return m[value];
-    }).sort(d3$1.ascending);
-    var quartiles = [d3$1.quantile(seriev, 0.25), d3$1.quantile(seriev, 0.5), d3$1.quantile(seriev, 0.75)];
-    var sum = d3$1.sum(seriev);
-    var absoluteSum = d3$1.sum(seriev.map(function (d) {
+    }).sort(d3.ascending);
+    var quartiles = [d3.quantile(seriev, 0.25), d3.quantile(seriev, 0.5), d3.quantile(seriev, 0.75)];
+    var sum = d3.sum(seriev);
+    var absoluteSum = d3.sum(seriev.map(function (d) {
       return Math.abs(d);
     }));
 
     // root mean squared value
     // general case of root mean squared error
-    var rmsv = Math.sqrt(d3$1.sum(seriev.map(function (d) {
+    var rmsv = Math.sqrt(d3.sum(seriev.map(function (d) {
       return Math.pow(d, 2);
     })) / seriev.length);
 
@@ -545,10 +623,11 @@
     console.log('quartiles', quartiles);
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
     console.log('iqr', iqr);
+
     // separate outliers
     var max = Number.MIN_VALUE;
     var min = Number.MAX_VALUE;
-    var boxData = d3$1.nest().key(function (d) {
+    var boxData = d3.nest().key(function (d) {
       var v = d[value];
       var type = v < quartiles[0] - iqr || v > quartiles[2] + iqr ? 'outlier' : 'normal';
       if (type === 'normal' && (v < min || v > max)) {
@@ -558,6 +637,7 @@
       return type;
     }).object(data);
     if (!boxData.outlier) boxData.outlier = [];
+
     // calculate class proportions
     var currentClassProportions = void 0;
     if (categoricalVariables.length > 0) {
@@ -573,6 +653,7 @@
     boxData.absoluteSum = absoluteSum;
     boxData.rootMeanSquaredValue = rmsv;
     boxData.classProportions = currentClassProportions;
+    boxData.all = data;
     console.log('boxData', boxData);
     return boxData;
   }
@@ -601,7 +682,7 @@
     // console.log('chartOptions.data.group', chartOptions.data.group);
     var groups = void 0;
     if (chartOptions.data.group) {
-      groups = d3$1.nest().key(function (k) {
+      groups = d3.nest().key(function (k) {
         return k[chartOptions.data.group];
       }).entries(data);
     } else {
@@ -614,7 +695,7 @@
       return d.key;
     });
 
-    var xScale = d3$1.scaleBand().domain(groupsKeys).padding(chartOptions.display.boxPadddingProportion).rangeRound([0, boxPlotWidth /* - margin.left - margin.right*/]);
+    var xScale = d3.scaleBand().domain(groupsKeys).padding(chartOptions.display.boxPadddingProportion).rangeRound([0, boxPlotWidth /* - margin.left - margin.right*/]);
 
     // compute new boxplot data with the new yVariable
     // for each group or class
@@ -637,12 +718,12 @@
     // transition too later
     // this would alter the domain of the y-scale in 
     // the update function
-    var yScale = d3$1.scaleLinear().range([chartOptions.height - margin.top - margin.bottom, 0]);
+    var yScale = d3.scaleLinear().range([chartOptions.height - margin.top - margin.bottom, 0]);
 
     if (typeof yDomain !== 'undefined') {
       yScale.domain(yDomain).nice();
     } else {
-      yScale.domain(d3$1.extent(data.map(function (d) {
+      yScale.domain(d3.extent(data.map(function (d) {
         return d[chartOptions.axes.y.variable];
       }))).nice();
 
@@ -655,7 +736,7 @@
     // calculate color scale here inside of transitionY
     var colors = chartOptions.boxColors;
 
-    var colorScale = d3$1.scaleOrdinal().domain(d3$1.set(data.map(function (d) {
+    var colorScale = d3.scaleOrdinal().domain(d3.set(data.map(function (d) {
       return d[chartOptions.data.colorIndex];
     })).values()).range(Object.keys(colors).map(function (d) {
       return colors[d];
@@ -835,7 +916,9 @@
       mobileScreenMax: 500,
       boxColors: ['#a6cee3', '#ff7f00', '#b2df8a', '#1f78b4', '#fdbf6f', '#33a02c', '#cab2d6', '#6a3d9a', '#fb9a99', '#e31a1c', '#ffff99', '#b15928'],
       categoricalVariables: undefined,
-      sortBoxplots: undefined
+      sortBoxplots: undefined,
+      skeletonBox: true,
+      oneSeries: true
     };
 
     // create local variables from chartOptions
@@ -890,7 +973,7 @@
       // console.log('selection from chart()', selection);
       var sortBoxplots = chartOptions.sortBoxplots;
       selection.each(function () {
-        var domParent = d3$1.select(this);
+        var domParent = d3.select(this);
         // console.log('domParent', domParent);
         constituents.elements.domParent = domParent;
 
@@ -901,7 +984,7 @@
         // calculate boxPlotWidth based on number of classes or groups
         // console.log('chartOptions.data.group', chartOptions.data.group);
         if (chartOptions.data.group) {
-          groups = d3$1.nest().key(function (k) {
+          groups = d3.nest().key(function (k) {
             return k[chartOptions.data.group];
           }).entries(dataSet);
         } else {
@@ -959,7 +1042,7 @@
           // from our specified categorical grouping variable
           // console.log('chartOptions.data.group', chartOptions.data.group);
           if (chartOptions.data.group) {
-            groups = d3$1.nest().key(function (k) {
+            groups = d3.nest().key(function (k) {
               return k[chartOptions.data.group];
             }).entries(dataSet);
           } else {
@@ -1007,13 +1090,13 @@
             return d.group;
           });
 
-          var xScale = d3$1.scaleBand().domain(groupsKeys).padding(chartOptions.display.boxPadddingProportion).rangeRound([0, boxPlotWidth /* - margin.left - margin.right*/]);
+          var xScale = d3.scaleBand().domain(groupsKeys).padding(chartOptions.display.boxPadddingProportion).rangeRound([0, boxPlotWidth /* - margin.left - margin.right*/]);
 
           constituents.scales.X = xScale;
           // console.log('xScale.domain()', xScale.domain());
           // console.log('xScale.range()', xScale.range());
 
-          var yScale = d3$1.scaleLinear().domain(d3$1.extent(dataSet.map(function (m) {
+          var yScale = d3.scaleLinear().domain(d3.extent(dataSet.map(function (m) {
             return m[chartOptions.axes.y.variable];
           }))).range([chartOptions.height - margin.top - margin.bottom, 0]).nice();
 
@@ -1021,7 +1104,7 @@
           // console.log('yScale.domain()', yScale.domain());
           // console.log('yScale.range()', yScale.range());
 
-          colorScale = d3$1.scaleOrdinal().domain(d3$1.set(dataSet.map(function (m) {
+          colorScale = d3.scaleOrdinal().domain(d3.set(dataSet.map(function (m) {
             return m[chartOptions.data.colorIndex];
           })).values()).range(Object.keys(colors).map(function (m) {
             return colors[m];
@@ -1036,10 +1119,10 @@
             events.update.ready(constituents, chartOptions, events);
           }
 
-          var xAxis = d3$1.axisBottom().scale(xScale).tickSizeOuter(0);
+          var xAxis = d3.axisBottom().scale(xScale).tickSizeOuter(0);
           // console.log('xAxis', xAxis);
 
-          var yAxis = d3$1.axisLeft().scale(yScale).ticks(chartOptions.axes.y.ticks).tickFormat(chartOptions.axes.y.tickFormat);
+          var yAxis = d3.axisLeft().scale(yScale).ticks(chartOptions.axes.y.ticks).tickFormat(chartOptions.axes.y.tickFormat);
           // console.log('yAxis', yAxis);
 
           var implodeBoxplotOptions = {
@@ -1097,7 +1180,7 @@
 
           updateYAxis.enter().append('g').merge(updateYAxis).attr('class', 'explodingBoxplot y axis').attr('id', 'xpb_yAxis').call(yAxis);
 
-          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text label').attr('transform', 'rotate(-90)').attr('x', -margin.top - d3$1.mean(yScale.range())).attr('dy', '.71em').attr('y', -margin.left + 5).style('text-anchor', 'middle').style('font-family', 'Times').style('fill', 'black').text(chartOptions.axes.y.label);
+          chartWrapper.selectAll('g.y.axis').append('text').attr('class', 'axis text label').attr('transform', 'rotate(-90)').attr('x', -margin.top - d3.mean(yScale.range())).attr('dy', '.71em').attr('y', -margin.left + 5).style('text-anchor', 'middle').style('font-family', 'Times').style('fill', 'black').text(chartOptions.axes.y.label);
 
           if (chartOptions.axes.y.labelPosition === 'origin') {
             chartWrapper.selectAll('g.y.axis').selectAll('text.label').attr('x', 0).attr('y', 0).attr('dy', '0.35em').style('text-anchor', 'end').style('font-size', '12px').attr('transform', 'rotate(0) translate(' + -(margin.left / 4) + ',' + yScale(0) + ')');
