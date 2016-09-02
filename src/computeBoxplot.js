@@ -22,7 +22,9 @@ export function computeBoxplot(data, options) {
     d3.quantile(seriev, 0.5),
     d3.quantile(seriev, 0.75)
   ];
+  const sum = d3.sum(seriev);
 
+  console.log('seriev', seriev);
   console.log('quartiles', quartiles);
   const iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
   console.log('iqr', iqr);
@@ -55,6 +57,7 @@ export function computeBoxplot(data, options) {
   boxData.iqr = iqr;
   boxData.max = max;
   boxData.min = min;
+  boxData.sum = sum;
   boxData.classProportions = currentClassProportions;
   console.log('boxData', boxData);
   return boxData;

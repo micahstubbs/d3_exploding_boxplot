@@ -126,7 +126,7 @@
     // append normal points here as well so that they can be
     // styled before being shown
     var displayNormalPoints = chartWrapper.select('#explodingBoxplot' + chartOptions.id + i).select('.normal-points').selectAll('.point').data(groups[i].normal);
-    console.log('groups[i].normal from jitterPlot', groups[i].normal);
+    // console.log('groups[i].normal from jitterPlot', groups[i].normal);
 
     displayNormalPoints.exit().remove();
 
@@ -137,7 +137,7 @@
         return 'hidden';
       }
     }).attr('cx', boxWidth * 0.5).attr('cy', function () {
-      console.log('groups[i] from jitterPlot', groups[i]);
+      // console.log('groups[i] from jitterPlot', groups[i]);
       return yScale(groups[i].quartiles[1]);
     }).call(initJitter, initJitterOptions).call(drawJitter, drawJitterOptions);
   }
@@ -231,6 +231,7 @@
     var events = options.events;
     var constituents = options.constituents;
     var chartWrapper = options.chartWrapper;
+    console.log('groups from drawBoxplot', groups);
 
     var explodeBoxplotOptions = {
       xScale: xScale,
@@ -518,14 +519,16 @@
     var categoricalVariables = chartOptions.categoricalVariables || [];
 
     value = value || Number;
-    console.log('iqrScalingFactor', iqrScalingFactor);
-    console.log('value from computeBoxplot', value);
+    // console.log('iqrScalingFactor', iqrScalingFactor);
+    // console.log('value from computeBoxplot', value);
 
     var seriev = data.map(function (m) {
       return m[value];
     }).sort(d3.ascending);
     var quartiles = [d3.quantile(seriev, 0.25), d3.quantile(seriev, 0.5), d3.quantile(seriev, 0.75)];
+    var sum = d3.sum(seriev);
 
+    console.log('seriev', seriev);
     console.log('quartiles', quartiles);
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
     console.log('iqr', iqr);
@@ -553,6 +556,7 @@
     boxData.iqr = iqr;
     boxData.max = max;
     boxData.min = min;
+    boxData.sum = sum;
     boxData.classProportions = currentClassProportions;
     console.log('boxData', boxData);
     return boxData;
@@ -815,7 +819,8 @@
       resize: true,
       mobileScreenMax: 500,
       boxColors: ['#a6cee3', '#ff7f00', '#b2df8a', '#1f78b4', '#fdbf6f', '#33a02c', '#cab2d6', '#6a3d9a', '#fb9a99', '#e31a1c', '#ffff99', '#b15928'],
-      categoricalVariables: undefined
+      categoricalVariables: undefined,
+      sortBoxplots: undefined
     };
 
     // create local variables from chartOptions
@@ -868,6 +873,7 @@
     function chart(selection) {
       console.log('chart() was called');
       // console.log('selection from chart()', selection);
+      var sortBoxplots = chartOptions.sortBoxplots;
       selection.each(function () {
         var domParent = d3.select(this);
         // console.log('domParent', domParent);
@@ -947,16 +953,6 @@
               values: dataSet
             }];
           }
-          // console.log('groups after nest', groups);
-          groupsKeys = groups.map(function (d) {
-            return d.key;
-          });
-
-          var xScale = d3.scaleBand().domain(groupsKeys).padding(chartOptions.display.boxPadddingProportion).rangeRound([0, boxPlotWidth /* - margin.left - margin.right*/]);
-
-          constituents.scales.X = xScale;
-          // console.log('xScale.domain()', xScale.domain());
-          // console.log('xScale.range()', xScale.range());
 
           // create boxplot data
           groups = groups.map(function (g) {
@@ -967,6 +963,25 @@
             return o;
           });
           console.log('groups after map', groups);
+
+          console.log('sortBoxplots', sortBoxplots);
+          if (typeof sortBoxplots !== 'undefined') {
+            groups = groups.sort(function (a, b) {
+              return b.sum - a.sum;
+            });
+            console.log('groups after sort', groups);
+          }
+
+          // console.log('groups after nest', groups);
+          groupsKeys = groups.map(function (d) {
+            return d.group;
+          });
+
+          var xScale = d3.scaleBand().domain(groupsKeys).padding(chartOptions.display.boxPadddingProportion).rangeRound([0, boxPlotWidth /* - margin.left - margin.right*/]);
+
+          constituents.scales.X = xScale;
+          // console.log('xScale.domain()', xScale.domain());
+          // console.log('xScale.range()', xScale.range());
 
           var yScale = d3.scaleLinear().domain(d3.extent(dataSet.map(function (m) {
             return m[chartOptions.axes.y.variable];

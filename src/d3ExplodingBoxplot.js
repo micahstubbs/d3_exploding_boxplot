@@ -95,7 +95,8 @@ export default function () {
       '#ffff99',
       '#b15928'
     ],
-    categoricalVariables: undefined
+    categoricalVariables: undefined,
+    sortBoxplots: undefined
   };
 
   // create local variables from chartOptions
@@ -150,6 +151,7 @@ export default function () {
   function chart(selection) {
     console.log('chart() was called');
     // console.log('selection from chart()', selection);
+    const sortBoxplots = chartOptions.sortBoxplots;
     selection.each(function () {
       const domParent = d3.select(this);
       // console.log('domParent', domParent);
@@ -240,8 +242,25 @@ export default function () {
             values: dataSet
           }];
         }
+
+        // create boxplot data
+        groups = groups.map(g => {
+          console.log('chartOptions from inside of groups map', chartOptions);
+          const computeBoxplotOptions = { chartOptions };
+          const o = computeBoxplot(g.values, computeBoxplotOptions);
+          o.group = g.key;
+          return o;
+        });
+        console.log('groups after map', groups);
+
+        console.log('sortBoxplots', sortBoxplots);
+        if (typeof sortBoxplots !== 'undefined') {
+          groups = groups.sort((a, b) => b.sum - a.sum);
+          console.log('groups after sort', groups);
+        }
+
         // console.log('groups after nest', groups);
-        groupsKeys = groups.map(d => d.key);
+        groupsKeys = groups.map(d => d.group);
 
         const xScale = d3.scaleBand()
           .domain(groupsKeys) 
@@ -253,16 +272,6 @@ export default function () {
         constituents.scales.X = xScale;
         // console.log('xScale.domain()', xScale.domain());
         // console.log('xScale.range()', xScale.range());
-
-        // create boxplot data
-        groups = groups.map(g => {
-          console.log('chartOptions from inside of groups map', chartOptions);
-          const computeBoxplotOptions = { chartOptions };
-          const o = computeBoxplot(g.values, computeBoxplotOptions);
-          o.group = g.key;
-          return o;
-        });
-        console.log('groups after map', groups);
 
         const yScale = d3.scaleLinear()
           .domain(d3.extent(dataSet.map(m => m[chartOptions.axes.y.variable])))

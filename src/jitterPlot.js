@@ -102,7 +102,7 @@ export function jitterPlot(i, options) {
       })
       .attr('cx', boxWidth * 0.5)
       .attr('cy', () => {
-        console.log('groups[i] from jitterPlot', groups[i]);
+        // console.log('groups[i] from jitterPlot', groups[i]);
         return yScale(groups[i].quartiles[1])
       })
       .call(initJitter, initJitterOptions)
