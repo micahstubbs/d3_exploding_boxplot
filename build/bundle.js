@@ -527,6 +527,15 @@
     }).sort(d3.ascending);
     var quartiles = [d3.quantile(seriev, 0.25), d3.quantile(seriev, 0.5), d3.quantile(seriev, 0.75)];
     var sum = d3.sum(seriev);
+    var absoluteSum = d3.sum(seriev.map(function (d) {
+      return Math.abs(d);
+    }));
+
+    // root mean squared value
+    // general case of root mean squared error
+    var rmsv = Math.sqrt(d3.sum(seriev.map(function (d) {
+      return Math.pow(d, 2);
+    })) / seriev.length);
 
     console.log('seriev', seriev);
     console.log('quartiles', quartiles);
@@ -557,6 +566,8 @@
     boxData.max = max;
     boxData.min = min;
     boxData.sum = sum;
+    boxData.absoluteSum = absoluteSum;
+    boxData.rootMeanSquaredValue = rmsv;
     boxData.classProportions = currentClassProportions;
     console.log('boxData', boxData);
     return boxData;
@@ -965,9 +976,24 @@
           console.log('groups after map', groups);
 
           console.log('sortBoxplots', sortBoxplots);
-          if (typeof sortBoxplots !== 'undefined') {
+          if (sortBoxplots === 'sum') {
             groups = groups.sort(function (a, b) {
               return b.sum - a.sum;
+            });
+            console.log('groups after sort', groups);
+          } else if (sortBoxplots === 'absoluteSum') {
+            groups = groups.sort(function (a, b) {
+              return b.absoluteSum - a.absoluteSum;
+            });
+            console.log('groups after sort', groups);
+          } else if (sortBoxplots === 'rootMeanSquaredValue') {
+            groups = groups.sort(function (a, b) {
+              return b.rootMeanSquaredValue - a.rootMeanSquaredValue;
+            });
+            console.log('groups after sort', groups);
+          } else if (typeof sortBoxplots !== 'undefined') {
+            groups = groups.sort(function (a, b) {
+              return b.absoluteSum - a.absoluteSum;
             });
             console.log('groups after sort', groups);
           }

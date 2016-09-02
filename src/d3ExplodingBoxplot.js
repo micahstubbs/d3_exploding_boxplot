@@ -254,8 +254,17 @@ export default function () {
         console.log('groups after map', groups);
 
         console.log('sortBoxplots', sortBoxplots);
-        if (typeof sortBoxplots !== 'undefined') {
+        if (sortBoxplots === 'sum') {
           groups = groups.sort((a, b) => b.sum - a.sum);
+          console.log('groups after sort', groups);
+        } else if (sortBoxplots === 'absoluteSum') {
+          groups = groups.sort((a, b) => b.absoluteSum - a.absoluteSum);
+          console.log('groups after sort', groups);
+        } else if (sortBoxplots === 'rootMeanSquaredValue') {
+          groups = groups.sort((a, b) => b.rootMeanSquaredValue - a.rootMeanSquaredValue);
+          console.log('groups after sort', groups);
+        } else if (typeof sortBoxplots !== 'undefined') {
+          groups = groups.sort((a, b) => b.absoluteSum - a.absoluteSum);
           console.log('groups after sort', groups);
         }
 

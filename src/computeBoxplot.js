@@ -23,6 +23,11 @@ export function computeBoxplot(data, options) {
     d3.quantile(seriev, 0.75)
   ];
   const sum = d3.sum(seriev);
+  const absoluteSum = d3.sum(seriev.map(d => Math.abs(d)));
+
+  // root mean squared value
+  // general case of root mean squared error
+  const rmsv = Math.sqrt(d3.sum(seriev.map(d => Math.pow(d, 2))) / seriev.length);
 
   console.log('seriev', seriev);
   console.log('quartiles', quartiles);
@@ -58,6 +63,8 @@ export function computeBoxplot(data, options) {
   boxData.max = max;
   boxData.min = min;
   boxData.sum = sum;
+  boxData.absoluteSum = absoluteSum;
+  boxData.rootMeanSquaredValue = rmsv;
   boxData.classProportions = currentClassProportions;
   console.log('boxData', boxData);
   return boxData;
