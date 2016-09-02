@@ -81,11 +81,13 @@ export function drawBoxplot(d, i, options, state) {
         return yScale(e.quartiles[2])
       })
       .attr('height', e => yScale(e.quartiles[0]) - yScale(e.quartiles[2]))
-      .attr('fill', e => {
+      .attr('fill', e => colorScale(e.normal[0][chartOptions.data.colorIndex]))
+      .style('fill-opacity', e => {
         if (typeof chartOptions.skeletonBox !== 'undefined') {
-          return 'none';
+          return 0;
+        } else {
+          return 1;
         }
-        return colorScale(e.normal[0][chartOptions.data.colorIndex]);
       });
 
   const drawBoxplotMedianLineSelection = s.select('line.median');

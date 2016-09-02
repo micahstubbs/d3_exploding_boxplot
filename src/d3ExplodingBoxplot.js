@@ -96,7 +96,7 @@ export default function () {
     ],
     categoricalVariables: undefined,
     sortBoxplots: undefined,
-    skeletonBox: true,
+    skeletonBox: undefined,
     oneSeries: true
   };
 
@@ -451,7 +451,6 @@ export default function () {
             // console.log('d, testing selection.each', d);
             // console.log('i, testing selection.each', i);
           })
-          .each(createJitter)
           .each((d, i) => {
             console.log('d from boxContent each', d);
             // console.log('this from boxContent each', this);
@@ -467,6 +466,7 @@ export default function () {
 
             createBoxplot(selector, d, createBoxplotOptions);
           })
+          .each(createJitter)
           .each((d, i) =>{
             console.log('inside of each containing drawBoxplot call');
             const drawBoxplotOptions = {
