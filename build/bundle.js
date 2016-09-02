@@ -136,7 +136,10 @@
       } else {
         return 'hidden';
       }
-    }).attr('cx', boxWidth * 0.5).attr('cy', yScale(groups[i].quartiles[1])).call(initJitter, initJitterOptions).call(drawJitter, drawJitterOptions);
+    }).attr('cx', boxWidth * 0.5).attr('cy', function () {
+      console.log('groups[i] from jitterPlot', groups[i]);
+      return yScale(groups[i].quartiles[1]);
+    }).call(initJitter, initJitterOptions).call(drawJitter, drawJitterOptions);
   }
 
   function hideBoxplot(d, options) {
@@ -506,18 +509,24 @@
   function computeBoxplot(data, options) {
     console.log('computeBoxplot() was called');
     console.log('data from computeBoxplot', data);
-    console.log('iqrScalingFactor', iqrScalingFactor);
-    console.log('value from computeBoxplot', value);
     var chartOptions = options.chartOptions;
     var iqrScalingFactor = chartOptions.display.iqr;
+    if (typeof iqrScalingFactor === 'undefined') {
+      iqrScalingFactor = 1.5;
+    }
     var value = chartOptions.axes.y.variable;
+    var categoricalVariables = chartOptions.categoricalVariables || [];
 
-    iqrScalingFactor = iqrScalingFactor || 1.5;
     value = value || Number;
+    console.log('iqrScalingFactor', iqrScalingFactor);
+    console.log('value from computeBoxplot', value);
+
     var seriev = data.map(function (m) {
       return m[value];
     }).sort(d3.ascending);
     var quartiles = [d3.quantile(seriev, 0.25), d3.quantile(seriev, 0.5), d3.quantile(seriev, 0.75)];
+
+    console.log('quartiles', quartiles);
     var iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
     console.log('iqr', iqr);
     // separate outliers
@@ -535,7 +544,7 @@
     if (!boxData.outlier) boxData.outlier = [];
     // calculate class proportions
     var currentClassProportions = void 0;
-    if (chartOptions.categoricalVariables.length > 0) {
+    if (categoricalVariables.length > 0) {
       var currentBoxNormalPointsData = boxData.normal;
       currentClassProportions = collectClassProportions(currentBoxNormalPointsData, { categoricalVariables: chartOptions.categoricalVariables });
       console.log('currentClassProportions from computeBoxplot', currentClassProportions);
@@ -734,10 +743,6 @@
       };
 
       jitterPlot(i, jitterPlotOptions);
-      // window.setTimeout(function() {
-      //     // this will execute extraDelay milliseconds later
-      //     jitterPlot(i, jitterPlotOptions);
-      // }, extraDelay);
     });
   }
 

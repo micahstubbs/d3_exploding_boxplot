@@ -4,20 +4,26 @@ import { collectClassProportions } from './collectClassProportions';
 export function computeBoxplot(data, options) {
   console.log('computeBoxplot() was called');
   console.log('data from computeBoxplot', data);
-  console.log('iqrScalingFactor', iqrScalingFactor);
-  console.log('value from computeBoxplot', value);
   let chartOptions = options.chartOptions;
   let iqrScalingFactor = chartOptions.display.iqr;
+  if (typeof iqrScalingFactor === 'undefined') {
+    iqrScalingFactor = 1.5;
+  }
   let value = chartOptions.axes.y.variable;
+  const categoricalVariables = chartOptions.categoricalVariables || [];
   
-  iqrScalingFactor = iqrScalingFactor || 1.5;
   value = value || Number;
+  // console.log('iqrScalingFactor', iqrScalingFactor);
+  // console.log('value from computeBoxplot', value);
+
   const seriev = data.map(m => m[value]).sort(d3.ascending);
   const quartiles = [
     d3.quantile(seriev, 0.25),
     d3.quantile(seriev, 0.5),
     d3.quantile(seriev, 0.75)
   ];
+
+  console.log('quartiles', quartiles);
   const iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
   console.log('iqr', iqr);
   // separate outliers
@@ -37,7 +43,7 @@ export function computeBoxplot(data, options) {
   if (!boxData.outlier) boxData.outlier = [];
   // calculate class proportions
   let currentClassProportions;
-  if (chartOptions.categoricalVariables.length > 0) {
+  if (categoricalVariables.length > 0) {
     const currentBoxNormalPointsData = boxData.normal;
     currentClassProportions = collectClassProportions(
       currentBoxNormalPointsData,

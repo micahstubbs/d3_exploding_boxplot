@@ -84,7 +84,7 @@ export function jitterPlot(i, options) {
     .select('.normal-points')
     .selectAll('.point')
     .data(groups[i].normal);
-    console.log('groups[i].normal from jitterPlot', groups[i].normal);
+    // console.log('groups[i].normal from jitterPlot', groups[i].normal);
 
   displayNormalPoints.exit()
     .remove();
@@ -101,7 +101,10 @@ export function jitterPlot(i, options) {
         }
       })
       .attr('cx', boxWidth * 0.5)
-      .attr('cy', yScale(groups[i].quartiles[1]))
+      .attr('cy', () => {
+        console.log('groups[i] from jitterPlot', groups[i]);
+        return yScale(groups[i].quartiles[1])
+      })
       .call(initJitter, initJitterOptions)
       .call(drawJitter, drawJitterOptions);
 }
