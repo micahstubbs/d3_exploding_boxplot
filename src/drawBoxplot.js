@@ -3,7 +3,7 @@ import { explodeBoxplot } from './explodeBoxplot';
 import * as d3 from 'd3';
 
 export function drawBoxplot(d, i, options, state) {
-  console.log('drawBoxplot() was called');
+  // console.log('drawBoxplot() was called');
   const chartOptions = options.chartOptions; // TODO: better names here
   const transitionTime = options.transitionTime;
   const xScale = options.xScale;
@@ -13,7 +13,7 @@ export function drawBoxplot(d, i, options, state) {
   const events = options.events;
   const constituents = options.constituents;
   const chartWrapper = options.chartWrapper;
-  console.log('groups from drawBoxplot', groups);
+  // console.log('groups from drawBoxplot', groups);
 
   const explodeBoxplotOptions = {
     xScale,

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 export function createBoxplot(selector, data, options) {
-  console.log('createBoxplot() was called');
+  // console.log('createBoxplot() was called');
 
   const i = options.i;
   const g = data;
@@ -9,9 +9,9 @@ export function createBoxplot(selector, data, options) {
   const colorScale = options.colorScale;
   const chartWrapper = options.chartWrapper;
   const groups = options.groups;
-  console.log('selector from createBoxplot', selector);
-  console.log('chartWrapper.select(selector)', chartWrapper.select(selector));
-  console.log('chartOptions from createBoxplot', chartOptions);
+  // console.log('selector from createBoxplot', selector);
+  // console.log('chartWrapper.select(selector)', chartWrapper.select(selector));
+  // console.log('chartOptions from createBoxplot', chartOptions);
 
   // console.log('this from createBoxplot', this);
   const s = chartWrapper.select(selector).append('g')

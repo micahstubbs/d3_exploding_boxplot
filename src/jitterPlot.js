@@ -3,7 +3,7 @@ import { drawJitter } from './drawJitter';
 import * as d3 from 'd3';
 
 export function jitterPlot(i, options) {
-  console.log('jitterPlot() was called');
+  // console.log('jitterPlot() was called');
 
   const chartOptions = options.chartOptions;
   const colorScale = options.colorScale;
@@ -16,7 +16,7 @@ export function jitterPlot(i, options) {
   const chartWrapper = options.chartWrapper;
   const boxExploded = options.boxExploded;
   const yVariable = chartOptions.axes.y.variable;
-  console.log('yVariable from jitterPlot', yVariable);
+  // console.log('yVariable from jitterPlot', yVariable);
 
   let boxWidth;
   if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
@@ -44,7 +44,7 @@ export function jitterPlot(i, options) {
   //   }
   // }
 
-  console.log('chartOptions.oneSeries', chartOptions.oneSeries);
+  // console.log('chartOptions.oneSeries', chartOptions.oneSeries);
   if (typeof chartOptions.oneSeries !== 'undefined') {
     const elem = chartWrapper.select(`#explodingBoxplot${chartOptions.id}${i}`)
       .select('.all-points');
@@ -54,8 +54,8 @@ export function jitterPlot(i, options) {
       return Number(b[yVariable]) - Number(a[yVariable]);
     });
 
-    console.log('allSorted', allSorted);
-    console.log('groups from jitterPlot', groups);
+    // console.log('allSorted', allSorted);
+    // console.log('groups from jitterPlot', groups);
 
     const displayAllPoints = elem.selectAll('.point')
       .data(groups[i].all);
@@ -103,9 +103,9 @@ export function jitterPlot(i, options) {
       return Number(b[yVariable]) - Number(a[yVariable]);
     });
     
-    console.log('outlierSorted', outlierSorted);
-    console.log('normalSorted', normalSorted);
-    console.log('groups from jitterPlot', groups);
+    // console.log('outlierSorted', outlierSorted);
+    // console.log('normalSorted', normalSorted);
+    // console.log('groups from jitterPlot', groups);
 
     const displayOutliers = elem.selectAll('.point')
       .data(groups[i].outlier);

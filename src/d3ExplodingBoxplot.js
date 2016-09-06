@@ -150,7 +150,7 @@ export default function () {
   };
 
   function chart(selection) {
-    console.log('chart() was called');
+    // console.log('chart() was called');
     // console.log('selection from chart()', selection);
     const sortBoxplots = chartOptions.sortBoxplots;
     selection.each(function () {
@@ -182,12 +182,12 @@ export default function () {
       if (typeof chartOptions.display.maxBoxWidth !== 'undefined') {
         boxWidth = chartOptions.display.maxBoxWidth;
       }
-      console.log('boxWidth', boxWidth);
+      // console.log('boxWidth', boxWidth);
 
       let groupsKeys = groups.map(d => d.key);
       const groupsCount = groupsKeys.length;
-      console.log('groupsKeys', groupsKeys);
-      console.log('groupsCount', groupsCount);
+      // console.log('groupsKeys', groupsKeys);
+      // console.log('groupsCount', groupsCount);
       if (typeof boxWidth !== 'undefined') {
         boxPlotWidth = (boxWidth * groupsCount)
          + (boxLineWidth * 2 * groupsCount) // lines on both sides
@@ -195,7 +195,7 @@ export default function () {
       } else {
         boxPlotWidth = chartOptions.width;
       }
-      console.log('boxPlotWidth', boxPlotWidth);
+      // console.log('boxPlotWidth', boxPlotWidth);
 
       // background click area added first
       const resetArea = chartRoot.append('g')
@@ -246,27 +246,27 @@ export default function () {
 
         // create boxplot data
         groups = groups.map(g => {
-          console.log('chartOptions from inside of groups map', chartOptions);
+          // console.log('chartOptions from inside of groups map', chartOptions);
           const computeBoxplotOptions = { chartOptions };
           const o = computeBoxplot(g.values, computeBoxplotOptions);
           o.group = g.key;
           return o;
         });
-        console.log('groups after map', groups);
+        // console.log('groups after map', groups);
 
-        console.log('sortBoxplots', sortBoxplots);
+        // console.log('sortBoxplots', sortBoxplots);
         if (sortBoxplots === 'sum') {
           groups = groups.sort((a, b) => b.sum - a.sum);
-          console.log('groups after sort', groups);
+          // console.log('groups after sort', groups);
         } else if (sortBoxplots === 'absoluteSum') {
           groups = groups.sort((a, b) => b.absoluteSum - a.absoluteSum);
-          console.log('groups after sort', groups);
+          // console.log('groups after sort', groups);
         } else if (sortBoxplots === 'rootMeanSquaredValue') {
           groups = groups.sort((a, b) => b.rootMeanSquaredValue - a.rootMeanSquaredValue);
-          console.log('groups after sort', groups);
+          // console.log('groups after sort', groups);
         } else if (typeof sortBoxplots !== 'undefined') {
           groups = groups.sort((a, b) => b.absoluteSum - a.absoluteSum);
-          console.log('groups after sort', groups);
+          // console.log('groups after sort', groups);
         }
 
         // console.log('groups after nest', groups);
@@ -300,7 +300,7 @@ export default function () {
 
         constituents.scales.color = colorScale;
 
-        console.log('events.update.ready', events.update.ready);
+        // console.log('events.update.ready', events.update.ready);
         if (events.update.ready) { events.update.ready(constituents, chartOptions, events); }
 
         const xAxis = d3.axisBottom()
@@ -432,18 +432,18 @@ export default function () {
 
         const boxContent = chartWrapper.selectAll('.boxcontent')
           .data(groups);
-        console.log('boxContent after variable declaration', boxContent);
+        // console.log('boxContent after variable declaration', boxContent);
 
         boxContent.enter()
           .append('g')
           .merge(boxContent)
           .attr('class', 'explodingBoxplot boxcontent')
           .attr('id', (d, i) => `explodingBoxplot${chartOptions.id}${i}`);
-        console.log('boxContent after enter', boxContent);
+        // console.log('boxContent after enter', boxContent);
 
         boxContent.exit()
           .remove();
-        console.log('boxContent after exit', boxContent);
+        // console.log('boxContent after exit', boxContent);
  
         chartWrapper.selectAll('g.explodingBoxplot.boxcontent')
           .attr('transform', d => `translate(${xScale(d.group)},0)`)
@@ -452,10 +452,10 @@ export default function () {
             // console.log('i, testing selection.each', i);
           })
           .each((d, i) => {
-            console.log('d from boxContent each', d);
+            // console.log('d from boxContent each', d);
             // console.log('this from boxContent each', this);
             const selector = `#explodingBoxplot${i}`;
-            console.log('selector from createBoxplot call', selector);
+            // console.log('selector from createBoxplot call', selector);
             const createBoxplotOptions = {
               chartOptions,
               i,
@@ -468,7 +468,7 @@ export default function () {
           })
           .each(createJitter)
           .each((d, i) =>{
-            console.log('inside of each containing drawBoxplot call');
+            // console.log('inside of each containing drawBoxplot call');
             const drawBoxplotOptions = {
               chartOptions,
               transitionTime,
@@ -660,8 +660,8 @@ export default function () {
 
   chart.transitionY = (selection, extraDelay) => {
     // console.log('chart.transitionY was called')
-    console.log('transitionTime from chart.transitionY', transitionTime);
-    console.log('chartOptions from chart.transitionY', chartOptions);
+    // console.log('transitionTime from chart.transitionY', transitionTime);
+    // console.log('chartOptions from chart.transitionY', chartOptions);
 
     const transitionYOptions = {
        chartOptions,

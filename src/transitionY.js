@@ -48,13 +48,13 @@ export function transitionY(data, options) {
   // compute new boxplot data with the new yVariable
   // for each group or class
   groups = groups.map(g => {
-    console.log('chartOptions from inside of groups map', chartOptions);
+    // console.log('chartOptions from inside of groups map', chartOptions);
     const computeBoxplotOptions = { chartOptions };
     const o = computeBoxplot(g.values, computeBoxplotOptions);
     o.group = g.key;
     return o;
   });
-  console.log('groups after map', groups);
+  // console.log('groups after map', groups);
 
   // x-scale remains the same
 
@@ -102,7 +102,7 @@ export function transitionY(data, options) {
     const boxcontentG = selection.select(`#explodingBoxplot${chartOptions.id}${i}`);
     // console.log('boxcontentG from jitterPlot', boxcontentG);
 
-    console.log("boxcontentG['_groups'][0][0]", boxcontentG['_groups'][0][0]);
+    // console.log("boxcontentG['_groups'][0][0]", boxcontentG['_groups'][0][0]);
     if (typeof boxcontentG['_groups'][0][0] !== 'undefined') {
       const boxcontentGClasses = boxcontentG.property('classList');
       // console.log('boxcontentGClasses from jitterPlot', boxcontentGClasses);

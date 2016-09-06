@@ -2,8 +2,8 @@ import * as d3 from 'd3';
 import { collectClassProportions } from './collectClassProportions';
 
 export function computeBoxplot(data, options) {
-  console.log('computeBoxplot() was called');
-  console.log('data from computeBoxplot', data);
+  // console.log('computeBoxplot() was called');
+  // console.log('data from computeBoxplot', data);
   let chartOptions = options.chartOptions;
   let iqrScalingFactor = chartOptions.display.iqr;
   if (typeof iqrScalingFactor === 'undefined') {
@@ -29,10 +29,10 @@ export function computeBoxplot(data, options) {
   // general case of root mean squared error
   const rmsv = Math.sqrt(d3.sum(seriev.map(d => Math.pow(d, 2))) / seriev.length);
 
-  console.log('seriev', seriev);
-  console.log('quartiles', quartiles);
+  // console.log('seriev', seriev);
+  // console.log('quartiles', quartiles);
   const iqr = (quartiles[2] - quartiles[0]) * iqrScalingFactor;
-  console.log('iqr', iqr);
+  // console.log('iqr', iqr);
 
   // separate outliers
   let max = Number.MIN_VALUE;
@@ -58,7 +58,7 @@ export function computeBoxplot(data, options) {
       currentBoxNormalPointsData,
       { categoricalVariables: chartOptions.categoricalVariables }
     );
-    console.log('currentClassProportions from computeBoxplot', currentClassProportions);  
+    // console.log('currentClassProportions from computeBoxplot', currentClassProportions);  
   }
   boxData.quartiles = quartiles;
   boxData.iqr = iqr;
@@ -69,6 +69,6 @@ export function computeBoxplot(data, options) {
   boxData.rootMeanSquaredValue = rmsv;
   boxData.classProportions = currentClassProportions;
   boxData.all = data;
-  console.log('boxData', boxData);
+  // console.log('boxData', boxData);
   return boxData;
 }
